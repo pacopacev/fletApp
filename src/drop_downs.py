@@ -84,7 +84,7 @@ class DDComponents:
             try:
                 # Get stations for the selected server
                 
-                self.radios = AllStations(self.server_value, self.tag_value).get_all_stations()
+                self.radios = await AllStations(self.server_value, self.tag_value).get_all_stations()
                 
                 
                 # Add new radio options
@@ -120,7 +120,7 @@ class DDComponents:
                  # Clear existing radio options
                 self.ddRadio.options.clear()
                 # Get stations for the selected server
-                self.radios = AllStations(self.server_value, self.tag_value).get_all_stations()
+                self.radios = await AllStations(self.server_value, self.tag_value).get_all_stations()
                 
                 # Add new radio options
                 for radio in self.radios:
