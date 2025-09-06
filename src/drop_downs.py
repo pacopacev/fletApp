@@ -66,8 +66,11 @@ class DDComponents:
     async def server_change(self, e):
         self.server_value = e.control.value
         print(f"Selected server: {self.server_value}")
+        self.coutrntry_codes = await AllStations(self.server_value, self.tag_value).fetch_country_codes()
+        await self.set_countruy_codes(self.coutrntry_codes)
         
-        # Clear existing radio options
+        
+        # Clear existing radio optionss
         self.ddRadio.options.clear()
 
         if self.tag_value == None:
@@ -85,6 +88,7 @@ class DDComponents:
                 # Get stations for the selected server
                 
                 self.radios = await AllStations(self.server_value, self.tag_value).get_all_stations()
+                
                 
                 
                 # Add new radio options
@@ -154,6 +158,13 @@ class DDComponents:
     async def on_radio_click(self, e):
         print("Radio dropdown focused")
         self.page.update()
+
+    async def set_countruy_codes(self, country_codes):
+        #print(self.coutrntry_codes)
+        self.ddCountry.options.clear()
+        for code in country_codes:
+            self.ddCountry.options.append(ft.dropdown.Option(code))
+        self.ddCountry.update()
 
 
 
