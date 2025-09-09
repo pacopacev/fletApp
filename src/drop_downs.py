@@ -11,6 +11,7 @@ class DDComponents:
         self.radios = None
         self.on_radio_change = on_radio_change
         self.page = page
+        self.coutrntry_codes = None
 
         self.ddServer = ft.DropdownM2(
             on_change=self.server_change,
@@ -43,9 +44,9 @@ class DDComponents:
             hint_text="Select Country",
             border_color=ft.Colors.RED,
             options=[
-                ft.dropdown.Option("BG"),
-                ft.dropdown.Option("US"),
-                ft.dropdown.Option("AK"),
+                # ft.dropdown.Option("BG"),
+                # ft.dropdown.Option("US"),
+                # ft.dropdown.Option("AK"),
             ],
         )
         
@@ -66,7 +67,9 @@ class DDComponents:
     async def server_change(self, e):
         self.server_value = e.control.value
         print(f"Selected server: {self.server_value}")
-        self.coutrntry_codes = await AllStations(self.server_value, self.tag_value).fetch_country_codes()
+
+
+        self.coutrntry_codes = await AllStations(self.server_value, self.tag_value, self.coutrntry_codes).fetch_country_codes()
         await self.set_countruy_codes(self.coutrntry_codes)
         
         
@@ -87,7 +90,7 @@ class DDComponents:
             try:
                 # Get stations for the selected server
                 
-                self.radios = await AllStations(self.server_value, self.tag_value).get_all_stations()
+                self.radios = await AllStations(self.server_value, self.tag_value, self.coutrntry_codes).get_all_stations()
                 
                 
                 
@@ -124,7 +127,7 @@ class DDComponents:
                  # Clear existing radio options
                 self.ddRadio.options.clear()
                 # Get stations for the selected server
-                self.radios = await AllStations(self.server_value, self.tag_value).get_all_stations()
+                self.radios = await AllStations(self.server_value, self.tag_value, self.coutrntry_codes).get_all_stations()
                 
                 # Add new radio options
                 for radio in self.radios:

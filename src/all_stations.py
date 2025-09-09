@@ -27,9 +27,10 @@ import ijson
 import time
 
 class AllStations:
-    def __init__(self, server_value, tag_value):
+    def __init__(self, server_value, tag_value, coutrntry_codes):
         self.server_value = server_value
         self.tag_value = tag_value
+        self.coutrntry_codes = coutrntry_codes
         print(f"Set tag value to: {tag_value}")
 
         
@@ -52,11 +53,24 @@ class AllStations:
                         except Exception as e:
                             print(f"Error parsing item: {e}")
                     print(f"Fetched {len(objects)} stations in {time.time() - start_time:.2f} seconds")
+                    # print(objects)
                     return objects
         except Exception as e:
             print(f"Error fetching stations: {e}")
             return []
-        
+
+
+
+
+
+
+
+
+
+
+
+
+
     async def fetch_country_codes(self):
         start_time = time.time()
         country_codes = []
@@ -73,6 +87,7 @@ class AllStations:
                         except Exception as e:
                             print(f"Error parsing item: {e}")
                     print(f"Fetched {len(country_codes)} country codes in {time.time() - start_time:.2f} seconds")
+                    print(country_codes)
                     return country_codes
         except Exception as e:
             print(f"Error fetching country codes: {e}")
