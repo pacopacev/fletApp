@@ -15,6 +15,7 @@ class AppBar(ft.AppBar):
     
             bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST,
             actions=[
+                ft.IconButton(tooltip="Try on depricated website", icon=ft.Icons.LINK, on_click=lambda _: self.page.launch_url("https://plambe.wuaze.com")),
                 ft.IconButton(ft.Icons.WB_SUNNY_OUTLINED, on_click=self._toggle_dark_mode),
              
         ],
