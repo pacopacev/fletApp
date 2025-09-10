@@ -1,4 +1,5 @@
 import flet as ft
+import flet.fastapi as flet_fastapi
 from appbar import AppBar
 from bottom_appbar import BottomAppBar
 from drop_downs import DDComponents
@@ -91,21 +92,13 @@ async def main(page: ft.Page):
                     height=50,
                 ),dd_instance.ddServer,dd_instance.ddGenre,dd_instance.ddCountry,dd_instance.ddRadio,
             ]
-          
-           
         ),
-
-        
         ft.Container(
             ft.Column([
                 ft.Row([
                     ft.Text("Audio Controls", size=16, weight=ft.FontWeight.BOLD),
                 ], alignment=ft.MainAxisAlignment.CENTER, spacing=5),
                 ft.Row([
-            
-                ]),
-                ft.Row([
-                    
                     ft.ElevatedButton("Play", on_click=play),
                     ft.ElevatedButton("Pause", on_click=pause),
                     ft.ElevatedButton("Resume", on_click=resume),
@@ -122,15 +115,16 @@ async def main(page: ft.Page):
                 ft.Row([
                     ft.ElevatedButton("Get Duration", on_click=get_duration),
                     ft.ElevatedButton("Get Position", on_click=get_position),
-        
                 ], alignment=ft.MainAxisAlignment.CENTER, spacing=5),
             ], alignment=ft.MainAxisAlignment.CENTER, spacing=10),
             padding=20,
             border_radius=ft.border_radius.all(10),
         )
     )
-    # bottom_appbar = BottomAppBar()
-    # page.add(bottom_appbar)
-#ft.app(main, view=ft.WEB_BROWSER ,route_url_strategy="hash")
 
+# Create FastAPI app
+app = flet_fastapi.app(main)
 
+# For local development
+if __name__ == "__main__":
+    ft.app(target=main, view=ft.WEB_BROWSER)
