@@ -131,6 +131,6 @@ async def main(page: ft.Page):
     )
     # bottom_appbar = BottomAppBar()
     # page.add(bottom_appbar)
-ft.app(main, view=ft.WEB_BROWSER ,route_url_strategy="hash")
+#ft.app(main, view=ft.WEB_BROWSER ,route_url_strategy="hash")
 
 
