@@ -1,12 +1,20 @@
 import os
 import sys
 
-# Add the current directory to Python path (so we can import src)
+# Add both current directory and src/ to Python path
 current_dir = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, current_dir)
+src_dir = os.path.join(current_dir, 'src')
 
-# Import from src package using absolute imports
-from src.main import main
+sys.path.insert(0, current_dir)  # For wsgi.py itself
+sys.path.insert(0, src_dir)      # For direct imports like "from appbar import AppBar"
+
+# Debug info
+print("=== DEBUG INFO ===")
+print(f"Current directory: {os.getcwd()}")
+print(f"Python path: {sys.path}")
+
+# Now you can import directly (no src. prefix needed)
+from main import main
 
 # Create Flet app
 import flet as ft
