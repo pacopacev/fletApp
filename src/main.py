@@ -1,7 +1,7 @@
 import flet as ft
-from src.appbar import AppBar
-from src.bottom_appbar import BottomAppBar
-from src.drop_downs import DDComponents
+from appbar import AppBar
+from bottom_appbar import BottomAppBar
+from drop_downs import DDComponents
 
 import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning, module="uvicorn")
