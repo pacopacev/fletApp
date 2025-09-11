@@ -1,38 +1,51 @@
 import os
 import sys
 
-# Add the current directory to Python path (so we can import src)
+# Add the current directory to Python path
 current_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, current_dir)
 
-# Print debug information
+# Debug information
+print("=== DEBUG INFO ===")
 print(f"Current directory: {os.getcwd()}")
 print(f"Python path: {sys.path}")
 
-# List files for debugging
-print("Files in current directory:")
+print("\nFiles in current directory:")
 for file in os.listdir('.'):
     print(f"  {file}")
 
-if os.path.exists('src'):
-    print("Files in src directory:")
-    for file in os.listdir('src'):
-        print(f"  {file}")
+print("\nFiles in src directory:")
+for file in os.listdir('src'):
+    print(f"  {file}")
 
-# Import from src package
+# Import main
 try:
     from src.main import main
     print("✓ Successfully imported from src.main")
 except ImportError as e:
     print(f"✗ Import failed: {e}")
-    # Try alternative import approach
+    
+    # Try to debug by importing each module
+    print("\nTrying to import individual modules:")
     try:
-        import src.main as main_module
-        main = main_module.main
-        print("✓ Successfully imported using alternative approach")
-    except ImportError as e2:
-        print(f"✗ All import attempts failed: {e2}")
-        raise
+        import src.appbar
+        print("✓ src.appbar imported successfully")
+    except ImportError as e:
+        print(f"✗ src.appbar import failed: {e}")
+    
+    try:
+        import src.drop_downs
+        print("✓ src.drop_downs imported successfully")
+    except ImportError as e:
+        print(f"✗ src.drop_downs import failed: {e}")
+    
+    try:
+        import src.all_stations
+        print("✓ src.all_stations imported successfully")
+    except ImportError as e:
+        print(f"✗ src.all_stations import failed: {e}")
+    
+    raise
 
 # Create Flet app
 import flet as ft
