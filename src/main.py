@@ -1,5 +1,4 @@
 import flet as ft
-import flet_fastapi
 from appbar import AppBar
 from bottom_appbar import BottomAppBar
 from drop_downs import DDComponents
@@ -123,8 +122,7 @@ async def main(page: ft.Page):
     )
 
 # Create FastAPI app
-app = flet_fastapi.app(main)
+
 
 # For local development
-if __name__ == "__main__":
-    ft.app(target=main, view=ft.WEB_BROWSER)
+ft.app(target=main, view=ft.WEB_BROWSER)

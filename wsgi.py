@@ -4,12 +4,12 @@ import sys
 # Add the src directory to the Python path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 
-# Now import flet_fastapi and your main function
-import flet_fastapi
+# Import the main function from your app
 from main import main
 
-# Create the FastAPI app with Flet
-app = flet_fastapi.app(main)
+# Create the Flet FastAPI app
+import flet as ft
+app = ft.fastapi.app(main)
 
 # Add a health check endpoint
 @app.get("/health")
