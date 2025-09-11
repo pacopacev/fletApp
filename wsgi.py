@@ -1,9 +1,14 @@
 import os
 import sys
 
-# Add current directory to path
+# Add current directory to Python path
 current_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, current_dir)
+
+# Debug info
+print("=== DEBUG INFO ===")
+print(f"Current directory: {os.getcwd()}")
+print(f"Python path: {sys.path}")
 
 # Import from src package
 from src.main import main
