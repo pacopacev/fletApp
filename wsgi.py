@@ -1,5 +1,5 @@
 import os
-from main import main
+from src.main import main
 import flet as ft
 
 # Create app using Flet's built-in FastAPI integration
