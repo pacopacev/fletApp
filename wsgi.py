@@ -1,21 +1,12 @@
 import os
 import sys
 
-# Add the src directory directly to Python path
-src_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'src')
-sys.path.insert(0, src_path)
+# Add the current directory to Python path (so we can import src)
+current_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, current_dir)
 
-# Debug info
-print("=== DEBUG INFO ===")
-print(f"Current directory: {os.getcwd()}")
-print(f"Python path: {sys.path}")
-
-print("Files in src directory:")
-for file in os.listdir(src_path):
-    print(f"  {file}")
-
-# Now you can import directly (no src. prefix needed)
-from main import main
+# Import from src package using absolute imports
+from src.main import main
 
 # Create Flet app
 import flet as ft
