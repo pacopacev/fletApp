@@ -1,6 +1,4 @@
-flet
 flet-fastapi
+flet
 fastapi
 uvicorn
-gunicorn
-aiohttp
