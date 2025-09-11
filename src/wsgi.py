@@ -1,12 +1,11 @@
 import os
 import sys
 
-# Add the src directory within the project to Python path
-project_root = os.path.dirname(os.path.abspath(__file__))
-src_dir = os.path.join(project_root, 'src')
-sys.path.insert(0, src_dir)
+# Get the current directory (where wsgi.py is located)
+current_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, current_dir)
 
-# Now import your app
+# Now import your app - no need for src. prefix since we're already in src/
 from main import main
 
 # Create the Flet FastAPI app
