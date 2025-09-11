@@ -1,5 +1,5 @@
 
-from drop_downs import Components
+from .drop_downs import Components
 
 
 

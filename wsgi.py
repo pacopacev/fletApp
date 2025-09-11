@@ -14,7 +14,7 @@ print(f"Current directory: {os.getcwd()}")
 print(f"Python path: {sys.path}")
 
 # Now you can import directly (no src. prefix needed)
-from main import main
+from src.main import main
 
 # Create Flet app
 import flet as ft
