@@ -3,3 +3,4 @@ flet-fastapi
 fastapi
 uvicorn
 gunicorn
+aiohttp

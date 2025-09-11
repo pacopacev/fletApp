@@ -1,5 +1,5 @@
 import flet as ft
-import flet.fastapi as flet_fastapi
+import flet_fastapi
 from appbar import AppBar
 from bottom_appbar import BottomAppBar
 from drop_downs import DDComponents
