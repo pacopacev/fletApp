@@ -5,8 +5,8 @@ import sys
 current_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, current_dir)
 
-# Now you can import directly
-from main import main
+# Import from src package
+from src.main import main
 
 # Create Flet app
 import flet as ft
