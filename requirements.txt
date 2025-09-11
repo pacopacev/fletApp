@@ -1,4 +1,4 @@
-flet-fastapi
 flet
+flet-fastapi
 fastapi
 uvicorn
