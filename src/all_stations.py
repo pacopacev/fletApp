@@ -15,13 +15,6 @@
 #             data = urllib.request.urlopen(url).read()
 #             parsed_data = json.loads(data)
 #             return parsed_data
-
-    
-import flet as ft
-import json
-import urllib
-
-import asyncio
 import aiohttp
 import ijson
 import time
