@@ -1,7 +1,7 @@
 import flet as ft
-from .severs import Servers
-from .all_stations import AllStations
-from .snackbar import Snackbar
+from src.severs import Servers
+from src.all_stations import AllStations
+from src.snackbar import Snackbar
 
 class DDComponents:
     def __init__(self, page, on_radio_change=None):
