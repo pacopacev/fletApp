@@ -1,17 +1,20 @@
 import os
 import sys
 
-# Add the src directory to the Python path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
+# Add the current directory and src to Python path
+current_dir = os.path.dirname(os.path.abspath(__file__))
+src_dir = os.path.join(current_dir, 'src')
+sys.path.insert(0, current_dir)
+sys.path.insert(0, src_dir)
 
-# Import the main function from your app
+# Now import your app
 from main import main
 
 # Create the Flet FastAPI app
 import flet as ft
 app = ft.fastapi.app(main)
 
-# Add a health check endpoint
+# Health check endpoint
 @app.get("/health")
 async def health_check():
     return {"status": "healthy", "message": "Flet app is running"}
