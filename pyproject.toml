@@ -4,9 +4,14 @@ version = "0.1.0"
 description = "DropDownRadio"
 authors = ["Plamen Dimitrov <pgdimitrov@yahoo.com>"]
 readme = "README.md"
-packages = [
-    { include = "src" },
-    { include = "assets", format = "sdist" }  # Include assets in source distribution
+packages = [{include = "src"}]
+
+# Include additional files when building packages
+include = [
+    "assets/**/*",
+    "src/assets/**/*",
+    "*.md",
+    "render.yaml"
 ]
 
 [tool.poetry.dependencies]
@@ -22,5 +27,3 @@ ijson = "3.2.3"
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.poetry.include]
-assets = "assets/**/*"
