@@ -8,13 +8,13 @@ warnings.filterwarnings("ignore", category=DeprecationWarning, module="uvicorn")
 warnings.filterwarnings("ignore", category=DeprecationWarning, module="websockets")
 
 async def main(page: ft.Page):
+    page.app = True
     page.title = "Radio Browser"
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     page.theme_mode = ft.ThemeMode.DARK
     page.auto_scroll = True
     page.scroll = ft.ScrollMode.AUTO
-    page.pwa = True
-    page.manifest = "/manifest.json"
+    
     # Define callback function for radio selection
     def on_radio_change(value):
         print(f"Radio changed to: {value}")
