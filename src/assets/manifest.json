@@ -1,6 +1,6 @@
 {
-    "name": "Radio App",
-    "short_name": "Radio",
+    "name": "DropDownRadio",
+    "short_name": "DDR",
     "description": "Listen to your favorite radio stations online",
     "start_url": "/",
     "display": "standalone",
@@ -10,36 +10,22 @@
     "categories": ["music", "entertainment"],
     "icons": [
         {
-            "src": "assets/images/Distressed Metal Chevron with Chains.png",
+            "src": "/favicon-192x192.png",
             "sizes": "192x192",
             "type": "image/png",
             "purpose": "any maskable"
         },
         {
-            "src": "assets/images/Distressed Metal Chevron with Chains.png",
+            "src": "/favicon-512x512.png",
             "sizes": "512x512",
             "type": "image/png",
             "purpose": "any maskable"
         },
         {
-            "src": "assets/images/Distressed Metal Chevron with Chains.png",
+            "src": "/Distressed Metal Chevron with Chains.png",
             "sizes": "1024x1024",
             "type": "image/png",
             "purpose": "any maskable"
-        }
-    ],
-    "screenshots": [
-        {
-            "src": "assets/images/Distressed Metal Chevron with Chains.png",
-            "sizes": "1280x720",
-            "type": "image/png",
-            "form_factor": "wide"
-        },
-        {
-            "src": "assets/images/Distressed Metal Chevron with Chains.png",
-            "sizes": "750x1334",
-            "type": "image/png",
-            "form_factor": "narrow"
         }
     ]
 }
