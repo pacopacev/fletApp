@@ -20,5 +20,5 @@ if __name__ == "__main__":
         target=main,
         port=port,
         view=ft.WEB_BROWSER,
-        assets_dir="assets"
+        assets_dir="src/assets"
     )
