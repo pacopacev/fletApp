@@ -9,16 +9,7 @@ print("=== DEBUG INFO ===")
 print(f"Current directory: {os.getcwd()}")
 print(f"Python path: {sys.path}")
 
-# List files for verification
-print("Files in current directory:")
-for file in os.listdir('.'):
-    print(f"  {file}")
-
-print("Files in src directory:")
-for file in os.listdir('src'):
-    print(f"  {file}")
-
-# Now import directly from src (no src. prefix needed)
+# Now import directly from src
 from main import main
 
 if __name__ == "__main__":

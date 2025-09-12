@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "fletapp"
+version = "0.1.0"
+description = "My Flet application"
+authors = ["Your Name <your@email.com>"]
+readme = "README.md"
+packages = [{include = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+flet = "0.28.3"
+uvicorn = {version = "0.24.0", extras = ["standard"]}
+aiohttp = "3.9.0"
+aiofiles = "23.2.0"
+requests = "2.31.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
