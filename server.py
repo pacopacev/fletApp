@@ -16,4 +16,9 @@ if __name__ == "__main__":
     import flet as ft
     port = int(os.environ.get("PORT", 8000))
     print(f"Starting Flet app on port {port}")
-    ft.app(target=main, port=port, view=ft.WEB_BROWSER)
+    ft.app(
+        target=main,
+        port=port,
+        view=ft.WEB_BROWSER,
+        assets_dir="assets"
+    )

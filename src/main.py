@@ -11,11 +11,13 @@ async def main(page: ft.Page):
     page.title = "Radio Browser"
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     page.theme_mode = ft.ThemeMode.DARK
-    page.html_head = """
-    <link rel="icon" href="assets/images/Distressed Metal Chevron with Chains.png" type="image/png">
-    <link rel="shortcut icon" href="assets/images/Distressed Metal Chevron with Chains.png" type="image/png">
-    """
-    page.manifest = "assets/manifest.json"
+    page.auto_scroll = True
+    page.scroll = ft.ScrollMode.AUTO
+    # page.html_head = """
+    # <link rel="icon" href="assets/images/Distressed Metal Chevron with Chains.png" type="image/png">
+    # <link rel="shortcut icon" href="assets/images/Distressed Metal Chevron with Chains.png" type="image/png">
+    # """
+    #page.manifest = "assets/manifest.json"
     # Define callback function for radio selection
     def on_radio_change(value):
         print(f"Radio changed to: {value}")

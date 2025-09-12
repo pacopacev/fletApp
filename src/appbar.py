@@ -4,7 +4,7 @@ class AppBar(ft.AppBar):
     def __init__(self):
         super().__init__(
 
-            leading=ft.Image(src="images/Weathered Chevron with Spikes and Chains.png"),
+            leading=ft.Image(src="Weathered Chevron with Spikes and Chains.png"),
             leading_width=40,
             title=ft.Text("Radio DropDown", size=20, weight="bold"),
             center_title=True,
