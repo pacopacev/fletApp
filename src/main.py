@@ -11,7 +11,11 @@ async def main(page: ft.Page):
     page.title = "Radio Browser"
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     page.theme_mode = ft.ThemeMode.DARK
-    
+    page.html_head = """
+    <link rel="icon" href="assets/images/Distressed Metal Chevron with Chains.png" type="image/png">
+    <link rel="shortcut icon" href="assets/images/Distressed Metal Chevron with Chains.png" type="image/png">
+    """
+    page.manifest = "assets/manifest.json"
     # Define callback function for radio selection
     def on_radio_change(value):
         print(f"Radio changed to: {value}")
@@ -20,7 +24,7 @@ async def main(page: ft.Page):
         audio1.update()
         page.update()
 
-    # Create dropdown components instance with callback
+
     dd_instance = DDComponents(page=page, on_radio_change=on_radio_change)
 
     # Audio control functions
@@ -120,9 +124,4 @@ async def main(page: ft.Page):
             border_radius=ft.border_radius.all(10),
         )
     )
-
-# Create FastAPI app
-
-
-# For local development
-ft.app(target=main, view=ft.WEB_BROWSER)
+ft.app(target=main, view=ft.WEB_BROWSER, assets_dir="assets")

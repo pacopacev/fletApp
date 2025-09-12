@@ -1,9 +1,5 @@
 import flet as ft
 
- 
-
-
-
 class AppBar(ft.AppBar):
     def __init__(self):
         super().__init__(
