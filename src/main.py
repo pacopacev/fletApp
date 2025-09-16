@@ -1,13 +1,35 @@
 import flet as ft
+import flet.fastapi as fastapi
+from fastapi import FastAPI
 from appbar import AppBar
 from bottom_appbar import BottomAppBar
 from drop_downs import DDComponents
-
 import warnings
+import asyncio
+
 warnings.filterwarnings("ignore", category=DeprecationWarning, module="uvicorn")
 warnings.filterwarnings("ignore", category=DeprecationWarning, module="websockets")
 
+# Create FastAPI app
+app = FastAPI()
+
 async def main(page: ft.Page):
+    page.foreground_decoration = ft.BoxDecoration(
+        gradient=ft.LinearGradient(
+            colors=[
+                ft.Colors.with_opacity(0.2, ft.Colors.RED),  # use lightly transparent colors instead of solid ones
+                ft.Colors.with_opacity(0.2, ft.Colors.BLUE),
+            ],
+            stops=[0.0, 1.0],
+            begin=ft.alignment.top_left,
+            end=ft.alignment.bottom_right,
+        ),
+        image=ft.DecorationImage(
+            src="Weathered Chevron with Spikes and Chains.png",
+            fit=ft.ImageFit.COVER,
+            opacity=0.2,
+        ),
+    )
     page.app = True
     page.title = "Radio Browser"
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
@@ -22,7 +44,6 @@ async def main(page: ft.Page):
         audio1.autoplay = True
         audio1.update()
         page.update()
-
 
     dd_instance = DDComponents(page=page, on_radio_change=on_radio_change)
 
@@ -123,4 +144,7 @@ async def main(page: ft.Page):
             border_radius=ft.border_radius.all(10),
         )
     )
+
+
+
 ft.app(target=main, view=ft.WEB_BROWSER, assets_dir="assets")

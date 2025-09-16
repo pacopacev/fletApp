@@ -5,8 +5,15 @@ class AppBar(ft.AppBar):
         super().__init__(
 
             leading=ft.Image(src="Weathered Chevron with Spikes and Chains.png"),
-            leading_width=40,
-            title=ft.Text("Radio DropDown", size=20, weight="bold"),
+            leading_width=50,
+            title=ft.Row(
+                controls=[
+                    ft.Image(src="Weathered Chevron with Spikes and Chains.png", width=40, height=40), 
+                    ft.Text("Radio DropDown", size=20, weight="bold"), 
+                    ft.Image(src="Weathered Chevron with Spikes and Chains.png", width=40, height=40)
+                    ],
+                alignment="center"),
+                
             center_title=True,
     
             bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST,

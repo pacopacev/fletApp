@@ -12,6 +12,7 @@ class DDComponents:
         self.on_radio_change = on_radio_change
         self.page = page
         self.coutrntry_codes = None
+        self.coutrntry_code = None
 
         self.ddServer = ft.DropdownM2(
             on_change=self.server_change,
@@ -40,6 +41,7 @@ class DDComponents:
         )
         
         self.ddCountry = ft.DropdownM2(
+            on_change=self.get_country_code,
             width=300,
             hint_text="Select Country",
             border_color=ft.Colors.RED,
@@ -60,16 +62,21 @@ class DDComponents:
         )
 
         # Initialize server options
+
+
         hosts = Servers().get_radiobrowser_base_urls()
+        server_name = ""
         for host in hosts:
-            self.ddServer.options.append(ft.dropdown.Option(host))
+            # print(host)
+            # print (host[:3].upper())
+            self.ddServer.options.append(ft.dropdown.Option(key=host, text=host[:3].upper()))
 
     async def server_change(self, e):
         self.server_value = e.control.value
         print(f"Selected server: {self.server_value}")
 
 
-        self.coutrntry_codes = await AllStations(self.server_value, self.tag_value, self.coutrntry_codes).fetch_country_codes()
+        self.coutrntry_codes = await AllStations(self.server_value, self.tag_value, self.coutrntry_code).fetch_country_codes()
         await self.set_countruy_codes(self.coutrntry_codes)
         
         
@@ -90,7 +97,7 @@ class DDComponents:
             try:
                 # Get stations for the selected server
                 
-                self.radios = await AllStations(self.server_value, self.tag_value, self.coutrntry_codes).get_all_stations()
+                self.radios = await AllStations(self.server_value, self.tag_value, self.coutrntry_code).get_all_stations()
                 
                 
                 
@@ -127,7 +134,7 @@ class DDComponents:
                  # Clear existing radio options
                 self.ddRadio.options.clear()
                 # Get stations for the selected server
-                self.radios = await AllStations(self.server_value, self.tag_value, self.coutrntry_codes).get_all_stations()
+                self.radios = await AllStations(self.server_value, self.tag_value, self.coutrntry_code).get_all_stations()
                 
                 # Add new radio options
                 for radio in self.radios:
@@ -168,6 +175,45 @@ class DDComponents:
         for code in country_codes:
             self.ddCountry.options.append(ft.dropdown.Option(code))
         self.ddCountry.update()
+
+    async def get_country_code(self, e):
+        # print(e.control.value)
+        self.coutrntry_code = e.control.value
+        if self.coutrntry_code == None:
+            print("No country selected")
+            snackbar_instance = Snackbar("No country selected", bgcolor="red", length = None)
+            snackbar_instance.open = True
+            self.page.controls.append(snackbar_instance)
+            self.page.update()
+            return
+        try:
+                 # Clear existing radio options
+                self.ddRadio.options.clear()
+                # Get stations for the selected server
+                self.radios = await AllStations(self.server_value, self.tag_value, self.coutrntry_code).get_all_stations()
+                
+                # Add new radio options
+                for radio in self.radios:
+                    radio_name = f"{radio['name']} - {radio.get('bitrate', 'N/A')} Kbps"
+                    self.ddRadio.options.append(
+                        ft.dropdown.Option(
+                            key=radio["url"], 
+                            text=radio_name
+                        )
+                    )
+                
+                # Update the dropdown
+                self.ddRadio.update()
+                print(f"Loaded {len(self.radios)} radio stations")
+                length = len(self.radios)
+                snackbar_instance = Snackbar("Loaded radio stations", bgcolor="green", length = length)
+                snackbar_instance.open = True  
+                self.page.controls.append(snackbar_instance)
+                self.page.update()
+                
+        except Exception as ex:
+            print(f"Error loading stations: {ex}")
+      
 
 
 

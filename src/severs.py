@@ -23,7 +23,9 @@ class Servers:
         # get all hosts from DNS
         ips = socket.getaddrinfo('all.api.radio-browser.info',
                                 80, 0, 0, socket.IPPROTO_TCP)
+        # print(ips)
         for ip_tupple in ips:
+
             ip = ip_tupple[4][0]
             # do a reverse lookup on every one of the ips to have a nice name for it
             host_addr = socket.gethostbyaddr(ip)
@@ -36,7 +38,7 @@ class Servers:
         # add "https://" in front to make it an url
         return hosts
         # return list(map(lambda x: "https://" + x, hosts))
-
+    
     def downloadUri(self, uri, param):
         """
         Download file with the correct headers set
