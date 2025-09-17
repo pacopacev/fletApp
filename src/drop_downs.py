@@ -20,7 +20,14 @@ class DDComponents:
             hint_text="Select Server",
             border_color=ft.Colors.RED,
             options=[],
+            # helper_text="Select a server from the list",
+            # helper_style=ft.TextStyle(color=ft.Colors.RED),         
+            #value=None,
+            
         )
+        
+        
+        # self.ddServer.options.append(ft.dropdown.Option(key = "None", text="Select Server"))
 
         self.ddGenre = ft.DropdownM2(
             on_change=self.tag_change,
@@ -46,9 +53,7 @@ class DDComponents:
             hint_text="Select Country",
             border_color=ft.Colors.RED,
             options=[
-                # ft.dropdown.Option("BG"),
-                # ft.dropdown.Option("US"),
-                # ft.dropdown.Option("AK"),
+
             ],
         )
         
@@ -74,6 +79,7 @@ class DDComponents:
     async def server_change(self, e):
         self.server_value = e.control.value
         print(f"Selected server: {self.server_value}")
+        
 
 
         self.coutrntry_codes = await AllStations(self.server_value, self.tag_value, self.coutrntry_code).fetch_country_codes()

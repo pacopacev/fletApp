@@ -5,6 +5,7 @@ from appbar import AppBar
 from bottom_appbar import BottomAppBar
 from drop_downs import DDComponents
 import warnings
+from global_model import GlobalModel
 import asyncio
 
 warnings.filterwarnings("ignore", category=DeprecationWarning, module="uvicorn")
@@ -144,6 +145,53 @@ async def main(page: ft.Page):
             border_radius=ft.border_radius.all(10),
         )
     )
+    
+    
+    last_visited_radios = [
+    {"name": "Metal FM", "url": "http://..."},
+    {"name": "Rock Radio", "url": "http://..."},
+]
+    
+    last_visited_list = ft.ListView(
+    controls=[
+        ft.ListTile(
+            title=ft.Text(radio["name"]),
+            subtitle=ft.Text(radio["url"]),
+            leading=ft.Icon("radio"),
+            trailing=ft.Icon("play_arrow"),
+            # on_click=lambda e, url=radio["url"]: print(f"Clicked {url}"),
+        )
+        for radio in last_visited_radios
+    ],
+    height=200,  # adjust as needed
+)
+    last_visited_list_container = ft.Container(
+            content=last_visited_list,
+            alignment=ft.alignment.center,
+            border_radius=ft.border_radius.all(10),
+            width=400,
+            height=220,
+            bgcolor="#B00020",
+        )
+    
+    page.add(ft.Text("Last Visited Radios", size=16, weight=ft.FontWeight.BOLD))
+    page.add(last_visited_list_container)
+    
+    
+    # Database test
+    global_model = GlobalModel()
+    test = []
+    try:
+        test = await global_model.execute_query_all("SELECT * FROM users LIMIT 10;")
+        # print("Database query result:", test)
+    except Exception as e:
+        print("Database query failed:", e)
+
+
+
+    
+    
+    
 
 
 
