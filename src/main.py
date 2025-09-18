@@ -146,11 +146,18 @@ async def main(page: ft.Page):
         )
     )
     
-    
-    last_visited_radios = [
-    {"name": "Metal FM", "url": "http://..."},
-    {"name": "Rock Radio", "url": "http://..."},
-]
+    global_model = GlobalModel()
+    last_visited_radios = []    
+    try:
+        last_visited_radios = await global_model.execute_query_all("SELECT * FROM flet_radios ORDER BY id DESC LIMIT 10;")
+        print("Database query result:", last_visited_radios)
+    except Exception as e:
+        print("Database query failed:", e)
+        
+#     last_visited_radios = [
+#     {"name": "Metal FM", "url": "http://..."},
+#     {"name": "Rock Radio", "url": "http://..."},
+# ]
     
     last_visited_list = ft.ListView(
     controls=[
@@ -178,14 +185,8 @@ async def main(page: ft.Page):
     page.add(last_visited_list_container)
     
     
-    # Database test
-    global_model = GlobalModel()
-    test = []
-    try:
-        test = await global_model.execute_query_all("SELECT * FROM users LIMIT 10;")
-        # print("Database query result:", test)
-    except Exception as e:
-        print("Database query failed:", e)
+  
+    
 
 
 

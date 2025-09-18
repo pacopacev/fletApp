@@ -1,7 +1,9 @@
 import flet as ft
+from datetime import datetime
 from severs import Servers
 from all_stations import AllStations
 from snackbar import Snackbar
+from global_model import GlobalModel
 
 class DDComponents:
     def __init__(self, page, on_radio_change=None):
@@ -14,7 +16,7 @@ class DDComponents:
         self.coutrntry_codes = None
         self.coutrntry_code = None
 
-        self.ddServer = ft.DropdownM2(
+        self.ddServer = ft.Dropdown(
             on_change=self.server_change,
             width=300,
             hint_text="Select Server",
@@ -29,7 +31,7 @@ class DDComponents:
         
         # self.ddServer.options.append(ft.dropdown.Option(key = "None", text="Select Server"))
 
-        self.ddGenre = ft.DropdownM2(
+        self.ddGenre = ft.Dropdown(
             on_change=self.tag_change,
             width=300,
             hint_text="Select Genre",
@@ -47,7 +49,7 @@ class DDComponents:
             value=None,
         )
         
-        self.ddCountry = ft.DropdownM2(
+        self.ddCountry = ft.Dropdown(
             on_change=self.get_country_code,
             width=300,
             hint_text="Select Country",
@@ -57,8 +59,8 @@ class DDComponents:
             ],
         )
         
-        self.ddRadio = ft.DropdownM2(
-            on_click=self.on_radio_click,
+        self.ddRadio = ft.Dropdown(
+            # on_click=self.on_radio_click,
             on_change=self.radio_change,
             width=300,
             border_color=ft.Colors.RED,
@@ -100,13 +102,9 @@ class DDComponents:
               
         else:
             print("Loading radio stations...")
-            try:
-                # Get stations for the selected server
-                
+            try:  
                 self.radios = await AllStations(self.server_value, self.tag_value, self.coutrntry_code).get_all_stations()
-                
-                
-                
+
                 # Add new radio options
                 for radio in self.radios:
                     radio_name = f"{radio['name']} - {radio.get('bitrate', 'N/A')} Kbps"
@@ -167,9 +165,12 @@ class DDComponents:
 
     async def radio_change(self, e):
         self.radio_value = e.control.value
-        print(f"Selected radio: {self.radio_value}")
         if self.on_radio_change:
             self.on_radio_change(self.radio_value)
+            radio_details = next((opt for opt in self.ddRadio.options if opt.key == self.ddRadio.value), None)
+            if radio_details:
+                # print(f"Radio selected: {radio_details.text} - {radio_details.key}")
+                await self.insert_radio_to_db(radio_details.text, radio_details.key)
 
     async def on_radio_click(self, e):
         print("Radio dropdown focused")
@@ -219,6 +220,19 @@ class DDComponents:
                 
         except Exception as ex:
             print(f"Error loading stations: {ex}")
+            
+    
+    async def insert_radio_to_db(self, name, url):
+        print("Inserting radio to database")
+        try:
+            global_model = GlobalModel()
+            await global_model.execute_query_all(
+                "INSERT INTO flet_radios (name, url, created_at) VALUES (%s, %s, %s);",
+                (name, url, datetime.now())
+            )
+            print("Radio inserted into database")           
+        except Exception as ex:
+            print(f"Error inserting radio into database: {ex}")
       
 
 

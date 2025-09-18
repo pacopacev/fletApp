@@ -1,5 +1,6 @@
 import psycopg2
 from psycopg2 import sql
+from psycopg2.extras import RealDictCursor
 import os
 from dotenv import load_dotenv
 
@@ -45,7 +46,8 @@ class GlobalModel:
                 user=self.user,
                 password=self.password,
                 host=self.host,
-                port=port
+                port=port,
+                cursor_factory=RealDictCursor
             )
             self.cursor = self.connection.cursor()
             # print("Database connection established successfully!")
@@ -61,9 +63,7 @@ class GlobalModel:
             self.connection.close()
         print("Database connection closed.")
 
-    async def execute_query_all(self, query, params=None):
-        print(123)
-     
+    async def execute_query_all(self, query, params=None):   
         if self.connection is None or self.cursor is None:
             await self.connect()  # Try to connect
 

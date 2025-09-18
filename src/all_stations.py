@@ -37,7 +37,7 @@ class AllStations:
                         filtered_objects = [obj for obj in objects if obj.get("country") == self.coutrntry_codes]
                         print(f"Filtered stations to {len(filtered_objects)} for country: {self.coutrntry_codes}")
                         return filtered_objects
-                    print(objects)
+                    # print(objects)
                     return objects
         except Exception as e:
             print(f"Error fetching stations: {e}")
