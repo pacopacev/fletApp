@@ -136,10 +136,10 @@ async def main(page: ft.Page):
                     ft.ElevatedButton("Balance ←", on_click=balance_left),
                     ft.ElevatedButton("Balance →", on_click=balance_right),
                 ], alignment=ft.MainAxisAlignment.CENTER, spacing=5),
-                ft.Row([
-                    ft.ElevatedButton("Get Duration", on_click=get_duration),
-                    ft.ElevatedButton("Get Position", on_click=get_position),
-                ], alignment=ft.MainAxisAlignment.CENTER, spacing=5),
+                # ft.Row([
+                #     ft.ElevatedButton("Get Duration", on_click=get_duration),
+                #     ft.ElevatedButton("Get Position", on_click=get_position),
+                # ], alignment=ft.MainAxisAlignment.CENTER, spacing=5),
             ], alignment=ft.MainAxisAlignment.CENTER, spacing=10),
             padding=20,
             border_radius=ft.border_radius.all(10),

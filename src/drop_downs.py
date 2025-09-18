@@ -68,9 +68,6 @@ class DDComponents:
             options=[],
         )
 
-        # Initialize server options
-
-
         hosts = Servers().get_radiobrowser_base_urls()
         server_name = ""
         for host in hosts:
@@ -88,7 +85,6 @@ class DDComponents:
         await self.set_countruy_codes(self.coutrntry_codes)
         
         
-        # Clear existing radio optionss
         self.ddRadio.options.clear()
 
         if self.tag_value == None:
