@@ -37,6 +37,7 @@ async def main(page: ft.Page):
     page.theme_mode = ft.ThemeMode.DARK
     page.auto_scroll = True
     page.scroll = ft.ScrollMode.AUTO
+    dd_instance = DDComponents(page=page)
     
     # Define callback function for radio selection
     def on_radio_change(value):
@@ -45,6 +46,16 @@ async def main(page: ft.Page):
         audio1.autoplay = True
         audio1.update()
         page.update()
+        
+    def set_state_to_now_playing(e):
+        radio_url = e.control.data["url"]
+        print(radio_url)
+
+        if radio_url:
+            audio1.src = radio_url
+            audio1.autoplay = True
+            audio1.update()
+            page.update()
 
     dd_instance = DDComponents(page=page, on_radio_change=on_radio_change)
 
@@ -104,6 +115,7 @@ async def main(page: ft.Page):
     # UI Layout
     appbar = AppBar()
     page.add(appbar)
+
     page.add(
         ft.Column(
             controls=[
@@ -114,9 +126,15 @@ async def main(page: ft.Page):
                     alignment=ft.alignment.center,
                     width=300,
                     height=50,
-                ),dd_instance.ddServer,dd_instance.ddGenre,dd_instance.ddCountry,dd_instance.ddRadio,
+                ),dd_instance.ddServer,
+                dd_instance.ddGenre,
+                dd_instance.ddCountry,
+                dd_instance.ddRadio, 
+             
+                
             ]
-        ),
+        ),dd_instance.now_playing_container,
+        
         ft.Container(
             ft.Column([
                 ft.Row([
@@ -149,7 +167,7 @@ async def main(page: ft.Page):
     global_model = GlobalModel()
     last_visited_radios = []    
     try:
-        last_visited_radios = await global_model.execute_query_all("SELECT * FROM flet_radios ORDER BY id DESC LIMIT 10;")
+        last_visited_radios = await global_model.execute_query_all("SELECT DISTINCT * FROM flet_radios ORDER BY id DESC LIMIT 10;")
         print("Database query result:", last_visited_radios)
     except Exception as e:
         print("Database query failed:", e)
@@ -166,7 +184,8 @@ async def main(page: ft.Page):
             subtitle=ft.Text(radio["url"]),
             leading=ft.Icon("radio"),
             trailing=ft.Icon("play_arrow"),
-            # on_click=lambda e, url=radio["url"]: print(f"Clicked {url}"),
+            data=radio,
+            on_click=set_state_to_now_playing,
         )
         for radio in last_visited_radios
     ],
@@ -184,16 +203,4 @@ async def main(page: ft.Page):
     page.add(ft.Text("Last Visited Radios", size=16, weight=ft.FontWeight.BOLD))
     page.add(last_visited_list_container)
     
-    
-  
-    
-
-
-
-    
-    
-    
-
-
-
 ft.app(target=main, view=ft.WEB_BROWSER, assets_dir="assets")

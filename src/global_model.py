@@ -50,7 +50,6 @@ class GlobalModel:
                 cursor_factory=RealDictCursor
             )
             self.cursor = self.connection.cursor()
-            # print("Database connection established successfully!")
             return True
         except Exception as e:
             print(f"Error connecting to the database: {e}")

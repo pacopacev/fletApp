@@ -15,6 +15,12 @@ class DDComponents:
         self.page = page
         self.coutrntry_codes = None
         self.coutrntry_code = None
+        self.now_playing_text = None
+        self.now_playing = None
+        self.now_playing_container = ft.Container()
+        # self.now_playing = ft.ListView(controls=[], height=200,)  #
+        
+        # self.now_playing_text_container = ft.Container(ft.Text("Now Playing: None", size=16, weight=ft.FontWeight.BOLD),)
 
         self.ddServer = ft.Dropdown(
             on_change=self.server_change,
@@ -22,14 +28,9 @@ class DDComponents:
             hint_text="Select Server",
             border_color=ft.Colors.RED,
             options=[],
-            # helper_text="Select a server from the list",
-            # helper_style=ft.TextStyle(color=ft.Colors.RED),         
-            #value=None,
             
         )
         
-        
-        # self.ddServer.options.append(ft.dropdown.Option(key = "None", text="Select Server"))
 
         self.ddGenre = ft.Dropdown(
             on_change=self.tag_change,
@@ -67,9 +68,10 @@ class DDComponents:
             hint_text="Select Radio",
             options=[],
         )
+        
+        self.now_playing_text_container = None
 
         hosts = Servers().get_radiobrowser_base_urls()
-        server_name = ""
         for host in hosts:
             # print(host)
             # print (host[:3].upper())
@@ -165,6 +167,8 @@ class DDComponents:
             self.on_radio_change(self.radio_value)
             radio_details = next((opt for opt in self.ddRadio.options if opt.key == self.ddRadio.value), None)
             if radio_details:
+                await self.set_now_playing(radio_details.text)
+                
                 # print(f"Radio selected: {radio_details.text} - {radio_details.key}")
                 await self.insert_radio_to_db(radio_details.text, radio_details.key)
 
@@ -229,6 +233,23 @@ class DDComponents:
             print("Radio inserted into database")           
         except Exception as ex:
             print(f"Error inserting radio into database: {ex}")
+            
+    async def set_now_playing(self, text):
+
+        self.now_playing_container.content = ft.Column(
+            controls=[
+                ft.Text(f"Now Playing: {text}", size=16, weight=ft.FontWeight.BOLD)
+            ],  
+            alignment=ft.MainAxisAlignment.CENTER,
+        )
+        self.now_playing_container.bgcolor = "#B00020"
+        self.now_playing_container.padding = 20
+        self.now_playing_container.border_radius = ft.border_radius.all(10)
+        self.now_playing_container.width = 400
+        self.now_playing_container.update()
+         
+            
+        
       
 
 
