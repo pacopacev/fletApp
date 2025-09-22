@@ -6,6 +6,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 import warnings
 from pathlib import Path
+from global_model import GlobalModel
 from app import main
 
 # Suppress noisy deprecation warnings
@@ -57,7 +58,16 @@ async def debug_assets():
         "files": files,
         "current_working_directory": str(Path.cwd())
     }
-
+@app.get("/test-db")
+async def db_health_check():
+    try:
+        global_model = GlobalModel()
+        # Test a simple query
+        result = await global_model.execute_query_all("SELECT * FROM flet_radios LIMIT 100;")
+        r_result = await global_model.execute_query_all("SELECT version() as db_version")
+        return {"status": "healthy", "database": "connected", "db_version": r_result[0].get('db_version', 'unknown'),"radios_count_in_last_view": len(result)}
+    except Exception as e:
+        return {"status": "unhealthy", "database": "disconnected", "error": str(e)}
 # --- Root landing page ---
 @app.get("/", response_class=HTMLResponse)
 async def read_root():
@@ -94,6 +104,7 @@ async def read_root():
                 <a href="/debug-assets">Debug Assets</a>
                 <a href="/assets/{icon_file}">Test Image Access</a>
                 <a href="/test-api">Test API</a>
+                <a href="/test-db">Test DB</a>
             </div>
         </div>
     </body>
@@ -110,7 +121,9 @@ app.mount(
     ),
 )
 
-# --- Entrypoint ---
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8553, log_level="info")
+    import os
+    
+    port = int(os.getenv("PORT", 8553))
+    uvicorn.run(app, host="0.0.0.0", port=port, log_level="info")
