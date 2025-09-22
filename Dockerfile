@@ -6,7 +6,7 @@ WORKDIR /app
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 ENV FLET_SERVER_IP="0.0.0.0"
-ENV PORT=8553
+ENV FLET_SERVER_PORT=8553
 
 # Install system dependencies including libmpv for audio
 RUN apt-get update && apt-get install -y \
@@ -25,7 +25,7 @@ COPY src/ ./src/
 
 WORKDIR /app/src
 
-EXPOSE $PORT
+EXPOSE 8553
 
 # For FastAPI, use uvicorn directly
-CMD uvicorn main:app --host 0.0.0.0 --port $PORT
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8553"]
