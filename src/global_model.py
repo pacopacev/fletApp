@@ -2,6 +2,7 @@ import psycopg2
 from psycopg2 import sql
 from psycopg2.extras import RealDictCursor
 import os
+import ssl
 from dotenv import load_dotenv
 
 
@@ -15,18 +16,22 @@ class GlobalModel:
         return cls._instance
 
     def __init__(self):
+        load_dotenv()  # Load from .env file
         
-        load_dotenv()  # Loads from .env automatically
-
-        self.dbname = os.getenv("DB_NAME")
-        self.user = os.getenv("DB_USER")
-        self.password = os.getenv("DB_PASSWORD")
-        self.host = os.getenv("DB_HOST")
-        self.port = os.getenv("DB_PORT")
+        # Get environment variables with defaults
+        self.db_config = {
+            'dbname': os.getenv("DB_NAME", "defaultdb"),
+            'user': os.getenv("DB_USER", "avnadmin"),
+            'password': os.getenv("DB_PASSWORD"),
+            'host': os.getenv("DB_HOST", "pa-pgdimitrov-bfdb.j.aivencloud.com"),
+            'port': os.getenv("DB_PORT", "25464")
+        }
+        
         self.connection = None
         self.cursor = None
         
-        print(f"DB Config - Name: {self.dbname}, User: {self.user}, Host: {self.host}, Port: {self.port}")
+        # Safe logging (don't log passwords)
+        print(f"DB Config - Host: {self.db_config['host']}, Port: {self.db_config['port']}")
 
     def set_data(self, key, value):
         """Set data globally."""
@@ -37,22 +42,33 @@ class GlobalModel:
         return self.data.get(key, None)
 
     async def connect(self):
-        """Establish the database connection and create a cursor."""
+        """Establish the database connection with SSL for Aiven."""
         try:
-            # Ensure port is an integer if not None
-            port = int(self.port) if self.port is not None else None
+            # Convert port to integer
+            port = int(self.db_config['port']) if self.db_config['port'] else 5432
+            
+            # Connection string for Aiven PostgreSQL (requires SSL)
+            conn_string = f"""
+                dbname='{self.db_config['dbname']}' 
+                user='{self.db_config['user']}' 
+                password='{self.db_config['password']}' 
+                host='{self.db_config['host']}' 
+                port={port} 
+                sslmode=require
+            """
+            
             self.connection = psycopg2.connect(
-                dbname=self.dbname,
-                user=self.user,
-                password=self.password,
-                host=self.host,
-                port=port,
+                conn_string,
                 cursor_factory=RealDictCursor
             )
+            
             self.cursor = self.connection.cursor()
+            print("✅ Database connected successfully with SSL")
             return True
+            
         except Exception as e:
-            print(f"Error connecting to the database: {e}")
+            print(f"❌ Error connecting to the database: {e}")
+            return False
 
     async def close(self):
         """Close the cursor and connection."""

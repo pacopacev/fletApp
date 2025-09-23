@@ -20,6 +20,7 @@ class AppBar(ft.AppBar):
             actions=[
                 ft.IconButton(
                     tooltip="Try on deprecated website", 
+                    mouse_cursor=ft.MouseCursor.CLICK,
                     icon=ft.Icons.LINK, 
                     on_click=lambda _: self.page.launch_url("https://plambe.wuaze.com")
                 ),
