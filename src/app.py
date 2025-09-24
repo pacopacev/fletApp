@@ -4,6 +4,7 @@ from bottom_appbar import BottomAppBar
 from drop_downs import DDComponents
 from global_model import GlobalModel
 import asyncio
+from audio_p import AudioPlayer
 
 async def main(page: ft.Page):
 
@@ -154,9 +155,12 @@ async def main(page: ft.Page):
     )
     
     global_model = GlobalModel()
-    last_visited_radios = []    
+    last_visited_radios = [] 
+    query_radios =  """SELECT name,url, COUNT(*) as count FROM flet_radios
+                GROUP BY name, url 
+                ORDER BY count DESC"""
     try:
-        last_visited_radios = await global_model.execute_query_all("SELECT DISTINCT * FROM flet_radios ORDER BY id DESC LIMIT 25;")
+        last_visited_radios = await global_model.execute_query_all(query_radios)
         print("Database query result:", last_visited_radios)
     except Exception as e:
         print("Database query failed:", e)
@@ -184,7 +188,10 @@ async def main(page: ft.Page):
         height=220,
         bgcolor="#B00020",
     )
-    
+    page.add(ft.Divider())
+    ap = AudioPlayer(page=page)
+    page.add(ap.stack)
+    page.add(ft.Divider())
     page.add(ft.Text("Last Visited Radios", size=16, weight=ft.FontWeight.BOLD))
     page.add(last_visited_list_container)
 
