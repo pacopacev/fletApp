@@ -7,6 +7,8 @@ import asyncio
 from audio_p import AudioPlayer
 
 async def main(page: ft.Page):
+    
+    ap = AudioPlayer(page=page)
 
     
     page.foreground_decoration = ft.BoxDecoration(
@@ -30,13 +32,14 @@ async def main(page: ft.Page):
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     page.theme_mode = ft.ThemeMode.DARK
     page.auto_scroll = True
-    page.scroll = ft.ScrollMode.AUTO
-    
-    # Define callback function for radio selection
+    #page.scroll = ft.ScrollMode.AUTO
+
     def on_radio_change(value):
         print(f"Radio changed to: {value}")
         audio1.src = value
-        audio1.autoplay = True
+        ap.audio1.src = value
+        
+        audio1.autoplay = False
         audio1.update()
         page.update()
         
@@ -98,7 +101,7 @@ async def main(page: ft.Page):
     audio1 = ft.Audio(
         src="https://stream.radiobrowser.de/rock-128.mp3",
         autoplay=False,
-        volume=0.7,
+        volume=0.5,
         balance=0,
         on_loaded=lambda _: print("Loaded"),
         on_duration_changed=lambda e: print("Duration changed:", e.data),
@@ -184,12 +187,11 @@ async def main(page: ft.Page):
         content=last_visited_list,
         alignment=ft.alignment.center,
         border_radius=ft.border_radius.all(10),
-        width=400,
+        width=600,
         height=220,
         bgcolor="#B00020",
     )
     page.add(ft.Divider())
-    ap = AudioPlayer(page=page)
     page.add(ap.stack)
     page.add(ft.Divider())
     page.add(ft.Text("Last Visited Radios", size=16, weight=ft.FontWeight.BOLD))
