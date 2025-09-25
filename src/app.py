@@ -32,7 +32,7 @@ async def main(page: ft.Page):
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     page.theme_mode = ft.ThemeMode.DARK
     page.auto_scroll = True
-    #page.scroll = ft.ScrollMode.AUTO
+    page.scroll = ft.ScrollMode.AUTO
 
     def on_radio_change(value):
         print(f"Radio changed to: {value}")

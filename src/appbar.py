@@ -5,7 +5,10 @@ class AppBar(ft.AppBar):
 
         
         super().__init__(
-            leading=ft.Image(src=f"/images/Weathered Chevron with Spikes and Chains.png", width=40, height=40),
+            
+
+            # leading=ft.Image(src=f"/images/Weathered Chevron with Spikes and Chains.png", width=40, height=40),
+            leading=ft.Container(width=40, height=40),
             leading_width=50,
             title=ft.Row(
                 controls=[
