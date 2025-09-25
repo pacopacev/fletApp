@@ -80,7 +80,7 @@ async def read_root():
     <!DOCTYPE html>
     <html>
     <head>
-        <title>Radio Browser</title>
+        <title>DropDown Radio</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="icon" href="/assets/{icon_file}" type="image/png">
