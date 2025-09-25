@@ -13,11 +13,12 @@ class AudioPlayer:
         # self.progress_track = ft.ProgressBar(width=400, value="0", height=8)
         # self.track_name = ft.Text(value=self.audio_init.title)
         # self.track_artist = ft.Text(value=self.audio_init.artist)
+        self.track_title = ft.Text("No Track")
         
         self.audio1 = ft.Audio(
         src="https://stream.radiobrowser.de/rock-128.mp3",
         autoplay=False,
-        volume=0.5,
+        volume=0.3,
         balance=0,
         on_loaded=lambda _: print("Loaded"),
         on_duration_changed=lambda e: print("Duration changed:", e.data),
@@ -33,8 +34,8 @@ class AudioPlayer:
         
         self.disc_image = ft.Image(
             src="/audio_player/album.png",
-            width=100,
-            height=100,
+            width=90,
+            height=90,
             fit=ft.ImageFit.CONTAIN,
             # rotate=ft.Rotate(0, alignment=ft.alignment.center_left),
             # rotate=ft.transform.Rotate(0, alignment=ft.alignment.center),
@@ -48,6 +49,7 @@ class AudioPlayer:
         #     border_radius=ft.border_radius.all(100),
         #     animate=ft.Animation(100, ft.AnimationCurve.EASE_IN_CIRC),
         # )
+        self.audio_control_title = ft.Text("Audio Control", size=16, weight=ft.FontWeight.BOLD)
         self.main_content = ft.Card(
             content=ft.Container(
                 content=ft.Row(
@@ -58,7 +60,7 @@ class AudioPlayer:
                                 ft.ListTile(
                                     leading=ft.Icon(ft.Icons.MUSIC_NOTE_ROUNDED),
                                     # title=self.track_name,
-                                    title=ft.Text(value="No Track"),
+                                    title=self.track_title,
                                     # subtitle=self.track_artist,
                                     subtitle=ft.Text(value="No Artist"),
                                 ),
@@ -69,17 +71,7 @@ class AudioPlayer:
                                 # ),
                                 ft.Row(
                                     [
-                                        # ft.IconButton(
-                                        #     icon=ft.Icons.SKIP_PREVIOUS,
-                                        #     icon_size=40,
-                                        #     on_click=self.previous_track,
-                                        # ),
                                         self.btn_play,
-                                        # ft.IconButton(
-                                        #     icon=ft.Icons.SKIP_NEXT,
-                                        #     icon_size=40,
-                                        #     on_click=self.next_track,
-                                        # ),
                                         self.volume_icon,
                                         ft.Slider(
                                             width=150,
@@ -93,10 +85,6 @@ class AudioPlayer:
                                         ),
                                         ft.IconButton(
                                             icon=ft.Icons.FAVORITE_BORDER,
-                                            # on_click=lambda _: pick_files_dialog.pick_files(
-                                            #     allow_multiple=True,
-                                            #     file_type=ft.FilePickerFileType.AUDIO,
-                                            # ),
                                         ),
                                     ],
                                     alignment=ft.MainAxisAlignment.END,
@@ -107,20 +95,35 @@ class AudioPlayer:
                 ),
             ),
             
-            width=580,
+            width=600,
             color=ft.Colors.ON_PRIMARY,
             height=180,
         )
 
         self.stack = ft.Stack(
             controls=[
+                
                 self.main_content,
                 # self.disc_image_container,
                 self.disc_image,
             ],
-            width=600,
-            height=300,
+            width=500,
+            height=180,
+            
         )
+
+        self.audio_player = ft.Container(
+             ft.Column([
+                 ft.Row([
+                    ft.Text("Audio Controls", size=16, weight=ft.FontWeight.BOLD),
+                 ], alignment=ft.MainAxisAlignment.CENTER, spacing=5),
+                 ft.Row([
+                     self.stack, 
+                 ], alignment=ft.MainAxisAlignment.CENTER, spacing=5)
+             ])
+        )
+
+        
 
     def converter_time(self, millis):
         millis = int(millis)
@@ -186,38 +189,12 @@ class AudioPlayer:
             print("Volume down")
         
         self.page.update()
-        
-    # def next_track(self, e):
-    #     global index
-    #     # page.overlay[index].release()
-    #     # page.overlay[index].update()
-    #     index = index + 1
-    #     if index == len(page.overlay):
-    #         index = 1
-    #     self.new_track()
-    #     # page.update()
 
-    # def previous_track(self, e):
-    #     global index
-    #     # page.overlay[index].release()
-    #     # page.overlay[index].update()
-    #     index = index - 1
-    #     # if index == 0:
-    #     #     index = len(page.overlay) - 1
-    #     # self.new_track()
-    #     # page.update()
+    async def update_title_on_player(self, radio_name):
         
-    # def new_track(self):
-    #     global index
-    #     global state
-    #     global volume
-    #     self.disc_image.rotate.angle += pi * 2
-    #     # audio = TinyTag.get(page.overlay[index].src)
-    #     # self.track_name.value = audio.title
-    #     # self.track_artist.value = audio.artist
-    #     self.current_time.value = "0:0"
-    #     # self.remaining_time.value = self.converter_time(audio.duration * 1000)
-    #     self.progress_track.value = "0"
-    #     #if state == "playing":
-    #         # page.overlay[index].volume = volume
-    #         # page.overlay[index].play()
+        print(f"Radio changed to: {radio_name}")
+        self.track_title.value = radio_name
+
+        
+            
+        
