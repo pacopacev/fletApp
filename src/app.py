@@ -38,11 +38,27 @@ async def main(page: ft.Page):
     def on_radio_change(value):
         print(f"Radio changed to: {value}")
         ap.audio1.src = value
-        
-        
-        ap.audio1.autoplay = False
-        ap.audio1.update()
-        page.update()
+        ap.audio1.autoplay = True  
+        try:
+            if value:  
+                # Ъпдейтваме аудио източника
+                ap.audio1.src = value
+                ap.audio1.autoplay = True
+                
+                # Ъпдейтваме състоянието на бутона
+                ap.state = True
+                ap.btn_play.icon = ft.Icons.PAUSE_CIRCLE
+                
+                # Ъпдейтваме UI компонентите
+             
+                
+                # Ъпдейтваме страницата
+                ap.audio1.update()
+                page.update()
+               
+                
+        except Exception as ex:
+            print(f"Error changing radio: {ex}")
         
     async def set_state_to_now_playing(e,  dd_instance=None):
 
@@ -62,16 +78,12 @@ async def main(page: ft.Page):
                 
                 # Ъпдейтваме заглавието и артиста
                 if ap.track_name:
-                    print(ap.track_name.value)
                     ap.track_name.value = "Now playing:"
-                    print(ap.track_name.value)
                 else:
                     ap.track_name = ft.Text(radio_name)
                 
                 if ap.track_artist:
-                    print(ap.track_artist.value)
                     ap.track_artist.value = radio_name
-                    print(ap.track_artist.value)
                 else:
                     ap.track_artist = ft.Text(radio_name)
                 

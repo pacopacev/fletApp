@@ -167,7 +167,7 @@ class DDComponents:
             self.on_radio_change(self.radio_value)
             radio_details = next((opt for opt in self.ddRadio.options if opt.key == self.ddRadio.value), None)
             if radio_details:
-                await self.set_now_playing(radio_details.text)
+                #await self.set_now_playing(radio_details.text)
                 # print(f"Radio selected: {radio_details.text} - {radio_details.key}")
                 await self.insert_radio_to_db(radio_details.text, radio_details.key)
 
