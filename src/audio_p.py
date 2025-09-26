@@ -1,19 +1,20 @@
 import flet as ft
 from tinytag import TinyTag
 from math import pi
+import asyncio
 
 class AudioPlayer:
     def __init__(self, page: ft.Page):
         self.page = page
+        self.track_name = ft.Text("Select a station", weight=ft.FontWeight.BOLD)
+        self.track_artist = ft.Text("No station selected")
         self.state = False
         self.volume = 0.5
         # self.audio_init = TinyTag.get(page.overlay[index].src)
         self.current_time = ft.Text(value="0:0")
-        # self.remaining_time = ft.Text(value=self.converter_time(self.audio_init.duration * 1000))
         # self.progress_track = ft.ProgressBar(width=400, value="0", height=8)
-        # self.track_name = ft.Text(value=self.audio_init.title)
-        # self.track_artist = ft.Text(value=self.audio_init.artist)
-        self.track_title = ft.Text("No Track")
+        self.audio1 = ft.Audio()
+        
         
         self.audio1 = ft.Audio(
         src="https://stream.radiobrowser.de/rock-128.mp3",
@@ -26,7 +27,9 @@ class AudioPlayer:
         on_state_changed=lambda e: print("State changed:", e.data),
         on_seek_complete=lambda _: print("Seek complete"),
     )
-        page.overlay.append(self.audio1)
+        self.page.overlay.append(self.audio1)
+        
+        
         self.btn_play = ft.IconButton(
             icon=ft.Icons.PLAY_CIRCLE, icon_size=50, on_click=self.play_track
         )
@@ -59,10 +62,9 @@ class AudioPlayer:
                             [
                                 ft.ListTile(
                                     leading=ft.Icon(ft.Icons.MUSIC_NOTE_ROUNDED),
-                                    # title=self.track_name,
-                                    title=self.track_title,
-                                    # subtitle=self.track_artist,
-                                    subtitle=ft.Text(value="No Artist"),
+                                    title=self.track_name,
+                                    subtitle=self.track_artist,
+                            
                                 ),
                                 # ft.Row(
                                 #     ["0", "0", "0"],
@@ -104,7 +106,6 @@ class AudioPlayer:
             controls=[
                 
                 self.main_content,
-                # self.disc_image_container,
                 self.disc_image,
             ],
             width=500,
@@ -191,9 +192,24 @@ class AudioPlayer:
         self.page.update()
 
     async def update_title_on_player(self, radio_name):
-        
-        print(f"Radio changed to: {radio_name}")
-        self.track_title.value = radio_name
+        """Ъпдейтва заглавието на играча"""
+        try:
+            print(f"Updating title to: {radio_name}")
+            
+            # Ъпдейтваме текстовете
+            if self.track_name:
+                self.track_name.value = "Now playing:"
+            
+            if self.track_artist:
+                self.track_artist.value = radio_name
+            
+            # Ако има страница, ъпдейтваме
+            if hasattr(self, 'page') and self.page:
+                self.page.update()
+                
+        except Exception as ex:
+            print(f"Error updating title: {ex}")
+
 
         
             

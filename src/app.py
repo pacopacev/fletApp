@@ -44,74 +44,57 @@ async def main(page: ft.Page):
         ap.audio1.update()
         page.update()
         
-    async def set_state_to_now_playing(e):
-        radio_url = e.control.data["url"]
-        radio_name = e.control.data["name"]
-        print(radio_url) 
-        print(radio_name)
+    async def set_state_to_now_playing(e,  dd_instance=None):
 
-        if radio_url:
+        try:
+            radio_url = e.control.data["url"]
+            radio_name = e.control.data["name"]
+            print(f"Loading: {radio_name} - {radio_url}")
 
-            await dd_instance.set_now_playing(radio_name)
-            await AudioPlayer().update_title_on_player(radio_name)
-            ap.audio1.src = radio_url
-            ap.audio1.autoplay = True
-            ap.audio1.update()
-            page.update()
+            if radio_url:
+                # Ако има Discord инстанция, ъпдейтваме статуса
+                if dd_instance:
+                    await dd_instance.set_now_playing(radio_name)
+                
+                # Спираме текущото възпроизвеждане
+                if ap.audio1:
+                    ap.audio1.pause()
+                
+                # Ъпдейтваме заглавието и артиста
+                if ap.track_name:
+                    print(ap.track_name.value)
+                    ap.track_name.value = "Now playing:"
+                    print(ap.track_name.value)
+                else:
+                    ap.track_name = ft.Text(radio_name)
+                
+                if ap.track_artist:
+                    print(ap.track_artist.value)
+                    ap.track_artist.value = radio_name
+                    print(ap.track_artist.value)
+                else:
+                    ap.track_artist = ft.Text(radio_name)
+                
+                # Ъпдейтваме аудио източника
+                ap.audio1.src = radio_url
+                ap.audio1.autoplay = True
+                
+                # Ъпдейтваме състоянието на бутона
+                ap.state = True
+                ap.btn_play.icon = ft.Icons.PAUSE_CIRCLE
+                
+                # Ъпдейтваме UI компонентите
+                await ap.update_title_on_player(radio_name)
+                
+                # Ъпдейтваме страницата
+                page.update()
+                print(f"Now playing: {radio_name}")
+                
+        except Exception as ex:
+            print(f"Error changing radio: {ex}")
 
     dd_instance = DDComponents(page=page, on_radio_change=on_radio_change)
 
-    # Audio control functions
-    # def volume_down(_):
-    #     audio1.volume = max(0, audio1.volume - 0.1)
-    #     audio1.update()
-
-    # def volume_up(_):
-    #     audio1.volume = min(1, audio1.volume + 0.1)
-    #     audio1.update()
-
-    # def balance_left(_):
-    #     audio1.balance = max(-1, audio1.balance - 0.1)
-    #     audio1.update()
-
-    # def balance_right(_):
-    #     audio1.balance = min(1, audio1.balance + 0.1)
-    #     audio1.update()
-
-    # def play(_):
-    #     audio1.play()
-    #     audio1.update()
-
-    # def pause(_):
-    #     audio1.pause()
-    #     audio1.update()
-
-    # def resume(_):
-    #     audio1.resume()
-    #     audio1.update()
-
-    # def release(_):
-    #     audio1.release()
-    #     audio1.update()
-
-    # def get_duration(_):
-    #     print("Current duration:", audio1.get_duration())
-
-    # def get_position(_):
-    #     print("Current position:", audio1.get_current_position())
-
-    # # Initialize audio player
-    # audio1 = ft.Audio(
-    #     src="https://stream.radiobrowser.de/rock-128.mp3",
-    #     autoplay=False,
-    #     volume=0.5,
-    #     balance=0,
-    #     on_loaded=lambda _: print("Loaded"),
-    #     on_duration_changed=lambda e: print("Duration changed:", e.data),
-    #     on_position_changed=lambda e: print("Position changed:", e.data),
-    #     on_state_changed=lambda e: print("State changed:", e.data),
-    #     on_seek_complete=lambda _: print("Seek complete"),
-    # )
     # page.overlay.append(audio1)
 
     # UI Layout
