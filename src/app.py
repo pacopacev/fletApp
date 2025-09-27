@@ -6,6 +6,7 @@ from global_model import GlobalModel
 import asyncio
 from audio_p import AudioPlayer
 from audio_p import AudioPlayer
+from datetime import datetime
 
 async def main(page: ft.Page):
     
@@ -35,7 +36,10 @@ async def main(page: ft.Page):
     page.auto_scroll = True
     page.scroll = ft.ScrollMode.AUTO
 
-    def on_radio_change(value):
+    def on_radio_change(value, key, text):
+        print("Radio dropdown changed")
+        print(f"Key: {key}")
+        print(f"Text: {text}")
         print(f"Radio changed to: {value}")
         ap.audio1.src = value
         ap.audio1.autoplay = True  
@@ -44,6 +48,8 @@ async def main(page: ft.Page):
                 # Ъпдейтваме аудио източника
                 ap.audio1.src = value
                 ap.audio1.autoplay = True
+
+                set_state_to_now_playing_via_dd(radio_url=key, radio_name=text)
                 
                 # Ъпдейтваме състоянието на бутона
                 ap.state = True
@@ -61,6 +67,7 @@ async def main(page: ft.Page):
             print(f"Error changing radio: {ex}")
         
     async def set_state_to_now_playing(e,  dd_instance=None):
+        
 
         try:
             radio_url = e.control.data["url"]
@@ -105,9 +112,52 @@ async def main(page: ft.Page):
         except Exception as ex:
             print(f"Error changing radio: {ex}")
 
+    def set_state_to_now_playing_via_dd(radio_url=None, radio_name=None):
+    
+        try:
+            print(f"Loading: {radio_name} - {radio_url}")
+
+            if radio_url:
+                # Ако има Discord инстанция, ъпдейтваме статуса
+                # if dd_instance:
+                #     await dd_instance.set_now_playing(radio_name)
+                
+                # Спираме текущото възпроизвеждане
+                if ap.audio1:
+                    ap.audio1.pause()
+                
+                # Ъпдейтваме заглавието и артиста
+                if ap.track_name:
+                    ap.track_name.value = "Now playing:"
+                else:
+                    ap.track_name = ft.Text(radio_name)
+                
+                if ap.track_artist:
+                    ap.track_artist.value = radio_name
+                else:
+                    ap.track_artist = ft.Text(radio_name)
+                
+                # Ъпдейтваме аудио източника
+                ap.audio1.src = radio_url
+                ap.audio1.autoplay = True
+                
+                # Ъпдейтваме състоянието на бутона
+                ap.state = True
+                ap.btn_play.icon = ft.Icons.PAUSE_CIRCLE
+                
+                # Ъпдейтваме UI компонентите
+                ap.update_title_on_player(radio_name)
+                
+                # Ъпдейтваме страницата
+                page.update()
+                print(f"Now playing: {radio_name}")
+                
+        except Exception as ex:
+            print(f"Error changing radio: {ex}")
+
+
     dd_instance = DDComponents(page=page, on_radio_change=on_radio_change)
 
-    # page.overlay.append(audio1)
 
     # UI Layout
     appbar = AppBar()
@@ -117,7 +167,13 @@ async def main(page: ft.Page):
         ft.Column(
             controls=[
                 ft.Container(
-                    content=ft.Text("↓DropDowns Here↓", size=16, weight=ft.FontWeight.BOLD),
+                    content=ft.Row(
+                        controls=[
+                            ft.Image(src=f"/images/Weathered Chevron with Spikes and Chains.png", width=40, height=40), 
+                            ft.Text("Radio DropDown", size=20, weight="bold"), 
+                            ft.Image(src=f"images/Weathered Chevron with Spikes and Chains.png", width=40, height=40)
+                        ]
+                    ),
                     padding=10,
                     border_radius=ft.border_radius.all(10),
                     alignment=ft.alignment.center,
@@ -133,9 +189,10 @@ async def main(page: ft.Page):
     
     global_model = GlobalModel()
     last_visited_radios = [] 
-    query_radios =  """SELECT name,url, COUNT(*) as count FROM flet_radios
-                GROUP BY name, url 
-                ORDER BY count DESC"""
+    query_radios =  """SELECT name,url,favorite, COUNT(*) as count FROM flet_radios
+                GROUP BY name, url, favorite
+                ORDER BY count DESC
+                LIMIT 5"""
     try:
         last_visited_radios = await global_model.execute_query_all(query_radios)
         print("Database query result:", last_visited_radios)
@@ -147,8 +204,12 @@ async def main(page: ft.Page):
             ft.ListTile(
                 title=ft.Text(radio["name"]),
                 subtitle=ft.Text(radio["url"]),
-                leading=ft.Icon("radio"),
-                trailing=ft.Icon("play_arrow"),
+                leading=ft.Icon("play_arrow", tooltip=ft.Tooltip("Play")),
+                trailing=ft.Icon(
+                    "favorite" if radio["favorite"] else "favorite_border",
+                    tooltip="Remove from favorites" if radio["favorite"] else "Add to favorites",
+                    
+                    ),
                 data=radio,
                 on_click=set_state_to_now_playing,
             )
@@ -165,10 +226,22 @@ async def main(page: ft.Page):
         height=300,
         bgcolor="#B00020",
     )
+    licence_text = ft.Text(
+            f"© {datetime.now().year} Plambe. All rights reserved.",
+            size=12,
+            weight=ft.FontWeight.BOLD,
+            color=ft.Colors.WHITE,
+            
+            style=ft.TextStyle(
+            bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST, color=ft.Colors.BLACK26,
+           
+    ),
+)
     
     page.add(ap.audio_player)
     
     page.add(ft.Text("Last Visited Radios", size=16, weight=ft.FontWeight.BOLD))
     page.add(last_visited_list_container)
+    page.add(licence_text)
 
 # ft.app(target=main, assets_dir="assets")

@@ -10,22 +10,20 @@ class AudioPlayer:
         self.track_artist = ft.Text("No station selected")
         self.state = False
         self.volume = 0.5
-        # self.audio_init = TinyTag.get(page.overlay[index].src)
-        self.current_time = ft.Text(value="0:0")
-        # self.progress_track = ft.ProgressBar(width=400, value="0", height=8)
         self.audio1 = ft.Audio()
         
         
         self.audio1 = ft.Audio(
-        src="https://stream.radiobrowser.de/rock-128.mp3",
+        src="empty",
         autoplay=False,
         volume=0.3,
         balance=0,
-        on_loaded=lambda _: print("Loaded"),
+        #on_loaded=lambda _: print("Loaded"),
+        on_loaded= self.check_radio_health,
         on_duration_changed=lambda e: print("Duration changed:", e.data),
         on_position_changed=lambda e: print("Position changed:", e.data),
         on_state_changed=lambda e: print("State changed:", e.data),
-        on_seek_complete=lambda _: print("Seek complete"),
+        # on_seek_complete=lambda _: print("Seek complete"),
     )
         self.page.overlay.append(self.audio1)
         
@@ -36,22 +34,11 @@ class AudioPlayer:
         self.volume_icon = ft.Icon(name=ft.Icons.VOLUME_DOWN)
         
         self.disc_image = ft.Image(
-            src="/audio_player/album.png",
+            src="/Distressed Metal Chevron with Chains.png",
             width=90,
             height=90,
             fit=ft.ImageFit.CONTAIN,
-            # rotate=ft.Rotate(0, alignment=ft.alignment.center_left),
-            # rotate=ft.transform.Rotate(0, alignment=ft.alignment.center),
-            
         )
-        # self.disc_image_container = ft.Container(
-        #     content=self.disc_image,
-        #     width=200,
-        #     height=200,
-        #     alignment=ft.alignment.center,
-        #     border_radius=ft.border_radius.all(100),
-        #     animate=ft.Animation(100, ft.AnimationCurve.EASE_IN_CIRC),
-        # )
         self.audio_control_title = ft.Text("Audio Control", size=16, weight=ft.FontWeight.BOLD)
         self.main_content = ft.Card(
             content=ft.Container(
@@ -66,11 +53,6 @@ class AudioPlayer:
                                     subtitle=self.track_artist,
                             
                                 ),
-                                # ft.Row(
-                                #     ["0", "0", "0"],
-                                #     # [self.current_time, self.progress_track, self.remaining_time],
-                                #     alignment=ft.MainAxisAlignment.END,
-                                # ),
                                 ft.Row(
                                     [
                                         self.btn_play,
@@ -87,6 +69,8 @@ class AudioPlayer:
                                         ),
                                         ft.IconButton(
                                             icon=ft.Icons.FAVORITE_BORDER,
+                                            on_click=lambda e, data=self.audio1.src: self.add_to_favorites(data),
+                                            data=self.audio1.src
                                         ),
                                     ],
                                     alignment=ft.MainAxisAlignment.END,
@@ -106,10 +90,10 @@ class AudioPlayer:
             controls=[
                 
                 self.main_content,
-                self.disc_image,
+                # self.disc_image
             ],
             width=500,
-            height=180,
+            height=170
             
         )
 
@@ -121,18 +105,10 @@ class AudioPlayer:
                  ft.Row([
                      self.stack, 
                  ], alignment=ft.MainAxisAlignment.CENTER, spacing=5)
-             ])
+             ]), 
         )
 
         
-
-    def converter_time(self, millis):
-        millis = int(millis)
-        seconds = (millis / 1000) % 60
-        seconds = int(seconds)
-        minutes = (millis / (1000 * 60)) % 60
-        minutes = int(minutes)
-        return "%d:%d" % (minutes, seconds)
     def play_track(self, e):
         global index
         global state
@@ -192,7 +168,6 @@ class AudioPlayer:
         self.page.update()
 
     async def update_title_on_player(self, radio_name):
-        """Ъпдейтва заглавието на играча"""
         try:
             print(f"Updating title to: {radio_name}")
             
@@ -209,6 +184,18 @@ class AudioPlayer:
                 
         except Exception as ex:
             print(f"Error updating title: {ex}")
+    
+    async def check_radio_health(self, e):
+        #print(e)
+        print("Loaded")
+        try:
+            pass
+        except Exception as ex:
+            print(f"Error checking radio health: {ex}")
+
+    def add_to_favorites(self, e):
+        print(e)
+        print("Adding to favorites")
 
 
         

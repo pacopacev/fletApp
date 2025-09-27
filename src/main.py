@@ -1,6 +1,5 @@
 import flet as ft
 import flet.fastapi as flet_fastapi
-# from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
@@ -8,6 +7,8 @@ import warnings
 from pathlib import Path
 from global_model import GlobalModel
 from app import main
+
+version = "0.1.0"
 
 # Suppress noisy deprecation warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning, module="uvicorn")
@@ -80,13 +81,24 @@ async def read_root():
     <!DOCTYPE html>
     <html>
     <head>
-        <title>DropDown Radio</title>
+        <title>DropDown Radio Browser</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="icon" href="/assets/{icon_file}" type="image/png">
+        <link rel="icon" href="/assets/Weathered Chevron with Spikes and Chains.png" type="image/png">
         <style>
-            body {{ font-family: Arial, sans-serif; margin: 40px; background: #f0f0f0; }}
-            .container {{ max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; }}
+            body {{ font-family: Arial, sans-serif; margin: 40px; background: #f0f0f0; 
+                    background-image: url('/assets/Distressed Metal Chevron with Chains.png');
+                    background-position: center;   /* Center the image */
+                    background-repeat: no-repeat;  /* No repeating */
+                    background-attachment: fixed;  /* Fixed on scroll */
+                    height: 100vh;      }}
+            .container {{ 
+                max-width: 800px; 
+                margin: 0 auto; background: 
+                transparent; 
+                padding: 20px; 
+                border-radius: 10px; 
+                }}
             h1 {{ color: #333; }}
             .links {{ margin-top: 20px; }}
             .links a {{ display: block; margin: 10px 0; padding: 10px; background: #007bff; color: white;
@@ -96,8 +108,8 @@ async def read_root():
     </head>
     <body>
         <div class="container">
-            <h1>🎵 Radio Browser</h1>
-            <p>Welcome to the Radio Browser application!</p>
+            <h1>🎵 DropDown Radio Browser</h1>
+            <p>Welcome to the Radio Browser app power by Flet!</p>
             <div class="links">
                 <a href="/app">Go to Radio App</a>
                 <a href="/health">API Health Check</a>
@@ -105,6 +117,7 @@ async def read_root():
                 <a href="/assets/{icon_file}">Test Image Access</a>
                 <a href="/test-api">Test API</a>
                 <a href="/test-db">Test DB</a>
+                <p>Version: {version}</p>
             </div>
         </div>
     </body>
