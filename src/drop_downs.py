@@ -4,6 +4,7 @@ from severs import Servers
 from all_stations import AllStations
 from snackbar import Snackbar
 from global_model import GlobalModel
+from validate_radio import ValidateRadio
 
 class DDComponents:
     def __init__(self, page, on_radio_change=None):
@@ -18,9 +19,7 @@ class DDComponents:
         self.now_playing_text = None
         self.now_playing = None
         self.now_playing_container = ft.Container()
-        # self.now_playing = ft.ListView(controls=[], height=200,)  #
         
-        # self.now_playing_text_container = ft.Container(ft.Text("Now Playing: None", size=16, weight=ft.FontWeight.BOLD),)
 
         self.ddServer = ft.Dropdown(
             on_change=self.server_change,
@@ -144,7 +143,12 @@ class DDComponents:
                     self.ddRadio.options.append(
                         ft.dropdown.Option(
                             key=radio["url"], 
-                            text=radio_name
+                            text=radio_name,
+                            data={
+                                "favicon": radio.get("favicon", ""),
+                                "name": radio["name"],
+                                "bitrate": radio.get("bitrate", "N/A")
+                                }
                         )
                     )
                 
@@ -159,15 +163,29 @@ class DDComponents:
                 
         except Exception as ex:
             print(f"Error loading stations: {ex}")
-        # AllStations(self.server_value, self.tag_value).get_all_stations()
 
     async def radio_change(self, e):
-        self.radio_value = e.control.value
-        if self.on_radio_change:
+        if e.control.value:
             radio_details = next((opt for opt in self.ddRadio.options if opt.key == self.ddRadio.value), None)
-            self.on_radio_change(self.radio_value, radio_details.key, radio_details.text)       
             if radio_details:
-                await self.insert_radio_to_db(radio_details.text, radio_details.key)
+                radio_status = await ValidateRadio().validate_stream(radio_details.key)
+                print(f"Radio URL: {radio_details.key}, Valid: {radio_status}")
+                if radio_status[0] == True:
+                    self.radio_value = e.control.value
+                    self.on_radio_change(self.radio_value, radio_status[1], radio_details.text) 
+                    print(f"Radio stream is valid: {radio_status[1]}")
+                    snackbar_instance = Snackbar("💀 Radio stream is VALID! 🖤 Let the darkness play! 🌑", bgcolor="green", length = None)
+                    snackbar_instance.open = True
+                    self.page.controls.append(snackbar_instance)
+                    self.page.update()
+                    await self.insert_radio_to_db(radio_details.text, radio_status[1])
+                    # await self.set_now_playing(radio_details.text)
+                else:
+                    print(f"Radio stream is NOT valid: {radio_details.text}")
+                    snackbar_instance = Snackbar("Radio stream is NOT valid", bgcolor="red", length = None)
+                    snackbar_instance.open = True
+                    self.page.controls.append(snackbar_instance)
+                    self.page.update()
 
     async def on_radio_click(self, e):
         print("Radio dropdown focused")
@@ -231,19 +249,19 @@ class DDComponents:
         except Exception as ex:
             print(f"Error inserting radio into database: {ex}")
             
-    async def set_now_playing(self, text):
+    # async def set_now_playing(self, text):
 
-        self.now_playing_container.content = ft.Column(
-            controls=[
-                ft.Text(f"Now Playing: {text}", size=16, weight=ft.FontWeight.BOLD)
-            ],  
-            alignment=ft.MainAxisAlignment.CENTER,
-        )
-        self.now_playing_container.bgcolor = "#B00020"
-        self.now_playing_container.padding = 20
-        self.now_playing_container.border_radius = ft.border_radius.all(10)
-        self.now_playing_container.width = 400
-        self.now_playing_container.update()
+    #     self.now_playing_container.content = ft.Column(
+    #         controls=[
+    #             ft.Text(f"Now Playing: {text}", size=16, weight=ft.FontWeight.BOLD)
+    #         ],  
+    #         alignment=ft.MainAxisAlignment.CENTER,
+    #     )
+    #     self.now_playing_container.bgcolor = "#B00020"
+    #     self.now_playing_container.padding = 20
+    #     self.now_playing_container.border_radius = ft.border_radius.all(10)
+    #     self.now_playing_container.width = 400
+    #     self.now_playing_container.update()
          
             
         

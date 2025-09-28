@@ -19,9 +19,9 @@ BASE_DIR = Path(__file__).parent
 ASSETS_DIR = BASE_DIR / "assets"
 ASSETS_DIR.mkdir(exist_ok=True)
 
-print(f"Base directory: {BASE_DIR}")
-print(f"Assets directory: {ASSETS_DIR}")
-print(f"Assets exists: {ASSETS_DIR.exists()}")
+# print(f"Base directory: {BASE_DIR}")
+# print(f"Assets directory: {ASSETS_DIR}")
+# print(f"Assets exists: {ASSETS_DIR.exists()}")
 if ASSETS_DIR.exists():
     print(f"Assets contents: {list(ASSETS_DIR.glob('*'))}")
 
@@ -137,4 +137,4 @@ app.mount(
 # --- Entrypoint ---
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8553, log_level="info")
+    uvicorn.run(app, host="0.0.0.0", port=8554, log_level="info")

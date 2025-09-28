@@ -11,8 +11,8 @@ class AppBar(ft.AppBar):
             leading=ft.Container(
                 content=ft.Image(
                 src=f"/Distressed Metal Chevron with Chains.png", 
-                width=40, 
-                height=40, 
+                width=30, 
+                height=30,
                 tooltip=ft.Tooltip("Go to main page"),
                 ), 
                  on_click=lambda _: self.page.launch_url("https://renewed-rosanne-pacopacev-b6447873.koyeb.app/"),

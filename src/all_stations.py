@@ -8,12 +8,9 @@ class AllStations:
         self.server_value = server_value
         self.tag_value = tag_value
         self.coutrntry_codes = coutrntry_code
-        print(f"Set server value to: {server_value}")
-        print(f"Set country codes to: {coutrntry_code}")
-        print(f"Set tag value to: {tag_value}")
-
-        
-        
+        # print(f"Set server value to: {server_value}")
+        # print(f"Set country codes to: {coutrntry_code}")
+        # print(f"Set tag value to: {tag_value}")
 
     async def get_all_stations(self):
         

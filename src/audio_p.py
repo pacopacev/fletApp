@@ -2,6 +2,7 @@ import flet as ft
 from tinytag import TinyTag
 from math import pi
 import asyncio
+from validate_radio import ValidateRadio
 
 class AudioPlayer:
     def __init__(self, page: ft.Page):
@@ -19,7 +20,7 @@ class AudioPlayer:
         volume=0.3,
         balance=0,
         #on_loaded=lambda _: print("Loaded"),
-        on_loaded= self.check_radio_health,
+        #on_loaded= lambda e: asyncio.run(ValidateRadio().validate_stream(e)),
         on_duration_changed=lambda e: print("Duration changed:", e.data),
         on_position_changed=lambda e: print("Position changed:", e.data),
         on_state_changed=lambda e: print("State changed:", e.data),
@@ -184,14 +185,7 @@ class AudioPlayer:
                 
         except Exception as ex:
             print(f"Error updating title: {ex}")
-    
-    async def check_radio_health(self, e):
-        #print(e)
-        print("Loaded")
-        try:
-            pass
-        except Exception as ex:
-            print(f"Error checking radio health: {ex}")
+
 
     def add_to_favorites(self, e):
         print(e)

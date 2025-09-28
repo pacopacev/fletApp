@@ -27,6 +27,7 @@ async def main(page: ft.Page):
             src="/images/Weathered Chevron with Spikes and Chains.png",
             fit=ft.ImageFit.COVER,
             opacity=0.2,
+            
         ),
     )
     page.app = True
@@ -192,10 +193,10 @@ async def main(page: ft.Page):
     query_radios =  """SELECT name,url,favorite, COUNT(*) as count FROM flet_radios
                 GROUP BY name, url, favorite
                 ORDER BY count DESC
-                LIMIT 5"""
+                LIMIT 666;"""
     try:
         last_visited_radios = await global_model.execute_query_all(query_radios)
-        print("Database query result:", last_visited_radios)
+        #print("Database query result:", last_visited_radios)
     except Exception as e:
         print("Database query failed:", e)
         
