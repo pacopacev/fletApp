@@ -170,16 +170,16 @@ async def main(page: ft.Page):
                 ft.Container(
                     content=ft.Row(
                         controls=[
-                            ft.Image(src=f"/images/Weathered Chevron with Spikes and Chains.png", width=40, height=40), 
+                            ft.Image(src=f"/images/Weathered Chevron with Spikes and Chains.png"), 
                             ft.Text("Radio DropDown", size=20, weight="bold"), 
-                            ft.Image(src=f"images/Weathered Chevron with Spikes and Chains.png", width=40, height=40)
+                            ft.Image(src=f"images/Weathered Chevron with Spikes and Chains.png")
                         ]
                     ),
                     padding=10,
                     border_radius=ft.border_radius.all(10),
                     alignment=ft.alignment.center,
                     width=300,
-                    height=50,
+                    height=60,
                 ),dd_instance.ddServer,
                 dd_instance.ddGenre,
                 dd_instance.ddCountry,
@@ -201,7 +201,11 @@ async def main(page: ft.Page):
         print("Database query failed:", e)
         
     last_visited_list = ft.ListView(
+        clip_behavior=ft.ClipBehavior.ANTI_ALIAS,
+    
+
         controls=[
+            
             ft.ListTile(
                 title=ft.Text(radio["name"]),
                 subtitle=ft.Text(radio["url"]),
@@ -211,6 +215,7 @@ async def main(page: ft.Page):
                     tooltip="Remove from favorites" if radio["favorite"] else "Add to favorites",
                     
                     ),
+                    
                 data=radio,
                 on_click=set_state_to_now_playing,
             )

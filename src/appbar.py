@@ -4,22 +4,20 @@ import flet as ft
 class AppBar(ft.AppBar):
     def __init__(self):
 
-        
         super().__init__(
-            
-
+     
             leading=ft.Container(
                 content=ft.Image(
                 src=f"/Distressed Metal Chevron with Chains.png", 
-                width=30, 
-                height=30,
+                # width=30, 
+                # height=30,
                 tooltip=ft.Tooltip("Go to main page"),
                 ), 
                  on_click=lambda _: self.page.launch_url("https://renewed-rosanne-pacopacev-b6447873.koyeb.app/"),
+                 
+                 
             ),
-
-
-
+            toolbar_height=50,
 
             # leading=ft.Container(width=40, height=40),
             leading_width=50,

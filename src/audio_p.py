@@ -45,7 +45,7 @@ class AudioPlayer:
             content=ft.Container(
                 content=ft.Row(
                     [
-                        ft.Container(width=80, height=300),
+                        ft.Container(width=100, height=100), 
                         ft.Column(
                             [
                                 ft.ListTile(
