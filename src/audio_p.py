@@ -9,6 +9,13 @@ class AudioPlayer:
         self.page = page
         self.track_name = ft.Text("Select a station", weight=ft.FontWeight.BOLD)
         self.track_artist = ft.Text("No station selected")
+        self.favicon = ft.Image(
+            src=f"/Distressed Metal Chevron with Chains.png",
+            width=90,
+            height=90,
+            fit=ft.ImageFit.CONTAIN,
+        )
+        print(f"Favicon: {self.favicon.src}")
         self.state = False
         self.volume = 0.5
         self.audio1 = ft.Audio()
@@ -34,12 +41,7 @@ class AudioPlayer:
         )
         self.volume_icon = ft.Icon(name=ft.Icons.VOLUME_DOWN)
         
-        self.disc_image = ft.Image(
-            src="/Distressed Metal Chevron with Chains.png",
-            width=90,
-            height=90,
-            fit=ft.ImageFit.CONTAIN,
-        )
+      
         self.audio_control_title = ft.Text("Audio Control", size=16, weight=ft.FontWeight.BOLD)
         self.main_content = ft.Card(
             content=ft.Container(
@@ -91,7 +93,7 @@ class AudioPlayer:
             controls=[
                 
                 self.main_content,
-                # self.disc_image
+                self.favicon
             ],
             width=500,
             height=170
@@ -168,9 +170,9 @@ class AudioPlayer:
         
         self.page.update()
 
-    async def update_title_on_player(self, radio_name):
+    async def update_title_on_player(self, radio_name, favicon):
         try:
-            print(f"Updating title to: {radio_name}")
+            # print(f"Updating title to: {radio_name}")
             
             # Ъпдейтваме текстовете
             if self.track_name:
@@ -178,6 +180,10 @@ class AudioPlayer:
             
             if self.track_artist:
                 self.track_artist.value = radio_name
+
+            if self.favicon:
+                print(favicon)
+                self.favicon.src = favicon
             
             # Ако има страница, ъпдейтваме
             if hasattr(self, 'page') and self.page:

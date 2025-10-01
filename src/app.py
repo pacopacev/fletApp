@@ -37,20 +37,24 @@ async def main(page: ft.Page):
     page.auto_scroll = True
     page.scroll = ft.ScrollMode.AUTO
 
-    def on_radio_change(value, key, text):
-        print("Radio dropdown changed")
-        print(f"Key: {key}")
-        print(f"Text: {text}")
-        print(f"Radio changed to: {value}")
+    def on_radio_change(value, key, text, favicon):
+        # print("Radio dropdown changed")
+        # print(f"Key: {key}")
+        # print(f"Text: {text}")
+        # print(f"Radio changed to: {value}")
         ap.audio1.src = value
         ap.audio1.autoplay = True  
         try:
             if value:  
+
+                # ap.favicon.src =  "/icon_or.png"
+                # ap.favicon.src =  "https://xr.dockl.com/100xr-logo-300sq.png"
+                #ap.favicon.src =  favicon if favicon else f"/Weathered Chevron with Spikes and Chains.png"
                 # Ъпдейтваме аудио източника
                 ap.audio1.src = value
                 ap.audio1.autoplay = True
 
-                set_state_to_now_playing_via_dd(radio_url=key, radio_name=text)
+                set_state_to_now_playing_via_dd(radio_url=key, radio_name=text, favicon=favicon)
                 
                 # Ъпдейтваме състоянието на бутона
                 ap.state = True
@@ -113,7 +117,7 @@ async def main(page: ft.Page):
         except Exception as ex:
             print(f"Error changing radio: {ex}")
 
-    def set_state_to_now_playing_via_dd(radio_url=None, radio_name=None):
+    def set_state_to_now_playing_via_dd(radio_url=None, radio_name=None, favicon=None):
     
         try:
             print(f"Loading: {radio_name} - {radio_url}")
@@ -138,6 +142,16 @@ async def main(page: ft.Page):
                 else:
                     ap.track_artist = ft.Text(radio_name)
                 
+                if ap.favicon:
+                    ap.favicon.src = favicon
+                else:
+                    ap.favicon = ft.Image(
+                        src=f"/Distressed Metal Chevron with Chains.png",
+                        width=90,
+                        height=90,
+                        fit=ft.ImageFit.CONTAIN,
+                    )
+                
                 # Ъпдейтваме аудио източника
                 ap.audio1.src = radio_url
                 ap.audio1.autoplay = True
@@ -147,7 +161,7 @@ async def main(page: ft.Page):
                 ap.btn_play.icon = ft.Icons.PAUSE_CIRCLE
                 
                 # Ъпдейтваме UI компонентите
-                ap.update_title_on_player(radio_name)
+                ap.update_title_on_player(radio_name, favicon)
                 
                 # Ъпдейтваме страницата
                 page.update()

@@ -146,8 +146,6 @@ class DDComponents:
                             text=radio_name,
                             data={
                                 "favicon": radio.get("favicon", ""),
-                                "name": radio["name"],
-                                "bitrate": radio.get("bitrate", "N/A")
                                 }
                         )
                     )
@@ -167,13 +165,15 @@ class DDComponents:
     async def radio_change(self, e):
         if e.control.value:
             radio_details = next((opt for opt in self.ddRadio.options if opt.key == self.ddRadio.value), None)
+            favicon = next((opt.data.get("favicon") for opt in self.ddRadio.options if opt.key == self.ddRadio.value), None)
+            
             if radio_details:
                 radio_status = await ValidateRadio().validate_stream(radio_details.key)
-                print(f"Radio URL: {radio_details.key}, Valid: {radio_status}")
+                # print(f"Radio URL: {radio_details.key}, Valid: {radio_status}")
                 if radio_status[0] == True:
                     self.radio_value = e.control.value
-                    self.on_radio_change(self.radio_value, radio_status[1], radio_details.text) 
-                    print(f"Radio stream is valid: {radio_status[1]}")
+                    self.on_radio_change(self.radio_value, radio_status[1], radio_details.text, favicon) 
+                    # print(f"Radio stream is valid: {radio_status[1]}")
                     snackbar_instance = Snackbar("💀 Radio stream is VALID! 🖤 Let the darkness play! 🌑", bgcolor="green", length = None)
                     snackbar_instance.open = True
                     self.page.controls.append(snackbar_instance)
