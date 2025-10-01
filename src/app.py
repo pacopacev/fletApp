@@ -37,24 +37,33 @@ async def main(page: ft.Page):
     page.auto_scroll = True
     page.scroll = ft.ScrollMode.AUTO
 
-    def on_radio_change(value, key, text):
-        print("Radio dropdown changed")
-        print(f"Key: {key}")
-        print(f"Text: {text}")
-        print(f"Radio changed to: {value}")
+    def on_radio_change(value, key, text, favicon):
+        # print("Radio dropdown changed")
+        # print(f"Key: {key}")
+        # print(f"Text: {text}")
+        # print(f"Radio changed to: {value}")
         ap.audio1.src = value
         ap.audio1.autoplay = True  
         try:
             if value:  
                 # Ъпдейтваме аудио източника
+                print(favicon)
+                ap.favicon = ft.Image(
+                    src=favicon if favicon else "/Distressed Metal Chevron with Chains.png",
+                    width=50,
+                    height=50,
+                    fit=ft.ImageFit.CONTAIN
+                )
+                # ap.fav.src = favicon if favicon else "/Distressed Metal Chevron with Chains.png"
                 ap.audio1.src = value
                 ap.audio1.autoplay = True
 
-                set_state_to_now_playing_via_dd(radio_url=key, radio_name=text)
+                set_state_to_now_playing_via_dd(radio_url=key, radio_name=text, favicon=favicon)
                 
                 # Ъпдейтваме състоянието на бутона
                 ap.state = True
                 ap.btn_play.icon = ft.Icons.PAUSE_CIRCLE
+                
                 
                 # Ъпдейтваме UI компонентите
              
@@ -113,10 +122,11 @@ async def main(page: ft.Page):
         except Exception as ex:
             print(f"Error changing radio: {ex}")
 
-    def set_state_to_now_playing_via_dd(radio_url=None, radio_name=None):
+    def set_state_to_now_playing_via_dd(radio_url=None, radio_name=None, favicon=None):
+        # print(favicon)
     
         try:
-            print(f"Loading: {radio_name} - {radio_url}")
+            # print(f"Loading: {radio_name} - {radio_url}")
 
             if radio_url:
                 # Ако има Discord инстанция, ъпдейтваме статуса

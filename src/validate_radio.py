@@ -9,13 +9,13 @@ class ValidateRadio:
 
             async with aiohttp.ClientSession() as session:
                 async with session.get(url, allow_redirects=False) as response:
-                    print(f"Status: {response.status}")
-                    print(f"Headers: {dict(response.headers)}")
+                    # print(f"Status: {response.status}")
+                    # print(f"Headers: {dict(response.headers)}")
                     
                     # Check for redirect
                     if response.status in [301, 302, 303, 307, 308]:
                         redirect_url = response.headers.get('Location')
-                        print(f"Redirecting to: {redirect_url}")
+                        # print(f"Redirecting to: {redirect_url}")
                         # You could choose to follow it manually or return the redirect URL
                         return True, redirect_url  # Modified return to include info
                     

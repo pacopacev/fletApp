@@ -9,6 +9,13 @@ class AudioPlayer:
         self.page = page
         self.track_name = ft.Text("Select a station", weight=ft.FontWeight.BOLD)
         self.track_artist = ft.Text("No station selected")
+        self.favicon = ft.Image(
+            src="https://www.australiandigitalradio.com/favicon.ico",
+            width=50,            
+            height=50,            
+            fit=ft.ImageFit.CONTAIN 
+        )
+      
         self.state = False
         self.volume = 0.5
         self.audio1 = ft.Audio()
@@ -34,12 +41,13 @@ class AudioPlayer:
         )
         self.volume_icon = ft.Icon(name=ft.Icons.VOLUME_DOWN)
         
-        self.disc_image = ft.Image(
-            src="/Distressed Metal Chevron with Chains.png",
-            width=90,
-            height=90,
-            fit=ft.ImageFit.CONTAIN,
-        )
+        # self.disc_image = ft.Image(
+        #     src="/audio_player/album.png",
+        #     width=90,
+        #     height=90,
+        #     fit=ft.ImageFit.CONTAIN,
+        # )
+        #self.disc_image.src = "/Distressed Metal Chevron with Chains.png"
         self.audio_control_title = ft.Text("Audio Control", size=16, weight=ft.FontWeight.BOLD)
         self.main_content = ft.Card(
             content=ft.Container(
@@ -91,7 +99,7 @@ class AudioPlayer:
             controls=[
                 
                 self.main_content,
-                # self.disc_image
+                self.favicon
             ],
             width=500,
             height=170
