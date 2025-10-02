@@ -14,8 +14,9 @@ class AudioPlayer:
             width=90,
             height=90,
             fit=ft.ImageFit.CONTAIN,
+            border_radius=ft.border_radius.all(10)
         )
-        print(f"Favicon: {self.favicon.src}")
+        # print(f"Favicon: {self.favicon.src}")
         self.state = False
         self.volume = 0.5
         self.audio1 = ft.Audio()
@@ -46,8 +47,8 @@ class AudioPlayer:
         self.main_content = ft.Card(
             content=ft.Container(
                 content=ft.Row(
-                    [
-                        ft.Container(width=100, height=100), 
+                    [ self.favicon,
+                        # ft.Container(width=100, height=100), 
                         ft.Column(
                             [
                                 ft.ListTile(
@@ -81,9 +82,9 @@ class AudioPlayer:
                             ]
                         ),
                     ]
-                ),
+                ),padding=10
             ),
-            
+        
             width=600,
             color=ft.Colors.ON_PRIMARY,
             height=180,
@@ -91,9 +92,7 @@ class AudioPlayer:
 
         self.stack = ft.Stack(
             controls=[
-                
                 self.main_content,
-                self.favicon
             ],
             width=500,
             height=170
@@ -181,9 +180,12 @@ class AudioPlayer:
             if self.track_artist:
                 self.track_artist.value = radio_name
 
-            if self.favicon:
-                print(favicon)
+            if favicon:
+                print(f"Updating favicon to: {favicon}")
                 self.favicon.src = favicon
+                self.page.update()
+            else:
+                self.favicon.src = f"/Weathered Chevron with Spikes and Chains.png"
             
             # Ако има страница, ъпдейтваме
             if hasattr(self, 'page') and self.page:
