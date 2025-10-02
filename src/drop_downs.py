@@ -145,7 +145,7 @@ class DDComponents:
                             key=radio["url"], 
                             text=radio_name,
                             data={
-                                "favicon": radio["favicon"],
+                                "favicon": radio.get("favicon", ""),
                                 }
                         )
                     )
@@ -166,12 +166,11 @@ class DDComponents:
         if e.control.value:
             # print(self.ddRadio.options)
             radio_details = next((opt for opt in self.ddRadio.options if opt.key == self.ddRadio.value), None)
-            favicon = radio_details.data.get("favicon")
-            # print(favicon)
-            # print(f"Radio details: {radio_details}")
+            favicon = next((opt.data.get("favicon") for opt in self.ddRadio.options if opt.key == self.ddRadio.value), None)
+            
             if radio_details:
                 radio_status = await ValidateRadio().validate_stream(radio_details.key)
-                #print(f"Radio URL: {radio_details.key}, Valid: {radio_status}")
+                # print(f"Radio URL: {radio_details.key}, Valid: {radio_status}")
                 if radio_status[0] == True:
                     self.radio_value = e.control.value
                     self.on_radio_change(self.radio_value, radio_status[1], radio_details.text, favicon) 

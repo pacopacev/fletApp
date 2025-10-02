@@ -6,7 +6,6 @@ class ValidateRadio:
     async def validate_stream(self, url):
         try:
             import aiohttp
-
             async with aiohttp.ClientSession() as session:
                 async with session.get(url, allow_redirects=False) as response:
                     # print(f"Status: {response.status}")
