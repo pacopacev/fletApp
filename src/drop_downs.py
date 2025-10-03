@@ -166,20 +166,20 @@ class DDComponents:
         if e.control.value:
             # print(self.ddRadio.options)
             radio_details = next((opt for opt in self.ddRadio.options if opt.key == self.ddRadio.value), None)
-            favicon = next((opt.data.get("favicon") for opt in self.ddRadio.options if opt.key == self.ddRadio.value), None)
+            favicon = str(next((opt.data.get("favicon") for opt in self.ddRadio.options if opt.key == self.ddRadio.value), None))
             
             if radio_details:
                 radio_status = await ValidateRadio().validate_stream(radio_details.key)
                 # print(f"Radio URL: {radio_details.key}, Valid: {radio_status}")
                 if radio_status[0] == True:
                     self.radio_value = e.control.value
-                    self.on_radio_change(self.radio_value, radio_status[1], radio_details.text, favicon) 
+                    await self.on_radio_change(str(radio_details.key), str(radio_status[1]), radio_details.text, favicon) 
                     # print(f"Radio stream is valid: {radio_status[1]}")
                     snackbar_instance = Snackbar("💀 Radio stream is VALID! 🖤 Let the darkness play! 🌑", bgcolor="green", length = None)
                     snackbar_instance.open = True
                     self.page.controls.append(snackbar_instance)
                     self.page.update()
-                    await self.insert_radio_to_db(radio_details.text, radio_status[1])
+                    await self.insert_radio_to_db(radio_details.text, str(radio_status[1]), favicon)
                     # await self.set_now_playing(radio_details.text)
                 else:
                     print(f"Radio stream is NOT valid: {radio_details.text}")
@@ -238,13 +238,14 @@ class DDComponents:
             print(f"Error loading stations: {ex}")
             
     
-    async def insert_radio_to_db(self, name, url):
+    async def insert_radio_to_db(self, name, url, favicon):
         print("Inserting radio to database")
+        favicon = favicon if favicon else "None"
         try:
             global_model = GlobalModel()
             await global_model.execute_query_all(
-                "INSERT INTO flet_radios (name, url, created_at) VALUES (%s, %s, %s);",
-                (name, url, datetime.now())
+                "INSERT INTO flet_radios (name, url, favicon_url,created_at) VALUES (%s, %s, %s, %s);",
+                (name, url, favicon, datetime.now())
             )
             print("Radio inserted into database")           
         except Exception as ex:

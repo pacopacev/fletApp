@@ -37,7 +37,7 @@ async def main(page: ft.Page):
     page.auto_scroll = True
     page.scroll = ft.ScrollMode.AUTO
 
-    def on_radio_change(value, key, text, favicon):
+    async def on_radio_change(value, key, text, favicon):
         # print("Radio dropdown changed")
         # print(f"Key: {key}")
         # print(f"Text: {text}")
@@ -46,33 +46,18 @@ async def main(page: ft.Page):
         ap.audio1.autoplay = True  
         try:
             if value:  
-
-                # ap.favicon.src =  "/icon_or.png"
-                # ap.favicon.src =  "https://xr.dockl.com/100xr-logo-300sq.png"
-                #ap.favicon.src =  favicon if favicon else f"/Weathered Chevron with Spikes and Chains.png"
-                # Ъпдейтваме аудио източника
-                print(favicon)
-                ap.favicon = ft.Image(
-                    src=favicon if favicon else "/Distressed Metal Chevron with Chains.png",
-                    width=50,
-                    height=50,
-                    fit=ft.ImageFit.CONTAIN
-                )
-                # ap.fav.src = favicon if favicon else "/Distressed Metal Chevron with Chains.png"
                 ap.audio1.src = value
                 ap.audio1.autoplay = True
 
-                set_state_to_now_playing_via_dd(radio_url=key, radio_name=text, favicon=favicon)
+                await set_state_to_now_playing_via_dd(radio_url=key, radio_name=text, favicon=favicon)
                 
-                # Ъпдейтваме състоянието на бутона
+
                 ap.state = True
                 ap.btn_play.icon = ft.Icons.PAUSE_CIRCLE
                 
-                
-                # Ъпдейтваме UI компонентите
+
              
-                
-                # Ъпдейтваме страницата
+
                 ap.audio1.update()
                 page.update()
                
@@ -86,7 +71,10 @@ async def main(page: ft.Page):
         try:
             radio_url = e.control.data["url"]
             radio_name = e.control.data["name"]
-            print(f"Loading: {radio_name} - {radio_url}")
+            favicon = e.control.data.get("favicon_url")
+            # print(f"Loading: {radio_name} - {radio_url}")
+            
+            print(f"favicon exists in database: {favicon}")
 
             if radio_url:
                 # Ако има Discord инстанция, ъпдейтваме статуса
@@ -107,40 +95,31 @@ async def main(page: ft.Page):
                     ap.track_artist.value = radio_name
                 else:
                     ap.track_artist = ft.Text(radio_name)
-                
-                # Ъпдейтваме аудио източника
+
                 ap.audio1.src = radio_url
                 ap.audio1.autoplay = True
                 
-                # Ъпдейтваме състоянието на бутона
                 ap.state = True
                 ap.btn_play.icon = ft.Icons.PAUSE_CIRCLE
                 
-                # Ъпдейтваме UI компонентите
-                await ap.update_title_on_player(radio_name)
-                
-                # Ъпдейтваме страницата
+                await ap.update_title_on_player(radio_name, favicon)
+
                 page.update()
                 print(f"Now playing: {radio_name}")
                 
         except Exception as ex:
             print(f"Error changing radio: {ex}")
 
-    def set_state_to_now_playing_via_dd(radio_url=None, radio_name=None, favicon=None):
+    async def set_state_to_now_playing_via_dd(radio_url=None, radio_name=None, favicon=None):
     
         try:
             # print(f"Loading: {radio_name} - {radio_url}")
 
             if radio_url:
-                # Ако има Discord инстанция, ъпдейтваме статуса
-                # if dd_instance:
-                #     await dd_instance.set_now_playing(radio_name)
-                
-                # Спираме текущото възпроизвеждане
+
                 if ap.audio1:
                     ap.audio1.pause()
-                
-                # Ъпдейтваме заглавието и артиста
+
                 if ap.track_name:
                     ap.track_name.value = "Now playing:"
                 else:
@@ -170,7 +149,7 @@ async def main(page: ft.Page):
                 ap.btn_play.icon = ft.Icons.PAUSE_CIRCLE
                 
                 # Ъпдейтваме UI компонентите
-                ap.update_title_on_player(radio_name, favicon)
+                await ap.update_title_on_player(radio_name, favicon)
                 
                 # Ъпдейтваме страницата
                 page.update()
@@ -213,13 +192,13 @@ async def main(page: ft.Page):
     
     global_model = GlobalModel()
     last_visited_radios = [] 
-    query_radios =  """SELECT name,url,favorite, COUNT(*) as count FROM flet_radios
-                GROUP BY name, url, favorite
+    query_radios =  """SELECT name,url,favorite, favicon_url, COUNT(*) as count FROM flet_radios
+                GROUP BY name, url, favorite, favicon_url
                 ORDER BY count DESC
                 LIMIT 666;"""
     try:
         last_visited_radios = await global_model.execute_query_all(query_radios)
-        #print("Database query result:", last_visited_radios)
+        # print("Database query result:", last_visited_radios)
     except Exception as e:
         print("Database query failed:", e)
         

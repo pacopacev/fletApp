@@ -7,6 +7,10 @@ import warnings
 from pathlib import Path
 from global_model import GlobalModel
 from app import main
+from jinja2 import Environment, FileSystemLoader
+
+env = Environment(loader=FileSystemLoader('templates'))
+
 
 version = "0.1.1"
 
@@ -23,7 +27,8 @@ ASSETS_DIR.mkdir(exist_ok=True)
 # print(f"Assets directory: {ASSETS_DIR}")
 # print(f"Assets exists: {ASSETS_DIR.exists()}")
 if ASSETS_DIR.exists():
-    print(f"Assets contents: {list(ASSETS_DIR.glob('*'))}")
+    pass
+    # print(f"Assets contents: {list(ASSETS_DIR.glob('*'))}")
 
 app = flet_fastapi.FastAPI()
 
@@ -77,52 +82,8 @@ async def read_root():
     if not (ASSETS_DIR / icon_file).exists():
         icon_file = next((f.name for f in ASSETS_DIR.glob("*.png")), "favicon.png")
 
-    return f"""
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <title>DropDown Radio Browser</title>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="icon" href="/assets/Weathered Chevron with Spikes and Chains.png" type="image/png">
-        <style>
-            body {{ font-family: Arial, sans-serif; margin: 40px; background: #f0f0f0; 
-                    background-image: url('/assets/Distressed Metal Chevron with Chains.png');
-                    background-position: center;   /* Center the image */
-                    background-repeat: no-repeat;  /* No repeating */
-                    background-attachment: fixed;  /* Fixed on scroll */
-                    height: 100vh;      }}
-            .container {{ 
-                max-width: 800px; 
-                margin: 0 auto; background: 
-                transparent; 
-                padding: 20px; 
-                border-radius: 10px; 
-                }}
-            h1 {{ color: #333; }}
-            .links {{ margin-top: 20px; }}
-            .links a {{ display: block; margin: 10px 0; padding: 10px; background: #007bff; color: white;
-                        text-decoration: none; border-radius: 5px; text-align: center; }}
-            .links a:hover {{ background: #0056b3; }}
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <h1>🎵 DropDown Radio Browser</h1>
-            <p>Welcome to the Radio Browser app power by Flet!</p>
-            <div class="links">
-                <a href="/app">Go to Radio App</a>
-                <a href="/health">API Health Check</a>
-                <a href="/debug-assets">Debug Assets</a>
-                <a href="/assets/{icon_file}">Test Image Access</a>
-                <a href="/test-api">Test API</a>
-                <a href="/test-db">Test DB</a>
-                <p>Version: {version}</p>
-            </div>
-        </div>
-    </body>
-    </html>
-    """
+    return env.get_template('main_page_html.html').render(version=version, icon_file=icon_file)
+       
 
 # --- Mount Flet app at /app ---
 app.mount(
