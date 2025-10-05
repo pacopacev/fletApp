@@ -1,12 +1,18 @@
 import flet as ft
-from tinytag import TinyTag
-from math import pi
 import asyncio
-from validate_radio import ValidateRadio
+from global_model import GlobalModel
+from snackbar import Snackbar
+
 
 class AudioPlayer:
     def __init__(self, page: ft.Page):
         self.page = page
+        # self.add_to_favorites = add_to_favorites
+        self.btn_favorite = ft.IconButton(
+            icon=ft.Icons.FAVORITE_BORDER,
+            tooltip="Add to favorites",
+            on_click=lambda e: asyncio.run(self.update_favorite(e, data=self.audio1.src)),
+        )
         self.track_name = ft.Text("Select a station", weight=ft.FontWeight.BOLD)
         self.track_artist = ft.Text("No station selected")
         self.favicon = ft.Image(
@@ -70,12 +76,8 @@ class AudioPlayer:
                                             value=50,
                                             label="{value}",
                                             on_change=self.volume_change,
-                                        ),
-                                        ft.IconButton(
-                                            icon=ft.Icons.FAVORITE_BORDER,
-                                            on_click=lambda e, data=self.audio1.src: self.add_to_favorites(data),
-                                            data=self.audio1.src
-                                        ),
+                                      ),
+                                        self.btn_favorite
                                     ],
                                     alignment=ft.MainAxisAlignment.END,
                                 ),
@@ -170,6 +172,8 @@ class AudioPlayer:
         self.page.update()
 
     async def update_title_on_player(self, radio_name, favicon):
+        self.btn_favorite.icon = ft.Icons.FAVORITE_BORDER
+        self.btn_favorite.update()
         try:
             # print(f"Updating title to: {radio_name}")
             
@@ -195,9 +199,62 @@ class AudioPlayer:
             print(f"Error updating title: {ex}")
 
 
-    def add_to_favorites(self, e):
-        print(e)
-        print("Adding to favorites")
+    async def update_favorite(self, e, data=None):
+        # Use the current audio source or provided data
+        station_url = self.audio1.src if self.audio1.src else False
+        station_name = self.track_artist.value
+        print(f"Updating favorite: {station_name} - {station_url}")
+        status_favorite = True
+        status_update = await GlobalModel().execute_query_update(
+            table="flet_radios",
+            columns=("favorite",),
+            updates=(status_favorite,),
+            where=(("url", station_url),)
+        
+        )
+        # print(status_update)
+        if status_update != True:
+            print(f"Failed to update favorite status for {station_name}")
+        else:
+            if self.btn_favorite.icon == ft.Icons.FAVORITE:
+                self.btn_favorite.icon = ft.Icons.FAVORITE_BORDER
+                self.btn_favorite.update()
+                await self.remove_favorite(station_url)
+            else:
+                self.btn_favorite.icon = ft.Icons.FAVORITE
+                snackbar_instance = Snackbar("Added to favorites", bgcolor="green", length = None)
+                snackbar_instance.open = True  
+                self.page.controls.append(snackbar_instance)
+                self.page.update()
+            
+
+            print(f"Successfully updated favorite status for {station_name}")
+
+
+    async def remove_favorite(self, station_url):
+        status_favorite = False
+        status_update = await GlobalModel().execute_query_update(
+            table="flet_radios",
+            columns=("favorite",),
+            updates=(status_favorite,),
+            where=(("url", station_url),)
+        )
+        try:
+            if status_update != True:
+                print(f"Failed to remove favorite status for URL: {station_url}")
+            else:
+                print(f"Successfully removed favorite status for URL: {station_url}")
+                snackbar_instance = Snackbar("Removed from favorites", bgcolor="green", length = None)
+                snackbar_instance.open = True  
+                self.page.controls.append(snackbar_instance)
+                self.page.update()
+        except Exception as e:
+            print(f"Error in remove_favorite: {e}")
+        return status_update        
+        
+        
+ 
+      
 
 
         

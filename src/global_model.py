@@ -165,19 +165,21 @@ class GlobalModel:
             print(f"Error executing query: {e}")
             self.connection.rollback()
 
-    def execute_query_update(self, table: str, columns: tuple, updates: tuple, where: tuple):
+    async def execute_query_update(self, table: str, columns: tuple, updates: tuple, where: tuple):
         try:
-            if self.connect():
+            if await self.connect():
                 set_clause = ', '.join([f"{col} = %s" for col in columns])
                 where_clause = ' AND '.join([f"{k} = %s" for k, _ in where])
                 sql = f"UPDATE {table} SET {set_clause} WHERE {where_clause}"
                 params = list(updates) + [v for _, v in where]
                 self.cursor.execute(sql, params)
+                # print(sql)  # Debug: print the executed query
                 self.connection.commit()
+                return True
                 print("✅ Update successful.")
         except Exception as e:
             print(f"[!] Error executing update: {e}")
             if self.connection:
                 self.connection.rollback()
         finally:
-            self.close()
+            await self.close()

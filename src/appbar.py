@@ -1,6 +1,7 @@
 import flet as ft
 
 
+
 class AppBar(ft.AppBar):
     def __init__(self):
 
@@ -13,7 +14,7 @@ class AppBar(ft.AppBar):
                 # height=30,
                 tooltip=ft.Tooltip("Go to main page"),
                 ), 
-                 on_click=lambda _: self.page.launch_url("https://renewed-rosanne-pacopacev-b6447873.koyeb.app/"),
+                 on_click=lambda _: self.page.launch_url("http://127.0.0.1:8553/"),
                  
                  
             ),
@@ -48,3 +49,5 @@ class AppBar(ft.AppBar):
         else:
             self.page.theme_mode = "light"
         self.page.update()
+
+

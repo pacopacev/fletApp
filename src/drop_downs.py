@@ -22,20 +22,24 @@ class DDComponents:
         
 
         self.ddServer = ft.Dropdown(
+            leading_icon=ft.Icons.PUBLIC,
+            label="Server",
             on_change=self.server_change,
             width=300,
             hint_text="Select Server",
-            border_color=ft.Colors.RED,
+            border_color=ft.Colors.WHITE,
             options=[],
             
         )
         
 
         self.ddGenre = ft.Dropdown(
+            leading_icon=ft.Icons.MUSIC_NOTE,
+            label="Genre",
             on_change=self.tag_change,
             width=300,
             hint_text="Select Genre",
-            border_color=ft.Colors.RED,
+            border_color=ft.Colors.WHITE,
             options=[
                 ft.dropdown.Option("metal", "Metal"),
                 ft.dropdown.Option("rock", "Rock"),
@@ -50,20 +54,24 @@ class DDComponents:
         )
         
         self.ddCountry = ft.Dropdown(
+            leading_icon=ft.Icons.FLAG,
+            label="Country",
             on_change=self.get_country_code,
             width=300,
             hint_text="Select Country",
-            border_color=ft.Colors.RED,
+            border_color=ft.Colors.WHITE,
             options=[
 
             ],
         )
         
         self.ddRadio = ft.Dropdown(
+            leading_icon=ft.Icons.RADIO,
+            label="Radio Stations",
             # on_click=self.on_radio_click,
             on_change=self.radio_change,
             width=300,
-            border_color=ft.Colors.RED,
+            border_color=ft.Colors.WHITE,
             hint_text="Select Radio",
             options=[],
         )

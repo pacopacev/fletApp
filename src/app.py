@@ -10,7 +10,7 @@ from datetime import datetime
 
 async def main(page: ft.Page):
     
-    ap = AudioPlayer(page=page)
+    
 
     
     page.foreground_decoration = ft.BoxDecoration(
@@ -37,6 +37,12 @@ async def main(page: ft.Page):
     page.auto_scroll = True
     page.scroll = ft.ScrollMode.AUTO
 
+    # async def add_to_favorites(e):
+    #     print(e)
+    #     print("Adding to favorites2")
+       
+        
+     
     async def on_radio_change(value, key, text, favicon):
         # print("Radio dropdown changed")
         # print(f"Key: {key}")
@@ -48,16 +54,9 @@ async def main(page: ft.Page):
             if value:  
                 ap.audio1.src = value
                 ap.audio1.autoplay = True
-
                 await set_state_to_now_playing_via_dd(radio_url=key, radio_name=text, favicon=favicon)
-                
-
                 ap.state = True
                 ap.btn_play.icon = ft.Icons.PAUSE_CIRCLE
-                
-
-             
-
                 ap.audio1.update()
                 page.update()
                
@@ -66,8 +65,6 @@ async def main(page: ft.Page):
             print(f"Error changing radio: {ex}")
         
     async def set_state_to_now_playing(e,  dd_instance=None):
-        
-
         try:
             radio_url = e.control.data["url"]
             radio_name = e.control.data["name"]
@@ -94,6 +91,7 @@ async def main(page: ft.Page):
                 if ap.track_artist:
                     ap.track_artist.value = radio_name
                 else:
+                    # print(f"Creating new track_artist Text for: {radio_name}")
                     ap.track_artist = ft.Text(radio_name)
 
                 ap.audio1.src = radio_url
@@ -158,7 +156,7 @@ async def main(page: ft.Page):
         except Exception as ex:
             print(f"Error changing radio: {ex}")
 
-
+    ap = AudioPlayer(page=page)
     dd_instance = DDComponents(page=page, on_radio_change=on_radio_change)
 
 
