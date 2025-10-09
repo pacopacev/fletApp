@@ -10,9 +10,12 @@ from datetime import datetime
 
 async def main(page: ft.Page):
     
-    
-
-    
+    page.app = True
+    page.title = "DropDown Radio"
+    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
+    page.theme_mode = ft.ThemeMode.DARK
+    page.auto_scroll = True
+    page.scroll = ft.ScrollMode.AUTO
     page.foreground_decoration = ft.BoxDecoration(
         gradient=ft.LinearGradient(
             colors=[
@@ -30,24 +33,8 @@ async def main(page: ft.Page):
             
         ),
     )
-    page.app = True
-    page.title = "DropDown Radio"
-    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-    page.theme_mode = ft.ThemeMode.DARK
-    page.auto_scroll = True
-    page.scroll = ft.ScrollMode.AUTO
-
-    # async def add_to_favorites(e):
-    #     print(e)
-    #     print("Adding to favorites2")
-       
-        
      
     async def on_radio_change(value, key, text, favicon):
-        # print("Radio dropdown changed")
-        # print(f"Key: {key}")
-        # print(f"Text: {text}")
-        # print(f"Radio changed to: {value}")
         ap.audio1.src = value
         ap.audio1.autoplay = True  
         try:
@@ -59,8 +46,6 @@ async def main(page: ft.Page):
                 ap.btn_play.icon = ft.Icons.PAUSE_CIRCLE
                 ap.audio1.update()
                 page.update()
-               
-                
         except Exception as ex:
             print(f"Error changing radio: {ex}")
         
@@ -109,25 +94,20 @@ async def main(page: ft.Page):
             print(f"Error changing radio: {ex}")
 
     async def set_state_to_now_playing_via_dd(radio_url=None, radio_name=None, favicon=None):
-    
+
         try:
             # print(f"Loading: {radio_name} - {radio_url}")
-
             if radio_url:
-
                 if ap.audio1:
                     ap.audio1.pause()
-
                 if ap.track_name:
                     ap.track_name.value = "Now playing:"
                 else:
                     ap.track_name = ft.Text(radio_name)
-                
                 if ap.track_artist:
                     ap.track_artist.value = radio_name
                 else:
-                    ap.track_artist = ft.Text(radio_name)
-                
+                    ap.track_artist = ft.Text(radio_name)              
                 if ap.favicon:
                     ap.favicon.src = favicon
                 else:
@@ -136,19 +116,15 @@ async def main(page: ft.Page):
                         width=90,
                         height=90,
                         fit=ft.ImageFit.CONTAIN,
-                    )
-                
+                    )           
                 # Ъпдейтваме аудио източника
                 ap.audio1.src = radio_url
-                ap.audio1.autoplay = True
-                
+                ap.audio1.autoplay = True               
                 # Ъпдейтваме състоянието на бутона
                 ap.state = True
-                ap.btn_play.icon = ft.Icons.PAUSE_CIRCLE
-                
+                ap.btn_play.icon = ft.Icons.PAUSE_CIRCLE               
                 # Ъпдейтваме UI компонентите
-                await ap.update_title_on_player(radio_name, favicon)
-                
+                await ap.update_title_on_player(radio_name, favicon)          
                 # Ъпдейтваме страницата
                 page.update()
                 print(f"Now playing: {radio_name}")
@@ -158,37 +134,13 @@ async def main(page: ft.Page):
 
     ap = AudioPlayer(page=page)
     dd_instance = DDComponents(page=page, on_radio_change=on_radio_change)
-
-
-    # UI Layout
-    appbar = AppBar()
-    page.add(appbar)
-
-    page.add(
-        ft.Column(
-            controls=[
-                ft.Container(
-                    content=ft.Row(
-                        controls=[
-                            ft.Image(src=f"/images/Weathered Chevron with Spikes and Chains.png"), 
-                            ft.Text("Radio DropDown", size=20, weight="bold"), 
-                            ft.Image(src=f"images/Weathered Chevron with Spikes and Chains.png")
-                        ]
-                    ),
-                    padding=10,
-                    border_radius=ft.border_radius.all(10),
-                    alignment=ft.alignment.center,
-                    width=300,
-                    height=60,
-                ),dd_instance.ddServer,
-                dd_instance.ddGenre,
-                dd_instance.ddCountry,
-                dd_instance.ddRadio, 
-            ]
-        ),dd_instance.now_playing_container,
-    )
-    
     global_model = GlobalModel()
+    appbar = AppBar()
+    page.appbar = appbar
+    
+
+    
+    
     last_visited_radios = [] 
     query_radios =  """SELECT name,url,favorite, favicon_url, COUNT(*) as count FROM flet_radios
                 GROUP BY name, url, favorite, favicon_url
@@ -199,13 +151,26 @@ async def main(page: ft.Page):
         # print("Database query result:", last_visited_radios)
     except Exception as e:
         print("Database query failed:", e)
-        
+
+
+
+
+
+# GUI components
+    licence_text = ft.Container(content=ft.Text(
+            f"© {datetime.now().year} Plambe. All rights reserved.",
+            size=12,
+            weight=ft.FontWeight.BOLD,
+            color=ft.Colors.WHITE,
+            style=ft.TextStyle(
+            bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST, color=ft.Colors.BLACK26,
+           
+    )
+),    padding=10,
+    )
     last_visited_list = ft.ListView(
         clip_behavior=ft.ClipBehavior.ANTI_ALIAS,
-    
-
         controls=[
-            
             ft.ListTile(
                 title=ft.Text(radio["name"]),
                 subtitle=ft.Text(radio["url"]),
@@ -213,9 +178,7 @@ async def main(page: ft.Page):
                 trailing=ft.Icon(
                     "favorite" if radio["favorite"] else "favorite_border",
                     tooltip="Remove from favorites" if radio["favorite"] else "Add to favorites",
-                    
-                    ),
-                    
+                    ),                    
                 data=radio,
                 on_click=set_state_to_now_playing,
             )
@@ -232,22 +195,69 @@ async def main(page: ft.Page):
         height=300,
         bgcolor="#B00020",
     )
-    licence_text = ft.Text(
-            f"© {datetime.now().year} Plambe. All rights reserved.",
-            size=12,
-            weight=ft.FontWeight.BOLD,
-            color=ft.Colors.WHITE,
-            
-            style=ft.TextStyle(
-            bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST, color=ft.Colors.BLACK26,
-           
-    ),
-)
     
-    page.add(ap.audio_player)
+    wlcome_text = ft.Row(
+                        controls=[
+                            ft.Image(src=f"/images/Weathered Chevron with Spikes and Chains.png", width=40, height=40), 
+                            ft.Text("Radio DropDown", size=20, weight="bold"), 
+                            ft.Image(src=f"/images/Weathered Chevron with Spikes and Chains.png", width=40, height=40)
+                        ],
+                        alignment=ft.MainAxisAlignment.CENTER,
+                        vertical_alignment=ft.CrossAxisAlignment.CENTER,
+                    )
     
-    page.add(ft.Text("Last Visited Radios", size=16, weight=ft.FontWeight.BOLD))
-    page.add(last_visited_list_container)
-    page.add(licence_text)
-
-# ft.app(target=main, assets_dir="assets")
+    scroll_position = 0
+    last_scroll_position = 0
+    
+    def on_scroll(e):
+        nonlocal scroll_position, last_scroll_position
+        
+        scroll_position = e.pixels
+        print(f"Scroll position: {scroll_position}")
+        
+        # Hide when scrolling down
+        if scroll_position > last_scroll_position + 50:
+            if appbar.visible:
+                appbar.visible = False
+                print("Hiding AppBar - Scrolling down")
+                page.update()
+        
+        # Show when scrolling up  
+        elif scroll_position < last_scroll_position - 20:
+            if not appbar.visible:
+                appbar.visible = True
+                print("Showing AppBar - Scrolling up")
+                page.update()
+        
+        last_scroll_position = scroll_position
+    main_column = ft.Column(
+        expand=True,
+        scroll=ft.ScrollMode.ADAPTIVE,
+        on_scroll=on_scroll,
+            controls=[
+                ft.Container(
+                    content=wlcome_text,
+                    padding=25,
+                    width=300,
+                    # border = ft.border.all(2, ft.Colors.RED),
+                    # border_radius=ft.border_radius.all(10),
+                ),
+                dd_instance.ddServer,
+                dd_instance.ddGenre,
+                dd_instance.ddCountry,
+                dd_instance.ddRadio,
+                ft.Container(content=ap.audio_player, padding=15, width=500),
+                ft.Text("Last Visited Radios", size=16, weight=ft.FontWeight.BOLD),
+                last_visited_list_container,
+                licence_text, 
+                
+                # BottomAppBar()
+            ],
+            alignment=ft.MainAxisAlignment.CENTER,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+        )
+    
+        
+    page.add(main_column)
+    
+    
