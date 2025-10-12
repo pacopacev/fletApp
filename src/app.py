@@ -10,11 +10,11 @@ from datetime import datetime
 
 async def main(page: ft.Page):
     
-    page.app = True
+    # page.app = True
     page.title = "DropDown Radio"
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     page.theme_mode = ft.ThemeMode.DARK
-    page.auto_scroll = True
+    # page.auto_scroll = True
     page.scroll = ft.ScrollMode.AUTO
     page.foreground_decoration = ft.BoxDecoration(
         gradient=ft.LinearGradient(
@@ -60,39 +60,74 @@ async def main(page: ft.Page):
 
             if radio_url:
                 # Ако има Discord инстанция, ъпдейтваме статуса
-                if dd_instance:
-                    await dd_instance.set_now_playing(radio_name)
-                
-                # Спираме текущото възпроизвеждане
+                if radio_url:
+                    # Ако има Discord инстанция, ъпдейтваме статуса
+                    if dd_instance:
+                        await dd_instance.set_now_playing(radio_name)
+                    # Спираме текущото възпроизвеждане
+                    if ap.audio1:
+                        ap.audio1.pause()
+                    # Ъпдейтваме заглавието и артиста
+                    if ap.track_name:
+                        ap.track_name.value = "Now playing:"
+                    else:
+                        ap.track_name = ft.Text(radio_name)
+                    if ap.track_artist:
+                        ap.track_artist.value = radio_name
+                    else:
+                        ap.track_artist = ft.Text(radio_name)
+                    ap.audio1.src = radio_url
+                    ap.audio1.autoplay = True
+                    ap.state = True
+                    ap.btn_play.icon = ft.Icons.PAUSE_CIRCLE
+                    # Update play icon in last_visited_list to pause
+                    
+                    await ap.update_title_on_player(radio_name, favicon)
+                    page.update()
+                    print(f"Now playing: {radio_name}")
+        except Exception as ex:
+            print(f"Error changing radio: {ex}")
+
+    async def set_play_from_list(e):
+        try:
+            radio_url = e.control.data["url"]
+            radio_name = e.control.data["name"]
+            favicon = e.control.data.get("favicon_url")
+            print(f"Loading from list: {radio_name} - {radio_url}")
+            if radio_url:
                 if ap.audio1:
                     ap.audio1.pause()
-                
-                # Ъпдейтваме заглавието и артиста
                 if ap.track_name:
                     ap.track_name.value = "Now playing:"
                 else:
                     ap.track_name = ft.Text(radio_name)
-                
                 if ap.track_artist:
                     ap.track_artist.value = radio_name
                 else:
-                    # print(f"Creating new track_artist Text for: {radio_name}")
-                    ap.track_artist = ft.Text(radio_name)
-
+                    ap.track_artist = ft.Text(radio_name)              
+                if ap.favicon:
+                    ap.favicon.src = favicon
+                else:
+                    ap.favicon = ft.Image(
+                        src=f"/Distressed Metal Chevron with Chains.png",
+                        width=90,
+                        height=90,
+                        fit=ft.ImageFit.CONTAIN,
+                    )           
                 ap.audio1.src = radio_url
-                ap.audio1.autoplay = True
-                
+                ap.audio1.autoplay = True               
                 ap.state = True
                 ap.btn_play.icon = ft.Icons.PAUSE_CIRCLE
-                
-                await ap.update_title_on_player(radio_name, favicon)
-
+            
+                if hasattr(e.control, 'icon'):
+                        e.control.icon = ft.Icons.PAUSE_CIRCLE 
+                        e.control.update()          
+                await ap.update_title_on_player(radio_name, favicon)          
                 page.update()
                 print(f"Now playing: {radio_name}")
                 
         except Exception as ex:
             print(f"Error changing radio: {ex}")
-
     async def set_state_to_now_playing_via_dd(radio_url=None, radio_name=None, favicon=None):
 
         try:
@@ -117,15 +152,11 @@ async def main(page: ft.Page):
                         height=90,
                         fit=ft.ImageFit.CONTAIN,
                     )           
-                # Ъпдейтваме аудио източника
                 ap.audio1.src = radio_url
                 ap.audio1.autoplay = True               
-                # Ъпдейтваме състоянието на бутона
                 ap.state = True
                 ap.btn_play.icon = ft.Icons.PAUSE_CIRCLE               
-                # Ъпдейтваме UI компонентите
                 await ap.update_title_on_player(radio_name, favicon)          
-                # Ъпдейтваме страницата
                 page.update()
                 print(f"Now playing: {radio_name}")
                 
@@ -137,8 +168,6 @@ async def main(page: ft.Page):
     global_model = GlobalModel()
     appbar = AppBar()
     page.appbar = appbar
-    
-
     
     
     last_visited_radios = [] 
@@ -174,17 +203,26 @@ async def main(page: ft.Page):
             ft.ListTile(
                 title=ft.Text(radio["name"]),
                 subtitle=ft.Text(radio["url"]),
-                leading=ft.Icon("play_arrow", tooltip=ft.Tooltip("Play")),
+                leading=ft.IconButton(
+                    icon=ft.Icons.PLAY_CIRCLE_FILL,
+                    style=ft.ButtonStyle(icon_size=40),
+                    icon_color=ft.Colors.WHITE,
+                    tooltip="Play this radio",
+                    data=radio,
+                    on_click=lambda e: asyncio.run(set_play_from_list(e))
+                ),
                 trailing=ft.Icon(
                     "favorite" if radio["favorite"] else "favorite_border",
                     tooltip="Remove from favorites" if radio["favorite"] else "Add to favorites",
                     ),                    
                 data=radio,
-                on_click=set_state_to_now_playing,
+                # on_click=set_state_to_now_playing,
             )
             for radio in last_visited_radios
         ],
         height=200,
+        # on_scroll=lambda e: on_scroll(e),
+        
     )
     
     last_visited_list_container = ft.Container(
@@ -205,35 +243,8 @@ async def main(page: ft.Page):
                         alignment=ft.MainAxisAlignment.CENTER,
                         vertical_alignment=ft.CrossAxisAlignment.CENTER,
                     )
-    
-    scroll_position = 0
-    last_scroll_position = 0
-    
-    def on_scroll(e):
-        nonlocal scroll_position, last_scroll_position
-        
-        scroll_position = e.pixels
-        print(f"Scroll position: {scroll_position}")
-        
-        # Hide when scrolling down
-        if scroll_position > last_scroll_position + 50:
-            if appbar.visible:
-                appbar.visible = False
-                print("Hiding AppBar - Scrolling down")
-                page.update()
-        
-        # Show when scrolling up  
-        elif scroll_position < last_scroll_position - 20:
-            if not appbar.visible:
-                appbar.visible = True
-                print("Showing AppBar - Scrolling up")
-                page.update()
-        
-        last_scroll_position = scroll_position
     main_column = ft.Column(
-        expand=True,
-        scroll=ft.ScrollMode.ADAPTIVE,
-        on_scroll=on_scroll,
+
             controls=[
                 ft.Container(
                     content=wlcome_text,
@@ -251,13 +262,41 @@ async def main(page: ft.Page):
                 last_visited_list_container,
                 licence_text, 
                 
-                # BottomAppBar()
+                ft.Container(height=66)  # Spacer at the bottom
             ],
             alignment=ft.MainAxisAlignment.CENTER,
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            scroll=ft.ScrollMode.ALWAYS,
+            on_scroll_interval=0,
+            on_scroll=lambda e: on_scroll(e)
         )
+    
+    scroll_position = 0
+    last_scroll_position = 0
+    
+    def on_scroll(e):
+        print("Scroll event triggered")
+        nonlocal scroll_position, last_scroll_position
+        scroll_position = e.pixels
+        # Hide AppBar when scrolling down
+        if scroll_position > last_scroll_position + 20:
+            if appbar.visible:
+                appbar.visible = False
+                page.update()
+        # Show AppBar when scrolling up
+        elif scroll_position < last_scroll_position - 20:
+            if not appbar.visible:
+                appbar.visible = True
+                page.update()
+        last_scroll_position = scroll_position
+
+    
+
+
+    
     
         
     page.add(main_column)
     
     
+

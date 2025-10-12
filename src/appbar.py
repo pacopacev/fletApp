@@ -4,9 +4,7 @@ import flet as ft
 
 class AppBar(ft.AppBar):
     def __init__(self):
-
         super().__init__(
-     
             leading=ft.Container(
                 content=ft.Image(
                 src=f"/Distressed Metal Chevron with Chains.png", 
@@ -15,8 +13,7 @@ class AppBar(ft.AppBar):
                 tooltip=ft.Tooltip("Go to main page"),
                 ), 
                  on_click=lambda _: self.page.launch_url("http://127.0.0.1:8553/"),
-                 
-                 
+                               
             ),
             toolbar_height=50,
 
