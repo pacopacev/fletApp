@@ -9,6 +9,8 @@ from audio_p import AudioPlayer
 from datetime import datetime
 
 async def main(page: ft.Page):
+
+    
     
     # page.app = True
     page.title = "DropDown Radio"
@@ -33,7 +35,8 @@ async def main(page: ft.Page):
             
         ),
     )
-     
+    
+        
     async def on_radio_change(value, key, text, favicon):
         ap.audio1.src = value
         ap.audio1.autoplay = True  
@@ -49,44 +52,6 @@ async def main(page: ft.Page):
         except Exception as ex:
             print(f"Error changing radio: {ex}")
         
-    # async def set_state_to_now_playing(e,  dd_instance=None):
-    #     try:
-    #         radio_url = e.control.data["url"]
-    #         radio_name = e.control.data["name"]
-    #         favicon = e.control.data.get("favicon_url")
-    #         # print(f"Loading: {radio_name} - {radio_url}")
-            
-    #         print(f"favicon exists in database: {favicon}")
-
-    #         if radio_url:
-    #             # Ако има Discord инстанция, ъпдейтваме статуса
-    #             if radio_url:
-    #                 # Ако има Discord инстанция, ъпдейтваме статуса
-    #                 if dd_instance:
-    #                     await dd_instance.set_now_playing(radio_name)
-    #                 # Спираме текущото възпроизвеждане
-    #                 if ap.audio1:
-    #                     ap.audio1.pause()
-    #                 # Ъпдейтваме заглавието и артиста
-    #                 if ap.track_name:
-    #                     ap.track_name.value = "Now playing:"
-    #                 else:
-    #                     ap.track_name = ft.Text(radio_name)
-    #                 if ap.track_artist:
-    #                     ap.track_artist.value = radio_name
-    #                 else:
-    #                     ap.track_artist = ft.Text(radio_name)
-    #                 ap.audio1.src = radio_url
-    #                 ap.audio1.autoplay = True
-    #                 ap.state = True
-    #                 ap.btn_play.icon = ft.Icons.PAUSE_CIRCLE
-    #                 # Update play icon in last_visited_list to pause
-                    
-    #                 await ap.update_title_on_player(radio_name, favicon)
-    #                 page.update()
-    #                 print(f"Now playing: {radio_name}")
-    #     except Exception as ex:
-    #         print(f"Error changing radio: {ex}")
 
     async def set_play_from_list(e):
         try:
@@ -96,6 +61,7 @@ async def main(page: ft.Page):
             print(f"Loading from list: {radio_name} - {radio_url}")
             if radio_url:
                 if ap.audio1:
+
                     ap.audio1.pause()
                     ap.btn_play.icon = ft.Icons.PAUSE_CIRCLE                   
                     # e.control.icon = ft.Icons.PAUSE_CIRCLE 
@@ -121,7 +87,7 @@ async def main(page: ft.Page):
                 ap.audio1.autoplay = True               
                 # ap.state = True
                 
-                if ap.state ==False:
+                if ap.state==False:
                     ap.state = True
                     ap.btn_play.icon = ft.Icons.PAUSE_CIRCLE
                     e.control.icon = ft.Icons.PAUSE_CIRCLE
@@ -129,7 +95,7 @@ async def main(page: ft.Page):
                     ap.audio1.play()
                     ap.audio1.update()
                     page.update()
-                elif ap.state ==True:
+                elif ap.state==True:
                     ap.state = False
                     ap.btn_play.icon = ft.Icons.PLAY_CIRCLE_FILL
                     e.control.icon = ft.Icons.PLAY_CIRCLE_FILL
@@ -191,8 +157,16 @@ async def main(page: ft.Page):
                 
         except Exception as ex:
             print(f"Error changing radio: {ex}")
-
-    ap = AudioPlayer(page=page)
+    def reset_listeners():
+        print("Resetting listeners")
+        # Reset all icons
+        for control in last_visited_list_container.content.controls:
+            # control is a ListTile, its leading is the IconButton
+            if hasattr(control, 'leading') and isinstance(control.leading, ft.IconButton):
+                control.leading.icon = ft.Icons.PLAY_CIRCLE_FILL
+                control.leading.update()
+    ap = AudioPlayer(page=page, reset_listeners=reset_listeners)
+    
     dd_instance = DDComponents(page=page, on_radio_change=on_radio_change)
     global_model = GlobalModel()
     appbar = AppBar()
@@ -238,7 +212,7 @@ async def main(page: ft.Page):
                 ),
                 trailing=ft.Icon(
                     "favorite" if radio["favorite"] else "favorite_border",
-                    tooltip="Remove from favorites" if radio["favorite"] else "Add to favorites",
+                    tooltip="Added to favorites" if radio["favorite"] else "",
                     ),                    
                 data=radio,
                 # on_click=set_state_to_now_playing,

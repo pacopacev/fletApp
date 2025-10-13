@@ -5,8 +5,9 @@ from snackbar import Snackbar
 
 
 class AudioPlayer:
-    def __init__(self, page: ft.Page):
+    def __init__(self, page: ft.Page, reset_listeners=None):
         self.page = page
+        self.reset_listeners = reset_listeners
         # self.add_to_favorites = add_to_favorites
         self.btn_favorite = ft.IconButton(
             icon=ft.Icons.FAVORITE_BORDER,
@@ -124,7 +125,8 @@ class AudioPlayer:
             self.audio1.play()
             self.audio1.update()
             self.page.update()
-        elif self.state == True:  
+        elif self.state == True:
+            self.reset_listeners()
             print(f"Paused:{self.state}")
             self.state = False
             self.btn_play.icon = ft.Icons.PLAY_CIRCLE
