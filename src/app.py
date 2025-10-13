@@ -49,44 +49,44 @@ async def main(page: ft.Page):
         except Exception as ex:
             print(f"Error changing radio: {ex}")
         
-    async def set_state_to_now_playing(e,  dd_instance=None):
-        try:
-            radio_url = e.control.data["url"]
-            radio_name = e.control.data["name"]
-            favicon = e.control.data.get("favicon_url")
-            # print(f"Loading: {radio_name} - {radio_url}")
+    # async def set_state_to_now_playing(e,  dd_instance=None):
+    #     try:
+    #         radio_url = e.control.data["url"]
+    #         radio_name = e.control.data["name"]
+    #         favicon = e.control.data.get("favicon_url")
+    #         # print(f"Loading: {radio_name} - {radio_url}")
             
-            print(f"favicon exists in database: {favicon}")
+    #         print(f"favicon exists in database: {favicon}")
 
-            if radio_url:
-                # Ако има Discord инстанция, ъпдейтваме статуса
-                if radio_url:
-                    # Ако има Discord инстанция, ъпдейтваме статуса
-                    if dd_instance:
-                        await dd_instance.set_now_playing(radio_name)
-                    # Спираме текущото възпроизвеждане
-                    if ap.audio1:
-                        ap.audio1.pause()
-                    # Ъпдейтваме заглавието и артиста
-                    if ap.track_name:
-                        ap.track_name.value = "Now playing:"
-                    else:
-                        ap.track_name = ft.Text(radio_name)
-                    if ap.track_artist:
-                        ap.track_artist.value = radio_name
-                    else:
-                        ap.track_artist = ft.Text(radio_name)
-                    ap.audio1.src = radio_url
-                    ap.audio1.autoplay = True
-                    ap.state = True
-                    ap.btn_play.icon = ft.Icons.PAUSE_CIRCLE
-                    # Update play icon in last_visited_list to pause
+    #         if radio_url:
+    #             # Ако има Discord инстанция, ъпдейтваме статуса
+    #             if radio_url:
+    #                 # Ако има Discord инстанция, ъпдейтваме статуса
+    #                 if dd_instance:
+    #                     await dd_instance.set_now_playing(radio_name)
+    #                 # Спираме текущото възпроизвеждане
+    #                 if ap.audio1:
+    #                     ap.audio1.pause()
+    #                 # Ъпдейтваме заглавието и артиста
+    #                 if ap.track_name:
+    #                     ap.track_name.value = "Now playing:"
+    #                 else:
+    #                     ap.track_name = ft.Text(radio_name)
+    #                 if ap.track_artist:
+    #                     ap.track_artist.value = radio_name
+    #                 else:
+    #                     ap.track_artist = ft.Text(radio_name)
+    #                 ap.audio1.src = radio_url
+    #                 ap.audio1.autoplay = True
+    #                 ap.state = True
+    #                 ap.btn_play.icon = ft.Icons.PAUSE_CIRCLE
+    #                 # Update play icon in last_visited_list to pause
                     
-                    await ap.update_title_on_player(radio_name, favicon)
-                    page.update()
-                    print(f"Now playing: {radio_name}")
-        except Exception as ex:
-            print(f"Error changing radio: {ex}")
+    #                 await ap.update_title_on_player(radio_name, favicon)
+    #                 page.update()
+    #                 print(f"Now playing: {radio_name}")
+    #     except Exception as ex:
+    #         print(f"Error changing radio: {ex}")
 
     async def set_play_from_list(e):
         try:
@@ -97,6 +97,9 @@ async def main(page: ft.Page):
             if radio_url:
                 if ap.audio1:
                     ap.audio1.pause()
+                    ap.btn_play.icon = ft.Icons.PAUSE_CIRCLE                   
+                    # e.control.icon = ft.Icons.PAUSE_CIRCLE 
+                    # e.control.update()
                 if ap.track_name:
                     ap.track_name.value = "Now playing:"
                 else:
@@ -116,12 +119,38 @@ async def main(page: ft.Page):
                     )           
                 ap.audio1.src = radio_url
                 ap.audio1.autoplay = True               
-                ap.state = True
-                ap.btn_play.icon = ft.Icons.PAUSE_CIRCLE
+                # ap.state = True
+                
+                if ap.state ==False:
+                    ap.state = True
+                    ap.btn_play.icon = ft.Icons.PAUSE_CIRCLE
+                    e.control.icon = ft.Icons.PAUSE_CIRCLE
+                    e.control.update()
+                    ap.audio1.play()
+                    ap.audio1.update()
+                    page.update()
+                elif ap.state ==True:
+                    ap.state = False
+                    ap.btn_play.icon = ft.Icons.PLAY_CIRCLE_FILL
+                    e.control.icon = ft.Icons.PLAY_CIRCLE_FILL
+                    e.control.update()
+                    ap.audio1.pause()
+                    ap.audio1.update()
+                    page.update()
+                else:
+                    ap.state = True
+                    ap.btn_play.icon = ft.Icons.PAUSE_CIRCLE
+                    e.control.icon = ft.Icons.PAUSE_CIRCLE
+                    e.control.update()
+                    ap.audio1.resume()
+                    ap.audio1.update()
+                    page.update()
+                
             
-                if hasattr(e.control, 'icon'):
-                        e.control.icon = ft.Icons.PAUSE_CIRCLE 
-                        e.control.update()          
+                # if hasattr(e.control, 'icon'):
+                #     ap.btn_play.icon = ft.Icons.PAUSE_CIRCLE                   
+                #     e.control.icon = ft.Icons.PAUSE_CIRCLE 
+                #     e.control.update()          
                 await ap.update_title_on_player(radio_name, favicon)          
                 page.update()
                 print(f"Now playing: {radio_name}")
@@ -180,10 +209,6 @@ async def main(page: ft.Page):
         # print("Database query result:", last_visited_radios)
     except Exception as e:
         print("Database query failed:", e)
-
-
-
-
 
 # GUI components
     licence_text = ft.Container(content=ft.Text(
