@@ -6,13 +6,18 @@ class AppBar(ft.AppBar):
     def __init__(self):
         super().__init__(
             leading=ft.Container(
-                content=ft.Image(
-                src=f"/Distressed Metal Chevron with Chains.png", 
-                # width=30, 
-                # height=30,
-                tooltip=ft.Tooltip("Go to main page"),
-                ), 
-                 on_click=lambda _: self.page.launch_url("http://127.0.0.1:8553/"),
+                content=ft.IconButton(
+                    icon=ft.Icons.HOME,
+                    tooltip="Go to main page",
+                    on_click=lambda _: self.page.launch_url("http://127.0.0.1:8553/"),
+                ),
+                # content=ft.Image(
+                # src=f"/Distressed Metal Chevron with Chains.png", 
+                # # width=30, 
+                # # height=30,
+                # tooltip=ft.Tooltip("Go to main page"),
+                # ), 
+                #  on_click=lambda _: self.page.launch_url("http://127.0.0.1:8553/"),
                                
             ),
             toolbar_height=50,
@@ -21,9 +26,9 @@ class AppBar(ft.AppBar):
             leading_width=50,
             title=ft.Row(
                 controls=[
-                    # ft.Image(src=f"/images/Weathered Chevron with Spikes and Chains.png", width=40, height=40), 
-                    # ft.Text("Radio DropDown", size=20, weight="bold"), 
-                    # ft.Image(src=f"images/Weathered Chevron with Spikes and Chains.png", width=40, height=40)
+                     ft.Image(src=f"/images/Weathered Chevron with Spikes and Chains.png", width=40, height=40), 
+                     ft.Text("Radio DropDown", size=20, weight="bold"), 
+                     ft.Image(src=f"images/Weathered Chevron with Spikes and Chains.png", width=40, height=40)
                 ],
                 alignment="center"
             ),

@@ -12,10 +12,11 @@ class AudioPlayer:
         self.btn_favorite = ft.IconButton(
             icon=ft.Icons.FAVORITE_BORDER,
             tooltip="Add to favorites",
+            disabled=True,
             on_click=lambda e: asyncio.run(self.update_favorite(e, data=self.audio1.src)),
         )
         self.track_name = ft.Text("Select a station", weight=ft.FontWeight.BOLD)
-        self.track_artist = ft.Text("No station selected")
+        self.track_artist = ft.Text("No station selected", max_lines=4, overflow="ellipsis")
         self.favicon = ft.Image(
             src=f"/Distressed Metal Chevron with Chains.png",
             width=90,
@@ -23,14 +24,27 @@ class AudioPlayer:
             fit=ft.ImageFit.CONTAIN,
             border_radius=ft.border_radius.all(10)
         )
+        
+        self.slider = ft.Slider(
+                                            width=150,
+                                            active_color=ft.Colors.WHITE60,
+                                            min=0,
+                                            max=100,
+                                            divisions=100,
+                                            value=50,
+                                            label="{value}",
+                                            disabled=True,
+                                            on_change=self.volume_change,
+                                      )
         # print(f"Favicon: {self.favicon.src}")
-        self.state = False
+        self.state = True
         self.volume = 0.5
+        self.src = "empty"
         self.audio1 = ft.Audio()
         
         
         self.audio1 = ft.Audio(
-        src="empty",
+        src=self.src,
         autoplay=False,
         volume=0.3,
         balance=0,
@@ -45,9 +59,14 @@ class AudioPlayer:
         
         
         self.btn_play = ft.IconButton(
-            icon=ft.Icons.PLAY_CIRCLE, icon_size=50, on_click=self.play_track
+            icon=ft.Icons.PLAY_CIRCLE, 
+            icon_size=50, 
+            on_click=self.play_track,
+            disabled=False,
+            tooltip="Select a station first"
         )
-        self.volume_icon = ft.Icon(name=ft.Icons.VOLUME_DOWN)
+        self.volume_icon = ft.Icon(name=ft.Icons.VOLUME_DOWN,
+                                   )
         
       
         self.audio_control_title = ft.Text("Audio Control", size=16, weight=ft.FontWeight.BOLD)
@@ -68,16 +87,7 @@ class AudioPlayer:
                                     [
                                         self.btn_play,
                                         self.volume_icon,
-                                        ft.Slider(
-                                            width=150,
-                                            active_color=ft.Colors.WHITE60,
-                                            min=0,
-                                            max=100,
-                                            divisions=100,
-                                            value=50,
-                                            label="{value}",
-                                            on_change=self.volume_change,
-                                      ),
+                                        self.slider,
                                         self.btn_favorite
                                     ],
                                     alignment=ft.MainAxisAlignment.END,
@@ -116,26 +126,38 @@ class AudioPlayer:
         
     def play_track(self, e):
         global index
-        global state
+        if self.audio1.src == "empty" or not self.audio1.src:
+            snackbar_instance = Snackbar("No station selected", bgcolor="green", length = None)
+            snackbar_instance.open = True  
+            self.page.controls.append(snackbar_instance)
+            self.page.update()
+            return
     
-        if self.state == False:
+        if self.state == True:
             print(f"Playing:{self.state}")
-            self.state = True
+            if self.track_name:
+                self.track_name.value = "Now playing:"
+                
+            self.state = False
             self.btn_play.icon = ft.Icons.PAUSE_CIRCLE
             self.audio1.play()
             self.audio1.update()
             self.page.update()
-        elif self.state == True:
-            self.reset_listeners()
+        elif self.state == False:
+            if self.track_name:
+                self.track_name.value = "Paused:"
+            # self.reset_listeners()
             print(f"Paused:{self.state}")
-            self.state = False
+            self.state = True
             self.btn_play.icon = ft.Icons.PLAY_CIRCLE
             self.audio1.pause()
             self.audio1.update()
             self.page.update()
         else:  # if state=="paused"
             print(f"Resumed:{self.state}")
-            self.state = True
+            if self.track_name:
+                self.track_name.value = "Now playing:"
+            self.state = False
             self.btn_play.icon = ft.Icons.PAUSE_CIRCLE
             self.audio1.resume()
             self.audio1.update()
@@ -189,9 +211,12 @@ class AudioPlayer:
             if favicon:
                 print(f"Updating favicon to: {favicon}")
                 self.favicon.src = favicon
+                self.favicon.update()
                 self.page.update()
             else:
                 self.favicon.src = f"/Weathered Chevron with Spikes and Chains.png"
+                self.favicon.update()
+                self.page.update()
             
             # Ако има страница, ъпдейтваме
             if hasattr(self, 'page') and self.page:
@@ -252,7 +277,16 @@ class AudioPlayer:
                 self.page.update()
         except Exception as e:
             print(f"Error in remove_favorite: {e}")
-        return status_update        
+        return status_update
+    
+    async def set_to_default(self):
+        self.track_name.value = "Select a station"
+        self.track_name.update()
+        self.track_artist.value = "No station selected"
+        self.track_artist.update()
+        self.favicon.src = f"/Distressed Metal Chevron with Chains.png"
+        self.favicon.update()
+        self.page.update()        
         
         
  

@@ -59,13 +59,20 @@ async def main(page: ft.Page):
             radio_name = e.control.data["name"]
             favicon = e.control.data.get("favicon_url")
             print(f"Loading from list: {radio_name} - {radio_url}")
+            
             if radio_url:
-                if ap.audio1:
-
-                    ap.audio1.pause()
-                    ap.btn_play.icon = ft.Icons.PAUSE_CIRCLE                   
-                    # e.control.icon = ft.Icons.PAUSE_CIRCLE 
-                    # e.control.update()
+                ap.btn_play.disabled = False
+                ap.btn_play.tooltip="Play/Pause"
+                ap.slider.disabled = False
+                ap.btn_favorite.disabled = False
+                ap.btn_play.update()
+                ap.slider.update()
+                ap.btn_favorite.update()
+                # if ap.audio1:
+                #     ap.audio1.pause()
+                #     ap.btn_play.icon = ft.Icons.PAUSE_CIRCLE                   
+                #     # e.control.icon = ft.Icons.PAUSE_CIRCLE 
+                #     # e.control.update()
                 if ap.track_name:
                     ap.track_name.value = "Now playing:"
                 else:
@@ -85,34 +92,45 @@ async def main(page: ft.Page):
                     )           
                 ap.audio1.src = radio_url
                 ap.audio1.autoplay = True               
-                # ap.state = True
-                
-                if ap.state==False:
-                    ap.state = True
+
+                if ap.state==True:
+                    print(f"Playing1:{ap.state}")          
+                    ap.state = False
                     ap.btn_play.icon = ft.Icons.PAUSE_CIRCLE
-                    e.control.icon = ft.Icons.PAUSE_CIRCLE
-                    e.control.update()
+                    # e.control.icon = ft.Icons.PAUSE_CIRCLE
+                    # e.control.update()       
                     ap.audio1.play()
                     ap.audio1.update()
-                    page.update()
-                elif ap.state==True:
-                    ap.state = False
+                    page.update()   
+                elif ap.state==False:
+                    print(f"Paused1:{ap.state}")
+                    ap.state = True
                     ap.btn_play.icon = ft.Icons.PLAY_CIRCLE_FILL
-                    e.control.icon = ft.Icons.PLAY_CIRCLE_FILL
-                    e.control.update()
+                    # e.control.icon = ft.Icons.PLAY_CIRCLE_FILL             
+                    favicon = ft.Image(
+                        src=f"/Distressed Metal Chevron with Chains.png",
+                        width=90,
+                        height=90,
+                        fit=ft.ImageFit.CONTAIN,
+                    )
+                    await ap.update_title_on_player("Select a station", favicon)
+                    ap.audio1.src = "empty"
+                    ap.audio1.autoplay = False                   
+                    # reset_listeners()
+                    # e.control.update()
                     ap.audio1.pause()
                     ap.audio1.update()
                     page.update()
+                    # return
                 else:
-                    ap.state = True
+                    ap.state = False
+                    print(f"Resumed1:{ap.state}")
                     ap.btn_play.icon = ft.Icons.PAUSE_CIRCLE
-                    e.control.icon = ft.Icons.PAUSE_CIRCLE
-                    e.control.update()
+                    # e.control.icon = ft.Icons.PAUSE_CIRCLE
+                    # e.control.update()
                     ap.audio1.resume()
                     ap.audio1.update()
-                    page.update()
-                
-            
+                    page.update()           
                 # if hasattr(e.control, 'icon'):
                 #     ap.btn_play.icon = ft.Icons.PAUSE_CIRCLE                   
                 #     e.control.icon = ft.Icons.PAUSE_CIRCLE 
@@ -202,19 +220,25 @@ async def main(page: ft.Page):
             ft.ListTile(
                 title=ft.Text(radio["name"]),
                 subtitle=ft.Text(radio["url"]),
-                leading=ft.IconButton(
-                    icon=ft.Icons.PLAY_CIRCLE_FILL,
-                    style=ft.ButtonStyle(icon_size=40),
-                    icon_color=ft.Colors.WHITE,
-                    tooltip="Play this radio",
-                    data=radio,
-                    on_click=lambda e: asyncio.run(set_play_from_list(e))
-                ),
+                leading = ft.Image(
+                    src=radio["favicon_url"] if radio["favicon_url"] else f"/images/Weathered Chevron with Spikes and Chains.png",
+                    width=60, 
+                    height=60),
+                # leading=ft.IconButton(
+                #     icon=ft.Icons.PLAY_CIRCLE_FILL,
+                #     style=ft.ButtonStyle(icon_size=40),
+                #     icon_color=ft.Colors.WHITE,
+                #     tooltip="Play this radio",
+                #     data=radio,
+                #     on_click=lambda e: asyncio.run(set_play_from_list(e))
+                # ),
                 trailing=ft.Icon(
                     "favorite" if radio["favorite"] else "favorite_border",
                     tooltip="Added to favorites" if radio["favorite"] else "",
-                    ),                    
+                    ),     
+                tooltip="Play this radio",               
                 data=radio,
+                on_click=lambda e: asyncio.run(set_play_from_list(e))
                 # on_click=set_state_to_now_playing,
             )
             for radio in last_visited_radios
