@@ -208,10 +208,10 @@ async def main(page: ft.Page):
             size=12,
             weight=ft.FontWeight.BOLD,
             color=ft.Colors.WHITE,
-            style=ft.TextStyle(
-            bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST, color=ft.Colors.BLACK26,
+    #         style=ft.TextStyle(
+    #         bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST, color=ft.Colors.BLACK26,
            
-    )
+    # )
 ),    padding=10,
     )
     last_visited_list = ft.ListView(
@@ -221,9 +221,12 @@ async def main(page: ft.Page):
                 title=ft.Text(radio["name"]),
                 subtitle=ft.Text(radio["url"]),
                 leading = ft.Image(
-                    src=radio["favicon_url"] if radio["favicon_url"] else f"/images/Weathered Chevron with Spikes and Chains.png",
-                    width=60, 
-                    height=60),
+                    src=radio["favicon_url"] if radio["favicon_url"] else f"/Weathered Chevron with Spikes and Chains.png",
+                    width=70,
+                    height=70,
+                    # fit=ft.ImageFit.CONTAIN,
+                    # border_radius=ft.border_radius.all(10)
+                    ),
                 # leading=ft.IconButton(
                 #     icon=ft.Icons.PLAY_CIRCLE_FILL,
                 #     style=ft.ButtonStyle(icon_size=40),
@@ -243,7 +246,8 @@ async def main(page: ft.Page):
             )
             for radio in last_visited_radios
         ],
-        height=200,
+        height=450,
+        spacing=0,
         # on_scroll=lambda e: on_scroll(e),
         
     )
@@ -253,34 +257,37 @@ async def main(page: ft.Page):
         alignment=ft.alignment.center,
         border_radius=ft.border_radius.all(10),
         width=500,
-        height=300,
+        height=500,
         bgcolor="#B00020",
     )
     
-    wlcome_text = ft.Row(
-                        controls=[
-                            ft.Image(src=f"/images/Weathered Chevron with Spikes and Chains.png", width=40, height=40), 
-                            ft.Text("Radio DropDown", size=20, weight="bold"), 
-                            ft.Image(src=f"/images/Weathered Chevron with Spikes and Chains.png", width=40, height=40)
-                        ],
-                        alignment=ft.MainAxisAlignment.CENTER,
-                        vertical_alignment=ft.CrossAxisAlignment.CENTER,
-                    )
+    # wlcome_text = ft.Row(
+    #                     controls=[
+    #                         ft.Image(src=f"/images/Weathered Chevron with Spikes and Chains.png", width=40, height=40), 
+    #                         ft.Text("Radio DropDown", size=20, weight="bold"), 
+    #                         ft.Image(src=f"/images/Weathered Chevron with Spikes and Chains.png", width=40, height=40)
+    #                     ],
+    #                     alignment=ft.MainAxisAlignment.CENTER,
+    #                     vertical_alignment=ft.CrossAxisAlignment.CENTER,
+    #                 )
     main_column = ft.Column(
 
             controls=[
                 ft.Container(
-                    content=wlcome_text,
-                    padding=25,
-                    width=300,
-                    # border = ft.border.all(2, ft.Colors.RED),
-                    # border_radius=ft.border_radius.all(10),
+                    height=10
                 ),
+                # ft.Container(
+                #     content=wlcome_text,
+                #     padding=25,
+                #     width=300,
+                #     # border = ft.border.all(2, ft.Colors.RED),
+                #     # border_radius=ft.border_radius.all(10),
+                # ),
                 dd_instance.ddServer,
                 dd_instance.ddGenre,
                 dd_instance.ddCountry,
                 dd_instance.ddRadio,
-                ft.Container(content=ap.audio_player, padding=15, width=500),
+                ap.audio_player,
                 ft.Text("Last Visited Radios", size=16, weight=ft.FontWeight.BOLD),
                 last_visited_list_container,
                 licence_text, 

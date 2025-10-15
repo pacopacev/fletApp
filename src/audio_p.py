@@ -95,8 +95,9 @@ class AudioPlayer:
                             ]
                         ),
                     ]
-                ),padding=10
+                ),padding=15
             ),
+
         
             width=600,
             color=ft.Colors.ON_PRIMARY,
@@ -108,7 +109,7 @@ class AudioPlayer:
                 self.main_content,
             ],
             width=500,
-            height=170
+            height=180
             
         )
 
@@ -120,7 +121,7 @@ class AudioPlayer:
                  ft.Row([
                      self.stack, 
                  ], alignment=ft.MainAxisAlignment.CENTER, spacing=5)
-             ]), 
+             ])
         )
 
         
@@ -245,10 +246,12 @@ class AudioPlayer:
         else:
             if self.btn_favorite.icon == ft.Icons.FAVORITE:
                 self.btn_favorite.icon = ft.Icons.FAVORITE_BORDER
+                
                 self.btn_favorite.update()
                 await self.remove_favorite(station_url)
             else:
                 self.btn_favorite.icon = ft.Icons.FAVORITE
+                self.btn_favorite.tooltip = "Added to favorites"
                 snackbar_instance = Snackbar("Added to favorites", bgcolor="green", length = None)
                 snackbar_instance.open = True  
                 self.page.controls.append(snackbar_instance)
