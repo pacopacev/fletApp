@@ -15,7 +15,7 @@ async def main(page: ft.Page):
     # page.app = True
     page.title = "DropDown Radio"
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-    page.theme_mode = ft.ThemeMode.DARK
+    page.theme_mode = ft.ThemeMode.DARK  
     # page.auto_scroll = True
     page.scroll = ft.ScrollMode.AUTO
     page.foreground_decoration = ft.BoxDecoration(
@@ -146,8 +146,16 @@ async def main(page: ft.Page):
         try:
             # print(f"Loading: {radio_name} - {radio_url}")
             if radio_url:
-                if ap.audio1:
-                    ap.audio1.pause()
+                
+                ap.btn_play.disabled = False
+                ap.btn_play.tooltip="Play/Pause"
+                ap.slider.disabled = False
+                ap.btn_favorite.disabled = False
+                ap.btn_play.update()
+                ap.slider.update()
+                ap.btn_favorite.update()
+                # if ap.audio1:
+                #     ap.audio1.pause()
                 if ap.track_name:
                     ap.track_name.value = "Now playing:"
                 else:
@@ -214,18 +222,17 @@ async def main(page: ft.Page):
     # )
 ),    padding=10,
     )
+    
     last_visited_list = ft.ListView(
         clip_behavior=ft.ClipBehavior.ANTI_ALIAS,
         controls=[
             ft.ListTile(
-                title=ft.Text(radio["name"]),
-                subtitle=ft.Text(radio["url"]),
+                title=ft.Text(radio["name"],color=ft.Colors.WHITE, weight=ft.FontWeight.BOLD),
+                subtitle=ft.Text(radio["url"], color=ft.Colors.WHITE, selectable=True),
                 leading = ft.Image(
                     src=radio["favicon_url"] if radio["favicon_url"] else f"/Weathered Chevron with Spikes and Chains.png",
-                    width=70,
-                    height=70,
-                    # fit=ft.ImageFit.CONTAIN,
-                    # border_radius=ft.border_radius.all(10)
+                    width=50,
+                    height=50,
                     ),
                 # leading=ft.IconButton(
                 #     icon=ft.Icons.PLAY_CIRCLE_FILL,

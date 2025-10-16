@@ -99,31 +99,34 @@ class AudioPlayer:
             ),
 
         
-            width=600,
+            # width=600,
             color=ft.Colors.ON_PRIMARY,
             height=180,
+            variant=ft.CardVariant.OUTLINED,
         )
 
-        self.stack = ft.Stack(
-            controls=[
-                self.main_content,
-            ],
+        self.stack = ft.Container(
+            content=self.main_content,
             width=500,
             height=180
             
         )
 
         self.audio_player = ft.Container(
-             ft.Column([
-                 ft.Row([
-                    ft.Text("Audio Controls", size=16, weight=ft.FontWeight.BOLD),
-                 ], alignment=ft.MainAxisAlignment.CENTER, spacing=5),
-                 ft.Row([
-                     self.stack, 
-                 ], alignment=ft.MainAxisAlignment.CENTER, spacing=5)
-             ])
-        )
+    ft.Column([
+        ft.Row([
+            ft.Text("Audio Controls", size=16, weight=ft.FontWeight.BOLD),
+        ], alignment=ft.MainAxisAlignment.CENTER, spacing=5),
+        ft.Row([
+            self.stack,
+        ], alignment=ft.MainAxisAlignment.CENTER, spacing=5),
+    ],
+    alignment=ft.MainAxisAlignment.CENTER,
+    spacing=5,
 
+    
+)
+        )
         
     def play_track(self, e):
         global index

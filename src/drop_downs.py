@@ -19,6 +19,7 @@ class DDComponents:
         self.now_playing_text = None
         self.now_playing = None
         self.now_playing_container = ft.Container()
+        self.border_color = ft.Colors.BLACK if self.page.theme_mode == "dark" else ft.Colors.RED
         
 
         self.ddServer = ft.Dropdown(
@@ -27,7 +28,7 @@ class DDComponents:
             on_change=self.server_change,
             width=300,
             hint_text="Select Server",
-            border_color=ft.Colors.WHITE,
+            border_color=self.border_color,
             options=[],
             
         )
@@ -39,7 +40,7 @@ class DDComponents:
             on_change=self.tag_change,
             width=300,
             hint_text="Select Genre",
-            border_color=ft.Colors.WHITE,
+            border_color=self.border_color,
             options=[
                 ft.dropdown.Option("metal", "Metal"),
                 ft.dropdown.Option("rock", "Rock"),
@@ -56,10 +57,10 @@ class DDComponents:
         self.ddCountry = ft.Dropdown(
             leading_icon=ft.Icons.FLAG,
             label="Country",
-            on_change=self.get_country_code,
+            on_change=self.get_country_code,    
             width=300,
             hint_text="Select Country",
-            border_color=ft.Colors.WHITE,
+            border_color=self.border_color,
             options=[
 
             ],
@@ -71,7 +72,7 @@ class DDComponents:
             # on_click=self.on_radio_click,
             on_change=self.radio_change,
             width=300,
-            border_color=ft.Colors.WHITE,
+            border_color=self.border_color,
             hint_text="Select Radio",
             options=[],
         )
