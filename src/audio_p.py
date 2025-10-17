@@ -5,7 +5,7 @@ from snackbar import Snackbar
 
 
 class AudioPlayer:
-    def __init__(self, page: ft.Page, reset_listeners=None):
+    def __init__(self, page: ft.Page, reset_listeners=None, favorite_status=None):
         self.page = page
         self.reset_listeners = reset_listeners
         # self.add_to_favorites = add_to_favorites
@@ -113,20 +113,16 @@ class AudioPlayer:
         )
 
         self.audio_player = ft.Container(
-    ft.Column([
-        ft.Row([
-            ft.Text("Audio Controls", size=16, weight=ft.FontWeight.BOLD),
-        ], alignment=ft.MainAxisAlignment.CENTER, spacing=5),
-        ft.Row([
-            self.stack,
-        ], alignment=ft.MainAxisAlignment.CENTER, spacing=5),
-    ],
-    alignment=ft.MainAxisAlignment.CENTER,
-    spacing=5,
-
-    
-)
+             ft.Column([
+                 ft.Row([
+                    ft.Text("Audio Controls", size=16, weight=ft.FontWeight.BOLD),
+                 ], alignment=ft.MainAxisAlignment.CENTER, spacing=5),
+                 ft.Row([
+                     self.stack, 
+                 ], alignment=ft.MainAxisAlignment.CENTER, spacing=5)
+             ])
         )
+
         
     def play_track(self, e):
         global index
@@ -199,9 +195,12 @@ class AudioPlayer:
         
         self.page.update()
 
-    async def update_title_on_player(self, radio_name, favicon):
-        self.btn_favorite.icon = ft.Icons.FAVORITE_BORDER
-        self.btn_favorite.update()
+    async def update_title_on_player(self, radio_name, favicon, favorite_status):
+        print(favorite_status)
+        
+        # self.btn_favorite.icon = ft.Icons.FAVORITE if favorite_status == True else ft.Icons.FAVORITE_BORDER
+        # self.btn_favorite.icon = ft.Icons.FAVORITE_BORDER
+        # self.btn_favorite.update()
         try:
             # print(f"Updating title to: {radio_name}")
             
@@ -220,6 +219,15 @@ class AudioPlayer:
             else:
                 self.favicon.src = f"/Weathered Chevron with Spikes and Chains.png"
                 self.favicon.update()
+                self.page.update()
+                
+            if favorite_status == True:
+                self.btn_favorite.icon = ft.Icons.FAVORITE
+                self.btn_favorite.update()
+                self.page.update()
+            else:
+                self.btn_favorite.icon = ft.Icons.FAVORITE_BORDER
+                self.btn_favorite.update()
                 self.page.update()
             
             # Ако има страница, ъпдейтваме

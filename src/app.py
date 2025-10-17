@@ -7,6 +7,7 @@ import asyncio
 from audio_p import AudioPlayer
 from audio_p import AudioPlayer
 from datetime import datetime
+from querys import query_radios
 
 async def main(page: ft.Page):
 
@@ -58,7 +59,9 @@ async def main(page: ft.Page):
             radio_url = e.control.data["url"]
             radio_name = e.control.data["name"]
             favicon = e.control.data.get("favicon_url")
-            print(f"Loading from list: {radio_name} - {radio_url}")
+            favorite = e.control.data.get("favorite")
+            # print(favorite)
+            # print(f"Loading from list: {radio_name} - {radio_url}")
             
             if radio_url:
                 ap.btn_play.disabled = False
@@ -89,7 +92,9 @@ async def main(page: ft.Page):
                         width=90,
                         height=90,
                         fit=ft.ImageFit.CONTAIN,
-                    )           
+                    )
+                
+                favorite_status = favorite if favorite == True else False          
                 ap.audio1.src = radio_url
                 ap.audio1.autoplay = True               
 
@@ -107,13 +112,13 @@ async def main(page: ft.Page):
                     ap.state = True
                     ap.btn_play.icon = ft.Icons.PLAY_CIRCLE_FILL
                     # e.control.icon = ft.Icons.PLAY_CIRCLE_FILL             
-                    favicon = ft.Image(
-                        src=f"/Distressed Metal Chevron with Chains.png",
-                        width=90,
-                        height=90,
-                        fit=ft.ImageFit.CONTAIN,
-                    )
-                    await ap.update_title_on_player("Select a station", favicon)
+                    # favicon = ft.Image(
+                    #     src=f"/Distressed Metal Chevron with Chains.png",
+                    #     width=90,
+                    #     height=90,
+                    #     fit=ft.ImageFit.CONTAIN,
+                    # )
+                    await ap.update_title_on_player("Select a station", favicon, favorite_status)
                     ap.audio1.src = "empty"
                     ap.audio1.autoplay = False                   
                     # reset_listeners()
@@ -135,7 +140,7 @@ async def main(page: ft.Page):
                 #     ap.btn_play.icon = ft.Icons.PAUSE_CIRCLE                   
                 #     e.control.icon = ft.Icons.PAUSE_CIRCLE 
                 #     e.control.update()          
-                await ap.update_title_on_player(radio_name, favicon)          
+                await ap.update_title_on_player(radio_name, favicon, favorite_status)          
                 page.update()
                 print(f"Now playing: {radio_name}")
                 
@@ -177,7 +182,7 @@ async def main(page: ft.Page):
                 ap.audio1.autoplay = True               
                 ap.state = True
                 ap.btn_play.icon = ft.Icons.PAUSE_CIRCLE               
-                await ap.update_title_on_player(radio_name, favicon)          
+                await ap.update_title_on_player(radio_name, favicon, favorite_status)          
                 page.update()
                 print(f"Now playing: {radio_name}")
                 
@@ -191,80 +196,84 @@ async def main(page: ft.Page):
             if hasattr(control, 'leading') and isinstance(control.leading, ft.IconButton):
                 control.leading.icon = ft.Icons.PLAY_CIRCLE_FILL
                 control.leading.update()
-    ap = AudioPlayer(page=page, reset_listeners=reset_listeners)
+    favorite_status = False
+    ap = AudioPlayer(page=page, reset_listeners=reset_listeners, favorite_status=favorite_status)
     
     dd_instance = DDComponents(page=page, on_radio_change=on_radio_change)
     global_model = GlobalModel()
-    appbar = AppBar()
+    
+    
+    def toggle_dark_mode(e):
+        if page.theme_mode == "light":
+            licence_text.content.color = ft.Colors.WHITE
+            page.theme_mode = "dark"     
+        else:
+            page.theme_mode = "light"
+            licence_text.content.color = ft.Colors.BLACK
+        page.update()
+        
+    appbar = AppBar(page=page, toggle_dark_mode=toggle_dark_mode)
     page.appbar = appbar
     
-    
     last_visited_radios = [] 
-    query_radios =  """SELECT name,url,favorite, favicon_url, COUNT(*) as count FROM flet_radios
-                GROUP BY name, url, favorite, favicon_url
-                ORDER BY count DESC
-                LIMIT 666;"""
+    query = query_radios["all_radios"]
     try:
-        last_visited_radios = await global_model.execute_query_all(query_radios)
+        last_visited_radios = await global_model.execute_query_all(query)
         # print("Database query result:", last_visited_radios)
     except Exception as e:
         print("Database query failed:", e)
 
 # GUI components
-    licence_text = ft.Container(content=ft.Text(
-            f"© {datetime.now().year} Plambe. All rights reserved.",
-            size=12,
-            weight=ft.FontWeight.BOLD,
-            color=ft.Colors.WHITE,
-    #         style=ft.TextStyle(
-    #         bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST, color=ft.Colors.BLACK26,
-           
-    # )
-),    padding=10,
-    )
+    licence_text = ft.Container(
+    content=ft.Text(
+        f"© {datetime.now().year} Plambe. All rights reserved.",
+        size=12,
+        weight=ft.FontWeight.BOLD,
+        color=ft.Colors.WHITE,
+    ),
+    # Add alignment and padding for better positioning
+    alignment=ft.alignment.center,
+    padding=10,
+)  
+    
     
     last_visited_list = ft.ListView(
-        clip_behavior=ft.ClipBehavior.ANTI_ALIAS,
-        controls=[
+    clip_behavior=ft.ClipBehavior.ANTI_ALIAS,
+    controls=[
+        item for radio in last_visited_radios
+        for item in [
+            
             ft.ListTile(
-                title=ft.Text(radio["name"],color=ft.Colors.WHITE, weight=ft.FontWeight.BOLD),
+                title=ft.Text(radio["name"], color=ft.Colors.WHITE, weight=ft.FontWeight.BOLD),
                 subtitle=ft.Text(radio["url"], color=ft.Colors.WHITE, selectable=True),
-                leading = ft.Image(
-                    src=radio["favicon_url"] if radio["favicon_url"] else f"/Weathered Chevron with Spikes and Chains.png",
+                leading=ft.Image(
+                    src=radio["favicon_url"] if radio["favicon_url"] not in [None, "None", ""] else "/audio_player/album.png",
+                    
                     width=50,
                     height=50,
-                    ),
-                # leading=ft.IconButton(
-                #     icon=ft.Icons.PLAY_CIRCLE_FILL,
-                #     style=ft.ButtonStyle(icon_size=40),
-                #     icon_color=ft.Colors.WHITE,
-                #     tooltip="Play this radio",
-                #     data=radio,
-                #     on_click=lambda e: asyncio.run(set_play_from_list(e))
-                # ),
+                ),
                 trailing=ft.Icon(
                     "favorite" if radio["favorite"] else "favorite_border",
                     tooltip="Added to favorites" if radio["favorite"] else "",
-                    ),     
+                ),     
                 tooltip="Play this radio",               
                 data=radio,
                 on_click=lambda e: asyncio.run(set_play_from_list(e))
-                # on_click=set_state_to_now_playing,
-            )
-            for radio in last_visited_radios
-        ],
-        height=450,
-        spacing=0,
+            ),
+            ft.Divider(height=1, color=ft.Colors.WHITE),
+        ]
+    ][:-1],  # Remove the last divider
+    height=None,
+    spacing=0,
+)
         # on_scroll=lambda e: on_scroll(e),
-        
-    )
     
     last_visited_list_container = ft.Container(
         content=last_visited_list,
         alignment=ft.alignment.center,
         border_radius=ft.border_radius.all(10),
         width=500,
-        height=500,
+        expand=True,
         bgcolor="#B00020",
     )
     

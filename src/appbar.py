@@ -4,7 +4,9 @@ import os
 
 
 class AppBar(ft.AppBar):
-    def __init__(self):
+    def __init__(self, page,toggle_dark_mode=None):
+        self.page = page
+        self.toggle_dark_mode = toggle_dark_mode
         if os.getenv("PUBLIC_URL"):
             self.public_url = os.getenv("PUBLIC_URL", "http://127.0.0.1:8000/")
         super().__init__(
@@ -65,7 +67,7 @@ class AppBar(ft.AppBar):
                 ),
                         # icon = ft.Icons.WB_SUNNY_OUTLINED, 
                         checked=False, 
-                        on_click=self._toggle_dark_mode
+                        on_click=self.toggle_dark_mode
                     ),
                 ], padding =ft.Padding(0,0,0,0), elevation=0,
             ),
@@ -79,13 +81,11 @@ class AppBar(ft.AppBar):
             ],
         )
 
-    def _toggle_dark_mode(self, e):
-        print("Toggling dark mode...")
-        print(f"Current theme mode: {self.page.theme_mode}")
-        if self.page.theme_mode == "light":
-            self.page.theme_mode = "dark"
-        else:
-            self.page.theme_mode = "light"
-        self.page.update()
+    # def toggle_dark_mode(self, e):
+    #     if self.page.theme_mode == "light":
+    #         self.page.theme_mode = "dark"
+    #     else:
+    #         self.page.theme_mode = "light"
+    #     self.page.update()
 
 

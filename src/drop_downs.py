@@ -5,6 +5,7 @@ from all_stations import AllStations
 from snackbar import Snackbar
 from global_model import GlobalModel
 from validate_radio import ValidateRadio
+import uuid
 
 class DDComponents:
     def __init__(self, page, on_radio_change=None):
@@ -141,12 +142,12 @@ class DDComponents:
             self.page.update()
             return    
         try:
-                 # Clear existing radio options
+                 
                 self.ddRadio.options.clear()
-                # Get stations for the selected server
+                
                 self.radios = await AllStations(self.server_value, self.tag_value, self.coutrntry_code).get_all_stations()
                 
-                # Add new radio options
+            
                 for radio in self.radios:
                     radio_name = f"{radio['name']} - {radio.get('bitrate', 'N/A')} Kbps"
                     self.ddRadio.options.append(
@@ -155,6 +156,7 @@ class DDComponents:
                             text=radio_name,
                             data={
                                 "favicon": radio.get("favicon", ""),
+                                "stationuuid": radio.get("stationuuid", ""),
                                 }
                         )
                     )
@@ -170,12 +172,14 @@ class DDComponents:
                 
         except Exception as ex:
             print(f"Error loading stations: {ex}")
-
+    
     async def radio_change(self, e):
+        
         if e.control.value:
             # print(self.ddRadio.options)
             radio_details = next((opt for opt in self.ddRadio.options if opt.key == self.ddRadio.value), None)
             favicon = str(next((opt.data.get("favicon") for opt in self.ddRadio.options if opt.key == self.ddRadio.value), None))
+            stationuuid = str(next((opt.data.get("stationuuid") for opt in self.ddRadio.options if opt.key == self.ddRadio.value), None))
             
             if radio_details:
                 radio_status = await ValidateRadio().validate_stream(radio_details.key)
@@ -188,8 +192,12 @@ class DDComponents:
                     snackbar_instance.open = True
                     self.page.controls.append(snackbar_instance)
                     self.page.update()
-                    await self.insert_radio_to_db(radio_details.text, str(radio_status[1]), favicon)
-                    # await self.set_now_playing(radio_details.text)
+                    uuid = stationuuid if stationuuid != "" else ""
+                    result_uuid_exist = await self.check_exist_station_uuid(uuid)
+                    # print(result_uuid_exist)
+                    if len(result_uuid_exist) == 0:
+                        await self.insert_radio_to_db(radio_details.text, str(radio_status[1]), favicon, uuid)
+                   
                 else:
                     print(f"Radio stream is NOT valid: {radio_details.text}")
                     snackbar_instance = Snackbar("Radio stream is NOT valid", bgcolor="red", length = None)
@@ -247,14 +255,15 @@ class DDComponents:
             print(f"Error loading stations: {ex}")
             
     
-    async def insert_radio_to_db(self, name, url, favicon):
+    async def insert_radio_to_db(self, name, url, favicon, uuid):
         print("Inserting radio to database")
         favicon = favicon if favicon else "None"
+        
         try:
             global_model = GlobalModel()
             await global_model.execute_query_all(
-                "INSERT INTO flet_radios (name, url, favicon_url,created_at) VALUES (%s, %s, %s, %s);",
-                (name, url, favicon, datetime.now())
+                "INSERT INTO flet_radios (name, url, favicon_url, uuid,created_at) VALUES (%s, %s, %s, %s, %s);",
+                (name, url, favicon, uuid, datetime.now())
             )
             print("Radio inserted into database")           
         except Exception as ex:
@@ -273,7 +282,12 @@ class DDComponents:
     #     self.now_playing_container.border_radius = ft.border_radius.all(10)
     #     self.now_playing_container.width = 400
     #     self.now_playing_container.update()
-         
+    async def check_exist_station_uuid(self, stationuuid):
+        # print(stationuuid)
+        global_model = GlobalModel()
+        result = await global_model.execute_query_all("SELECT * FROM flet_radios WHERE uuid = %s", (stationuuid,))
+        return result
+       
             
         
       
