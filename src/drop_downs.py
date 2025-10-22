@@ -20,8 +20,10 @@ class DDComponents:
         self.now_playing_text = None
         self.now_playing = None
         self.now_playing_container = ft.Container()
-        self.border_color = ft.Colors.BLACK if self.page.theme_mode == "dark" else ft.Colors.RED
         
+   
+        self.border_color = ft.Colors.BLACK
+     
 
         self.ddServer = ft.Dropdown(
             leading_icon=ft.Icons.PUBLIC,

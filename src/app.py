@@ -11,13 +11,9 @@ from querys import query_radios
 
 async def main(page: ft.Page):
 
-    
-    
-    # page.app = True
     page.title = "DropDown Radio"
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-    page.theme_mode = ft.ThemeMode.DARK  
-    # page.auto_scroll = True
+    page.theme_mode = ft.ThemeMode.LIGHT  
     page.scroll = ft.ScrollMode.AUTO
     page.foreground_decoration = ft.BoxDecoration(
         gradient=ft.LinearGradient(
@@ -60,8 +56,6 @@ async def main(page: ft.Page):
             radio_name = e.control.data["name"]
             favicon = e.control.data.get("favicon_url")
             favorite = e.control.data.get("favorite")
-            # print(favorite)
-            # print(f"Loading from list: {radio_name} - {radio_url}")
             
             if radio_url:
                 ap.btn_play.disabled = False
@@ -71,11 +65,7 @@ async def main(page: ft.Page):
                 ap.btn_play.update()
                 ap.slider.update()
                 ap.btn_favorite.update()
-                # if ap.audio1:
-                #     ap.audio1.pause()
-                #     ap.btn_play.icon = ft.Icons.PAUSE_CIRCLE                   
-                #     # e.control.icon = ft.Icons.PAUSE_CIRCLE 
-                #     # e.control.update()
+
                 if ap.track_name:
                     ap.track_name.value = "Now playing:"
                 else:
@@ -103,14 +93,15 @@ async def main(page: ft.Page):
                     ap.state = False
                     ap.btn_play.icon = ft.Icons.PAUSE_CIRCLE
                     # e.control.icon = ft.Icons.PAUSE_CIRCLE
-                    # e.control.update()       
+                    # e.control.update()   
+                    # await ap.update_title_on_player("Select a station", favicon, favorite_status)    
                     ap.audio1.play()
                     ap.audio1.update()
                     page.update()   
                 elif ap.state==False:
                     print(f"Paused1:{ap.state}")
                     ap.state = True
-                    ap.btn_play.icon = ft.Icons.PLAY_CIRCLE_FILL
+                    ap.btn_play.icon = ft.Icons.PAUSE_CIRCLE
                     # e.control.icon = ft.Icons.PLAY_CIRCLE_FILL             
                     # favicon = ft.Image(
                     #     src=f"/Distressed Metal Chevron with Chains.png",
@@ -119,30 +110,27 @@ async def main(page: ft.Page):
                     #     fit=ft.ImageFit.CONTAIN,
                     # )
                     await ap.update_title_on_player("Select a station", favicon, favorite_status)
-                    ap.audio1.src = "empty"
-                    ap.audio1.autoplay = False                   
+                    ap.audio1.src = radio_url
+                    ap.audio1.autoplay = True                   
                     # reset_listeners()
                     # e.control.update()
-                    ap.audio1.pause()
+                    ap.audio1.play()
                     ap.audio1.update()
                     page.update()
                     # return
-                else:
-                    ap.state = False
-                    print(f"Resumed1:{ap.state}")
-                    ap.btn_play.icon = ft.Icons.PAUSE_CIRCLE
-                    # e.control.icon = ft.Icons.PAUSE_CIRCLE
-                    # e.control.update()
-                    ap.audio1.resume()
-                    ap.audio1.update()
-                    page.update()           
-                # if hasattr(e.control, 'icon'):
-                #     ap.btn_play.icon = ft.Icons.PAUSE_CIRCLE                   
-                #     e.control.icon = ft.Icons.PAUSE_CIRCLE 
-                #     e.control.update()          
+                # else:
+                #     ap.state = False
+                #     print(f"Resumed1:{ap.state}")
+                #     ap.btn_play.icon = ft.Icons.PAUSE_CIRCLE
+                #     # e.control.icon = ft.Icons.PAUSE_CIRCLE
+                #     # e.control.update()
+                #     ap.audio1.resume()
+                #     ap.audio1.update()
+                #     page.update()           
+                   
                 await ap.update_title_on_player(radio_name, favicon, favorite_status)          
                 page.update()
-                print(f"Now playing: {radio_name}")
+                # print(f"Now playing: {radio_name}")
                 
         except Exception as ex:
             print(f"Error changing radio: {ex}")
@@ -204,12 +192,14 @@ async def main(page: ft.Page):
     
     
     def toggle_dark_mode(e):
-        if page.theme_mode == "light":
+        if page.theme_mode == "dark":
             licence_text.content.color = ft.Colors.WHITE
-            page.theme_mode = "dark"     
+            dd_instance.ddServer.border_color = ft.Colors.BLACK
+            page.theme_mode = "light"     
         else:
-            page.theme_mode = "light"
-            licence_text.content.color = ft.Colors.BLACK
+            page.theme_mode = "dark"
+            dd_instance.border_color = ft.Colors.WHITE
+            licence_text.content.color = ft.Colors.WHITE
         page.update()
         
     appbar = AppBar(page=page, toggle_dark_mode=toggle_dark_mode)
@@ -229,7 +219,7 @@ async def main(page: ft.Page):
         f"© {datetime.now().year} Plambe. All rights reserved.",
         size=12,
         weight=ft.FontWeight.BOLD,
-        color=ft.Colors.WHITE,
+        color=ft.Colors.BLACK,
     ),
     # Add alignment and padding for better positioning
     alignment=ft.alignment.center,
@@ -244,17 +234,17 @@ async def main(page: ft.Page):
         for item in [
             
             ft.ListTile(
-                title=ft.Text(radio["name"], color=ft.Colors.WHITE, weight=ft.FontWeight.BOLD),
-                subtitle=ft.Text(radio["url"], color=ft.Colors.WHITE, selectable=True),
+                title=ft.Text(radio["name"], size=20, weight=ft.FontWeight.BOLD, color=ft.Colors.WHITE),
+                subtitle=ft.Text(radio["url"], size=10, color=ft.Colors.WHITE, selectable=True),
                 leading=ft.Image(
-                    src=radio["favicon_url"] if radio["favicon_url"] not in [None, "None", ""] else "/audio_player/album.png",
-                    
-                    width=50,
-                    height=50,
+                    src=radio["favicon_url"] if radio["favicon_url"] not in [None, "None", ""] else f"/Weathered Chevron with Spikes and Chains.png",  
+                    width=70,
+                    height=70,
                 ),
                 trailing=ft.Icon(
                     "favorite" if radio["favorite"] else "favorite_border",
                     tooltip="Added to favorites" if radio["favorite"] else "",
+                    color=ft.Colors.WHITE,
                 ),     
                 tooltip="Play this radio",               
                 data=radio,
@@ -263,7 +253,7 @@ async def main(page: ft.Page):
             ft.Divider(height=1, color=ft.Colors.WHITE),
         ]
     ][:-1],  # Remove the last divider
-    height=None,
+    height=600,
     spacing=0,
 )
         # on_scroll=lambda e: on_scroll(e),
@@ -272,8 +262,9 @@ async def main(page: ft.Page):
         content=last_visited_list,
         alignment=ft.alignment.center,
         border_radius=ft.border_radius.all(10),
-        width=500,
+        width=666,
         expand=True,
+        height=666,
         bgcolor="#B00020",
     )
     
@@ -299,16 +290,30 @@ async def main(page: ft.Page):
                 #     # border = ft.border.all(2, ft.Colors.RED),
                 #     # border_radius=ft.border_radius.all(10),
                 # ),
-                dd_instance.ddServer,
-                dd_instance.ddGenre,
-                dd_instance.ddCountry,
-                dd_instance.ddRadio,
+                # ft.Card(ft.Container(content=ft.Column(
+                #     controls=[
+                        dd_instance.ddServer,
+                        dd_instance.ddGenre,
+                        dd_instance.ddCountry,
+                        dd_instance.ddRadio,
+                        
+                #     ]
+                # ),
+                #                      padding=20,),
+                # color=ft.Colors.ON_PRIMARY,
+                # # height=280,
+                # variant=ft.CardVariant.OUTLINED,
+                # # bgcolor="#B00020",
+
+                # # border = ft.border.all(2, ft.Colors.BLACK),
+                # # border_radius=ft.border_radius.all(10),
+                # ),
                 ap.audio_player,
                 ft.Text("Last Visited Radios", size=16, weight=ft.FontWeight.BOLD),
                 last_visited_list_container,
                 licence_text, 
                 
-                ft.Container(height=66)  # Spacer at the bottom
+                ft.Container(height=13)  # Spacer at the bottom
             ],
             alignment=ft.MainAxisAlignment.CENTER,
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,

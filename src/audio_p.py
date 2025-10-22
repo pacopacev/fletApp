@@ -50,9 +50,9 @@ class AudioPlayer:
         balance=0,
         #on_loaded=lambda _: print("Loaded"),
         #on_loaded= lambda e: asyncio.run(ValidateRadio().validate_stream(e)),
-        on_duration_changed=lambda e: print("Duration changed:", e.data),
-        on_position_changed=lambda e: print("Position changed:", e.data),
-        on_state_changed=lambda e: print("State changed:", e.data),
+        # on_duration_changed=lambda e: print("Duration changed:", e.data),
+        # on_position_changed=lambda e: print("Position changed:", e.data),
+        # on_state_changed=lambda e: print("State changed:", e.data),
         # on_seek_complete=lambda _: print("Seek complete"),
     )
         self.page.overlay.append(self.audio1)
@@ -65,8 +65,7 @@ class AudioPlayer:
             disabled=False,
             tooltip="Select a station first"
         )
-        self.volume_icon = ft.Icon(name=ft.Icons.VOLUME_DOWN,
-                                   )
+        self.volume_icon = ft.Icon(name=ft.Icons.VOLUME_DOWN)
         
       
         self.audio_control_title = ft.Text("Audio Control", size=16, weight=ft.FontWeight.BOLD)
@@ -95,12 +94,15 @@ class AudioPlayer:
                             ]
                         ),
                     ]
-                ),padding=15
+                ),
+                padding=15,
+                border=ft.border.all(5, ft.Colors.WHITE),
+                border_radius=ft.border_radius.all(10),
             ),
 
         
             # width=600,
-            color=ft.Colors.ON_PRIMARY,
+            color=ft.Colors.WHITE,
             height=180,
             variant=ft.CardVariant.OUTLINED,
         )
@@ -118,7 +120,8 @@ class AudioPlayer:
                     ft.Text("Audio Controls", size=16, weight=ft.FontWeight.BOLD),
                  ], alignment=ft.MainAxisAlignment.CENTER, spacing=5),
                  ft.Row([
-                     self.stack, 
+                    self.stack,
+                    #  self.main_content 
                  ], alignment=ft.MainAxisAlignment.CENTER, spacing=5)
              ])
         )
@@ -196,7 +199,9 @@ class AudioPlayer:
         self.page.update()
 
     async def update_title_on_player(self, radio_name, favicon, favorite_status):
-        print(favorite_status)
+        self.btn_favorite.icon = ft.Icons.FAVORITE_BORDER
+        self.btn_favorite.update()
+        # print(favorite_status)
         
         # self.btn_favorite.icon = ft.Icons.FAVORITE if favorite_status == True else ft.Icons.FAVORITE_BORDER
         # self.btn_favorite.icon = ft.Icons.FAVORITE_BORDER
@@ -221,14 +226,14 @@ class AudioPlayer:
                 self.favicon.update()
                 self.page.update()
                 
-            if favorite_status == True:
-                self.btn_favorite.icon = ft.Icons.FAVORITE
-                self.btn_favorite.update()
-                self.page.update()
-            else:
-                self.btn_favorite.icon = ft.Icons.FAVORITE_BORDER
-                self.btn_favorite.update()
-                self.page.update()
+            # if favorite_status == True:
+            #     self.btn_favorite.icon = ft.Icons.FAVORITE
+            #     self.btn_favorite.update()
+            #     self.page.update()
+            # else:
+            #     self.btn_favorite.icon = ft.Icons.FAVORITE_BORDER
+            #     self.btn_favorite.update()
+            #     self.page.update()
             
             # Ако има страница, ъпдейтваме
             if hasattr(self, 'page') and self.page:
