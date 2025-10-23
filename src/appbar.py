@@ -1,10 +1,11 @@
 import flet as ft
-import os 
+import os
+from info_banner import InfoBanner
 
 
 
 class AppBar(ft.AppBar):
-    def __init__(self, page,toggle_dark_mode=None):
+    def __init__(self, page, toggle_dark_mode=None):
         self.page = page
         self.toggle_dark_mode = toggle_dark_mode
         if os.getenv("PUBLIC_URL"):
@@ -69,6 +70,28 @@ class AppBar(ft.AppBar):
                         checked=False, 
                         on_click=self.toggle_dark_mode
                     ),
+                    ft.PopupMenuItem(),
+                    ft.PopupMenuItem(
+                        content=ft.Row(
+                    [
+                        ft.Icon(ft.Icons.INFO),
+                        ft.Text("Info"),
+                    ]
+                ),
+                        checked=False, 
+                        on_click=self.get_info
+                    ),
+                    ft.PopupMenuItem(),
+                    ft.PopupMenuItem(
+                        content=ft.Row(
+                    [
+                        ft.Icon(ft.Icons.BUG_REPORT),
+                        ft.Text("Report a bug"),
+                    ]
+                ),
+                        checked=False, 
+                        on_click=self.toggle_dark_mode
+                    )
                 ], padding =ft.Padding(0,0,0,0), elevation=0,
             ),
                 # ft.IconButton(
@@ -87,5 +110,12 @@ class AppBar(ft.AppBar):
     #     else:
     #         self.page.theme_mode = "light"
     #     self.page.update()
+    def get_info(self, e):
+        
+        print("Info")
+        info_banner = InfoBanner(page=self.page)
+        self.page.add(info_banner)
+        self.page.update()
+        
 
 

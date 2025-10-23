@@ -21,30 +21,35 @@ class DDComponents:
         self.now_playing = None
         self.now_playing_container = ft.Container()
         
-   
         self.border_color = ft.Colors.BLACK
      
 
         self.ddServer = ft.Dropdown(
-            leading_icon=ft.Icons.PUBLIC,
+            trailing_icon=ft.Icon(ft.Icons.ARROW_DROP_DOWN, color=ft.Colors.BLACK),
+            leading_icon=ft.Icon(ft.Icons.PUBLIC, color=ft.Colors.BLACK),
             label="Server",
+            label_style=ft.TextStyle(color=ft.Colors.BLACK),
             on_change=self.server_change,
             width=300,
             hint_text="Select Server",
             border_color=self.border_color,
+            filled=True,
             options=[],
             
         )
         
 
         self.ddGenre = ft.Dropdown(
-            leading_icon=ft.Icons.MUSIC_NOTE,
-            label="Genre",
+            trailing_icon=ft.Icon(ft.Icons.ARROW_DROP_DOWN, color=ft.Colors.BLACK),
+            leading_icon=ft.Icon(ft.Icons.MUSIC_NOTE, color=ft.Colors.BLACK),
+            label="Tag",
+            label_style=ft.TextStyle(color=ft.Colors.BLACK),
             on_change=self.tag_change,
             width=300,
             hint_text="Select Genre",
             border_color=self.border_color,
             options=[
+                ft.dropdown.Option("punk", "Punk"),
                 ft.dropdown.Option("metal", "Metal"),
                 ft.dropdown.Option("rock", "Rock"),
                 ft.dropdown.Option("grindcore", "Grindcore"),
@@ -54,12 +59,15 @@ class DDComponents:
                 ft.dropdown.Option("death_metal", "Death Metal"),
                 ft.dropdown.Option("black_metal", "Black Metal"),
             ],
+            filled=True,
             value=None,
         )
         
         self.ddCountry = ft.Dropdown(
-            leading_icon=ft.Icons.FLAG,
+            trailing_icon=ft.Icon(ft.Icons.ARROW_DROP_DOWN, color=ft.Colors.BLACK),
+            leading_icon=ft.Icon(ft.Icons.FLAG, color=ft.Colors.BLACK),
             label="Country",
+            label_style=ft.TextStyle(color=ft.Colors.BLACK),
             on_change=self.get_country_code,    
             width=300,
             hint_text="Select Country",
@@ -67,17 +75,22 @@ class DDComponents:
             options=[
 
             ],
+            filled=True,
+            disabled=True
         )
         
         self.ddRadio = ft.Dropdown(
-            leading_icon=ft.Icons.RADIO,
+            trailing_icon=ft.Icon(ft.Icons.ARROW_DROP_DOWN, color=ft.Colors.BLACK),
+            leading_icon=ft.Icon(ft.Icons.RADIO, color=ft.Colors.BLACK),
             label="Radio Stations",
+            label_style=ft.TextStyle(color=ft.Colors.BLACK),
             # on_click=self.on_radio_click,
             on_change=self.radio_change,
             width=300,
             border_color=self.border_color,
             hint_text="Select Radio",
             options=[],
+            filled=True,
         )
         
         self.now_playing_text_container = None
@@ -87,7 +100,22 @@ class DDComponents:
             # print(host)
             # print (host[:3].upper())
             self.ddServer.options.append(ft.dropdown.Option(key=host, text=host[:3].upper()))
-
+    
+    
+    @staticmethod
+    def toggle_border_color(page, self, e, dds):
+        if page.theme_mode == "dark":
+            page.theme_mode = "dark"
+            for dd in dds:
+                dd.border_color = ft.Colors.BLACK
+            page.theme_mode = "light"
+        else: 
+            page.theme_mode = "dark"
+            for dd in dds:
+                dd.border_color = ft.Colors.WHITE
+                dd.fill_color = ft.Colors.WHITE
+        page.update()
+        
     async def server_change(self, e):
         self.server_value = e.control.value
         print(f"Selected server: {self.server_value}")

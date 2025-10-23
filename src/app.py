@@ -186,22 +186,27 @@ async def main(page: ft.Page):
                 control.leading.update()
     favorite_status = False
     ap = AudioPlayer(page=page, reset_listeners=reset_listeners, favorite_status=favorite_status)
-    
+    # def toggle_mode():
+    #     print ("Toggling mode")
     dd_instance = DDComponents(page=page, on_radio_change=on_radio_change)
     global_model = GlobalModel()
     
     
     def toggle_dark_mode(e):
+        dds = [dd_instance.ddServer, dd_instance.ddGenre, dd_instance.ddCountry, dd_instance.ddRadio]
         if page.theme_mode == "dark":
+            dd_instance.toggle_border_color(page, self=None, e=None, dds=dds)
+
             licence_text.content.color = ft.Colors.WHITE
-            dd_instance.ddServer.border_color = ft.Colors.BLACK
+            licence_text.content.color = ft.Colors.BLACK
             page.theme_mode = "light"     
-        else:
+        else: 
+            dd_instance.toggle_border_color(page, self=None, e=None, dds=dds)
             page.theme_mode = "dark"
-            dd_instance.border_color = ft.Colors.WHITE
             licence_text.content.color = ft.Colors.WHITE
         page.update()
         
+    
     appbar = AppBar(page=page, toggle_dark_mode=toggle_dark_mode)
     page.appbar = appbar
     

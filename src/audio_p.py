@@ -11,12 +11,13 @@ class AudioPlayer:
         # self.add_to_favorites = add_to_favorites
         self.btn_favorite = ft.IconButton(
             icon=ft.Icons.FAVORITE_BORDER,
+            icon_color=ft.Colors.BLACK,
             tooltip="Add to favorites",
             disabled=True,
             on_click=lambda e: asyncio.run(self.update_favorite(e, data=self.audio1.src)),
         )
-        self.track_name = ft.Text("Select a station", weight=ft.FontWeight.BOLD)
-        self.track_artist = ft.Text("No station selected", max_lines=4, overflow="ellipsis")
+        self.track_name = ft.Text("Select a station", weight=ft.FontWeight.BOLD, color=ft.Colors.BLACK)
+        self.track_artist = ft.Text("No station selected", max_lines=4, overflow="ellipsis", color=ft.Colors.BLACK)
         self.favicon = ft.Image(
             src=f"/Distressed Metal Chevron with Chains.png",
             width=90,
@@ -27,7 +28,8 @@ class AudioPlayer:
         
         self.slider = ft.Slider(
                                             width=150,
-                                            active_color=ft.Colors.WHITE60,
+                                            thumb_color=ft.Colors.BLACK,
+                                            overlay_color=ft.Colors.RED,
                                             min=0,
                                             max=100,
                                             divisions=100,
@@ -59,13 +61,14 @@ class AudioPlayer:
         
         
         self.btn_play = ft.IconButton(
-            icon=ft.Icons.PLAY_CIRCLE, 
+            icon=ft.Icons.PLAY_CIRCLE,
+            icon_color=ft.Colors.BLACK,
             icon_size=50, 
             on_click=self.play_track,
             disabled=False,
             tooltip="Select a station first"
         )
-        self.volume_icon = ft.Icon(name=ft.Icons.VOLUME_DOWN)
+        self.volume_icon = ft.Icon(name=ft.Icons.VOLUME_DOWN, color=ft.Colors.BLACK)
         
       
         self.audio_control_title = ft.Text("Audio Control", size=16, weight=ft.FontWeight.BOLD)
@@ -77,7 +80,7 @@ class AudioPlayer:
                         ft.Column(
                             [
                                 ft.ListTile(
-                                    leading=ft.Icon(ft.Icons.MUSIC_NOTE_ROUNDED),
+                                    leading=ft.Icon(ft.Icons.MUSIC_NOTE_ROUNDED, color=ft.Colors.BLACK),
                                     title=self.track_name,
                                     subtitle=self.track_artist,
                             
