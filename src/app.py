@@ -318,7 +318,7 @@ async def main(page: ft.Page):
                 last_visited_list_container,
                 licence_text, 
                 
-                ft.Container(height=13)  # Spacer at the bottom
+                ft.Container(height=8)  # Spacer at the bottom
             ],
             alignment=ft.MainAxisAlignment.CENTER,
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,

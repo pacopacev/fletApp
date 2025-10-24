@@ -1,27 +1,42 @@
 import flet as ft
+from info_txt import info_txt
 
 
 class InfoBanner(ft.Banner):
-    def __init__(self, page): 
-        pass
+    def __init__(self, page):
         super().__init__(
-            bgcolor=ft.Colors.AMBER_100,
-            leading=ft.Icon(ft.Icons.WARNING_AMBER_ROUNDED, color=ft.Colors.AMBER, size=40),
+            bgcolor=ft.Colors.BLACK,
+            leading=ft.Icon(ft.Icons.INFO, color=ft.Colors.WHITE, size=40),
             content=ft.Text(
-                value="Oops, there were some errors while trying to delete the file. What would you like to do?",
-                color=ft.Colors.BLACK,
+                value=info_txt,
+                color=ft.Colors.WHITE, weight=ft.FontWeight.BOLD,
             ),
-            actions = ft.TextButton(text="Cancel", on_click=lambda _: page.go("/"))
-            # actions=[
-            #     ft.TextButton(
-            #         text="Retry", style=action_button_style, on_click=close_banner
-            #     ),
-            #     ft.TextButton(
-            #         text="Ignore", style=action_button_style, on_click=close_banner
-            #     ),
-            #     ft.TextButton(
-            #         text="Cancel", style=action_button_style, on_click=close_banner
-            #     ),
-            # ],
-        
+            actions=[
+                ft.FilledButton(
+                    text="Dissmiss", style=ft.ButtonStyle(color=ft.Colors.BLACK), bgcolor=ft.Colors.WHITE, on_click=self.close_banner
+                ),
+            ]
         )
+    @staticmethod
+    def open_banner(page):
+        # print("OPENING INFO BANNER")
+        info_banner = InfoBanner(page)
+        info_banner.open = True
+        page.add(info_banner)
+        page.update()
+        
+    def close_banner(e, banner):
+        # print(e)
+        # print("CLOSING INFO BANNER")
+        page = banner.page
+        banner.open = False
+        page.close(e)
+        page.update()
+  
+
+    
+
+
+        
+    
+          

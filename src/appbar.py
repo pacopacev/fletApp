@@ -1,6 +1,7 @@
 import flet as ft
 import os
 from info_banner import InfoBanner
+from submit_bug import SubmitBug
 
 
 
@@ -90,7 +91,7 @@ class AppBar(ft.AppBar):
                     ]
                 ),
                         checked=False, 
-                        on_click=self.toggle_dark_mode
+                        on_click=self.submit_bug
                     )
                 ], padding =ft.Padding(0,0,0,0), elevation=0,
             ),
@@ -111,11 +112,18 @@ class AppBar(ft.AppBar):
     #         self.page.theme_mode = "light"
     #     self.page.update()
     def get_info(self, e):
-        
-        print("Info")
-        info_banner = InfoBanner(page=self.page)
-        self.page.add(info_banner)
+        info_banner = InfoBanner(self.page)
+        info_banner.open_banner(page=self.page)
         self.page.update()
+        
+    def submit_bug(self, e):
+        
+        # self.page.launch_url("https://github.com/Plambe/RadioDropDown/issues/new")
+        bug_report = SubmitBug(self.page)
+        self.page.open(bug_report)
+        # bug_report.open_dialog(page=self.page)
+        self.page.update()
+        
         
 
 

@@ -108,12 +108,16 @@ class DDComponents:
             page.theme_mode = "dark"
             for dd in dds:
                 dd.border_color = ft.Colors.BLACK
+                dd.border_width = 1
             page.theme_mode = "light"
         else: 
             page.theme_mode = "dark"
             for dd in dds:
                 dd.border_color = ft.Colors.WHITE
+                dd.border_width = 15
+                dd.label_style.color = ft.Colors.BLACK
                 dd.fill_color = ft.Colors.WHITE
+                dd.border_radius = ft.border_radius.all(10)
         page.update()
         
     async def server_change(self, e):
