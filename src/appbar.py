@@ -1,6 +1,6 @@
 import flet as ft
 import os
-from info_banner import InfoBanner
+from info_banner import InfoDialog
 from submit_bug import SubmitBug
 
 
@@ -112,7 +112,7 @@ class AppBar(ft.AppBar):
     #         self.page.theme_mode = "light"
     #     self.page.update()
     def get_info(self, e):
-        info_banner = InfoBanner(self.page)
+        info_banner = InfoDialog(self.page)
         info_banner.open_banner(page=self.page)
         self.page.update()
         
