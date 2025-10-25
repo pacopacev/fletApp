@@ -8,7 +8,6 @@ import os
 
 class SubmitBug(ft.AlertDialog):
     def __init__(self, page):
-        # self.token = "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"
         self.page = page
         self.message_field = ft.TextField(
             label="Bug Description", 
