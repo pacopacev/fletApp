@@ -4,6 +4,7 @@ import base64
 import json
 from datetime import datetime
 from snackbar import Snackbar
+import os
 
 class SubmitBug(ft.AlertDialog):
     def __init__(self, page):
@@ -72,9 +73,10 @@ class SubmitBug(ft.AlertDialog):
         - REPO_NAME: Repository name
         """
         # Configuration - UPDATE THESE VALUES
-        GITHUB_TOKEN = "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"
+        GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
         REPO_OWNER = "pacopacev"
         REPO_NAME = "fletApp"
+        
         
         if not GITHUB_TOKEN.startswith("ghp_"):
             return False, "GitHub token not configured"
