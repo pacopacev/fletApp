@@ -92,7 +92,19 @@ class AppBar(ft.AppBar):
                 ),
                         checked=False, 
                         on_click=self.submit_bug
-                    )
+                    ),
+                    ft.PopupMenuItem(),
+                    ft.PopupMenuItem(
+                        content=ft.Row(
+                    [
+                        ft.Icon(ft.Icons.MONETIZATION_ON),
+                        ft.Text("Donate"),
+                    ]
+                ),
+                        checked=False, 
+                        on_click=lambda _: self.page.launch_url("https://www.buymeacoffee.com/")
+                    ),
+                    
                 ], padding =ft.Padding(0,0,0,0), elevation=0,
             ),
                 # ft.IconButton(

@@ -17,7 +17,7 @@ class AudioPlayer:
             on_click=lambda e: asyncio.run(self.update_favorite(e, data=self.audio1.src)),
         )
         self.track_name = ft.Text("Select a station", weight=ft.FontWeight.BOLD, color=ft.Colors.BLACK)
-        self.track_artist = ft.TextField("No station selected", max_lines=4, color=ft.Colors.BLACK, multiline=True)
+        self.track_artist = ft.Text("No station selected", color=ft.Colors.BLACK)
         self.favicon = ft.Image(
             src=f"/Distressed Metal Chevron with Chains.png",
             width=90,

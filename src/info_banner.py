@@ -1,32 +1,36 @@
 import flet as ft
 from info_txt import info_txt
+import markdown
 class InfoDialog(ft.AlertDialog):
     def __init__(self, page):
+
+        self.info_txt = markdown.markdown(info_txt)
+        
         super().__init__(
-            bgcolor=ft.Colors.BLACK,
+            bgcolor=ft.Colors.WHITE,
             title=ft.Row(
                 controls=[
-                    ft.Icon(ft.Icons.INFO, color=ft.Colors.WHITE, size=40),
-                    ft.Text("Information", color=ft.Colors.WHITE, weight=ft.FontWeight.BOLD),
+                    ft.Icon(ft.Icons.INFO, color=ft.Colors.BLACK, size=40),
+                    ft.Text("Information", color=ft.Colors.BLACK, weight=ft.FontWeight.BOLD),
                 ]
             ),
             content=ft.Container(
                 content=ft.Column(
                     controls=[
-                        ft.Text(
+                        ft.Markdown(
                             value=info_txt,
-                            color=ft.Colors.WHITE,
-                        ),
-                        ft.Divider(color=ft.Colors.WHITE, height=2),
-                        ft.Text(
-                            value="To dismiss, click the button below",
-                            color=ft.Colors.WHITE,
-                        ),
+                            selectable=True,
+                            extension_set=ft.MarkdownExtensionSet.GITHUB_WEB,
+                            
+                 
+                            
+                        )
                     ],
-                    scroll=ft.ScrollMode.ALWAYS,
+                    scroll=ft.ScrollMode.ADAPTIVE,
                 ),
-                height=400,  # Set a fixed height for the dialog content
-                width=600,   # Set a fixed width
+                width=700,
+                height=500,
+                padding=20,
             ),
             actions=[
                 ft.FilledButton(

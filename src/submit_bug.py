@@ -1,56 +1,178 @@
 import flet as ft
-from global_model import GlobalModel
-
-
+import requests
+import base64
+import json
+from datetime import datetime
+from snackbar import Snackbar
 
 class SubmitBug(ft.AlertDialog):
     def __init__(self, page):
+        # self.token = "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"
         self.page = page
+        self.message_field = ft.TextField(
+            label="Bug Description", 
+            multiline=True,
+            min_lines=3,
+            hint_text="Describe the bug in detail...",
+        )
+        
+        self.title_field = ft.TextField(
+            label="Issue Title",
+            hint_text="Brief description of the issue"
+        )
+        
+        # Optional: Add issue type selector
+        self.issue_type = ft.Dropdown(
+            label="Issue Type",
+            options=[
+                ft.dropdown.Option("bug"),
+                ft.dropdown.Option("enhancement"),
+                ft.dropdown.Option("question"),
+            ],
+            value="bug"
+        )
+        
         super().__init__(
             modal=True,
-            title=ft.Text("Please enter your comments", size=20, weight=ft.FontWeight.BOLD),
+            title=ft.Text("Submit Bug Report to GitHub", size=20, weight=ft.FontWeight.BOLD),
             content=ft.Column([
-                ft.TextField(
-                    label="Message", 
-                    multiline=True,
-                    min_lines=3
-                ),
+                self.title_field,
+                self.issue_type,
+                self.message_field,
             ], 
-            height=200, 
-            width=300
+            height=300, 
+            width=400,
+            scroll=ft.ScrollMode.ADAPTIVE
             ),
             actions=[
-                ft.TextButton("Cancel", on_click=lambda e: self.page.close(e)),
-                ft.ElevatedButton("Submit", on_click=self.submit_dialog),
+                ft.TextButton("Cancel", on_click=self.close_dialog),
+                ft.ElevatedButton("Submit to GitHub", on_click=self.submit_dialog),
             ],
-         
             actions_alignment=ft.MainAxisAlignment.END,
         )
         
-    def open_dialog(e):
-        print("Open")
-        # page.dialog = dialog
-        # dialog.open = True
-        # page.update()
+    def open_dialog(self, e=None):
+        """Open the dialog"""
+        self.page.dialog = self
+        self.open = True
+        self.page.update()
 
-    # def close_dialog(self,e):
-    #     print("Close")
-    #     self.page.close(e)
-    #     # page.dialog = None
-    #     # dialog.open = False
-    #     # page.update()
+    def close_dialog(self, e=None):
+        """Close the dialog"""
+        self.open = False
+        self.page.update()
 
-    def submit_dialog(e):
-        print("Submit")
-        # if name_field.value and email_field.value:
-        #     result_text.value = f"Name: {name_field.value}\nEmail: {email_field.value}\nMessage: {message_field.value}"
-        #     # Clear fields for next use
-        #     name_field.value = ""
-        #     email_field.value = ""
-        #     message_field.value = ""
-        #     close_dialog(e)
-        # else:
-        #     # Show error
-        #     page.show_snack_bar(ft.SnackBar(content=ft.Text("Please fill name and email!")))
-    
-   
+    def create_github_issue(self, title, body, issue_type="bug"):
+        """
+        Create an issue in GitHub repository
+        
+        You'll need to configure these:
+        - GITHUB_TOKEN: Personal access token with repo scope
+        - REPO_OWNER: Your GitHub username or organization
+        - REPO_NAME: Repository name
+        """
+        # Configuration - UPDATE THESE VALUES
+        GITHUB_TOKEN = "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"
+        REPO_OWNER = "pacopacev"
+        REPO_NAME = "fletApp"
+        
+        if not GITHUB_TOKEN.startswith("ghp_"):
+            return False, "GitHub token not configured"
+        
+        url = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/issues"
+        
+        headers = {
+            "Authorization": f"token {GITHUB_TOKEN}",
+            "Accept": "application/vnd.github.v3+json"
+        }
+        
+        # Create labels based on issue type
+        labels = [issue_type]
+        if issue_type == "bug":
+            labels.extend(["bug-report", "triage"])
+        elif issue_type == "enhancement":
+            labels.extend(["feature-request", "enhancement"])
+        
+        data = {
+            "title": title,
+            "body": body,
+            "labels": labels
+        }
+        
+        try:
+            response = requests.post(url, headers=headers, json=data)
+            
+            if response.status_code == 201:
+                issue_data = response.json()
+                return True, f"Issue #{issue_data['number']} created successfully: {issue_data['html_url']}"
+            else:
+                return False, f"GitHub API error: {response.status_code} - {response.text}"
+                
+        except Exception as e:
+            return False, f"Network error: {str(e)}"
+
+    def submit_dialog(self, e=None):
+        """Handle form submission to GitHub"""
+        if not self.title_field.value.strip():
+            self.page.show_snack_bar(
+                ft.SnackBar(content=ft.Text("Please enter a title!"))
+            )
+            return
+            
+        if not self.message_field.value.strip():
+            self.page.show_snack_bar(
+                ft.SnackBar(content=ft.Text("Please enter a description!"))
+            )
+            return
+        
+        # Show loading indicator
+        self.submit_button_original_text = self.actions[1].text
+        self.actions[1].text = "Submitting..."
+        self.actions[1].disabled = True
+        self.page.update()
+        
+        # Create issue body with additional context
+        issue_body = f"""
+### Bug Description
+{self.message_field.value}
+
+### Additional Context
+- Reported via: Flet Application
+- Timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+- Issue Type: {self.issue_type.value}
+
+---
+
+*This issue was automatically generated from the application bug report form.*
+        """.strip()
+        
+        # Submit to GitHub
+        success, message = self.create_github_issue(
+            title=self.title_field.value.strip(),
+            body=issue_body,
+            issue_type=self.issue_type.value
+        )
+        
+        # Reset button state
+        self.actions[1].text = self.submit_button_original_text
+        self.actions[1].disabled = False
+        
+        if success:
+            print(f"Bug submitted to GitHub Repo: {message}")
+            # Clear fields
+            self.title_field.value = ""
+            self.message_field.value = ""
+            self.close_dialog()
+            snackbar_instance = Snackbar(f"{message}", bgcolor="green", length = None)
+            snackbar_instance.open = True
+            self.page.controls.append(snackbar_instance)
+            self.page.update()
+        
+        else:
+            print(f"Failed to submit bug: {message}")
+            snackbar_instance = Snackbar(f"{message}", bgcolor="red", length = None)
+            snackbar_instance.open = True
+            self.page.controls.append(snackbar_instance)
+            self.page.update()
+        
+        self.page.update()
