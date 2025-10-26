@@ -34,7 +34,7 @@ class SubmitBug(ft.AlertDialog):
         
         super().__init__(
             modal=True,
-            title=ft.Text("Submit Bug Report to GitHub", size=20, weight=ft.FontWeight.BOLD),
+            title=ft.Text("Submit Bug Report", size=20, weight=ft.FontWeight.BOLD),
             content=ft.Column([
                 self.title_field,
                 self.issue_type,
@@ -46,7 +46,7 @@ class SubmitBug(ft.AlertDialog):
             ),
             actions=[
                 ft.TextButton("Cancel", on_click=self.close_dialog),
-                ft.ElevatedButton("Submit to GitHub", on_click=self.submit_dialog),
+                ft.ElevatedButton("Submit", on_click=self.submit_dialog),
             ],
             actions_alignment=ft.MainAxisAlignment.END,
         )
