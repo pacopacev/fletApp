@@ -1,87 +1,55 @@
-import flet as ft
+import pygame
+import random
 import time
-import threading
 
-def main(page: ft.Page):
-    page.title = "Moving Header Text Effect"
-    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-    page.vertical_alignment = ft.MainAxisAlignment.CENTER
-    page.bgcolor = ft.colors.BLUE_GREY_900
-    page.padding = 20
+# Initialize pygame
+pygame.init()
 
-    # Create a container for the moving text
-    text_container = ft.Container(
-        width=page.width,
-        height=80,
-        bgcolor=ft.colors.TRANSPARENT,
-        clip_behavior=ft.ClipBehavior.HARD_EDGE,
-    )
+# Set up the display
+screen_width = 800
+screen_height = 200
+screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption("Music Visualizer")
 
-    # Create the moving text
-    moving_text = ft.Text(
-        value="WELCOME TO OUR WEBSITE • DISCOVER AMAZING THINGS • EXPLORE NOW • ",
-        size=40,
-        weight=ft.FontWeight.BOLD,
-        color=ft.colors.CYAN_ACCENT_400,
-    )
+# Define the colors
+bg_color = (0, 0, 0)
+bar_color = (255, 0, 0)
 
-    # Create a row to hold the text that will be animated
-    text_row = ft.Row(
-        controls=[moving_text],
-        vertical_alignment=ft.CrossAxisAlignment.CENTER,
-    )
+# Define the bar positions
+bar_width = 50
+bar_spacing = 10
+bar_count = 5
+bar_positions = [(x * (bar_width + bar_spacing)) + (bar_width / 2) - (bar_width / 2) for x in range(bar_count)]
 
-    # Add the row to the container
-    text_container.content = text_row
+# Create the bars
+bars = [pygame.Rect(x, 0, bar_width, 0) for x in bar_positions]
 
-    # Function to animate the text
-    def animate_text():
-        position = 0
-        while True:
-            # Update the text position
-            text_row.offset = ft.Offset(position, 0)
-            page.update()
-            
-            # Move the text to the left
-            position -= 0.5
-            
-            # Reset position when text moves completely off screen
-            if position < -text_container.width:
-                position = page.width
-                
-            time.sleep(0.02)
+# Main game loop
+running = True
+while running:
+    # Handle events
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
 
-    # Start animation in a separate thread
-    threading.Thread(target=animate_text, daemon=True).start()
+    # Clear the screen
+    screen.fill(bg_color)
 
-    # Add some additional UI elements
-    title = ft.Text(
-        "Moving Header Effect",
-        size=30,
-        weight=ft.FontWeight.BOLD,
-        color=ft.colors.WHITE,
-    )
+    # Update the bar positions randomly
+    for i in range(bar_count):
+        bar_height = random.randint(0, screen_height)
+        bars[i].y = screen_height - bar_height
+        bars[i].height = bar_height
 
-    subtitle = ft.Text(
-        "Smooth scrolling text animation",
-        size=16,
-        color=ft.colors.WHITE70,
-    )
+    # Draw the bars
+    for i in range(bar_count):
+        pygame.draw.rect(screen, bar_color, bars[i])
 
-    # Add everything to the page
-    page.add(
-        title,
-        subtitle,
-        ft.Divider(height=20, color=ft.colors.TRANSPARENT),
-        text_container,
-        ft.Divider(height=40, color=ft.colors.TRANSPARENT),
-        ft.Text(
-            "This text moves smoothly across the screen",
-            size=18,
-            color=ft.colors.WHITE60,
-            italic=True
-        )
-    )
+    # Update the display
+    pygame.display.flip()
 
-# Run the app
-ft.app(target=main)
+    # Delay to control the animation speed
+    time.sleep(0.1)
+
+# Quit the game
+pygame.quit()

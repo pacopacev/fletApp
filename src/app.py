@@ -273,47 +273,21 @@ async def main(page: ft.Page):
         height=666,
         bgcolor="#B00020",
     )
-    
-    # wlcome_text = ft.Row(
-    #                     controls=[
-    #                         ft.Image(src=f"/images/Weathered Chevron with Spikes and Chains.png", width=40, height=40), 
-    #                         ft.Text("Radio DropDown", size=20, weight="bold"), 
-    #                         ft.Image(src=f"/images/Weathered Chevron with Spikes and Chains.png", width=40, height=40)
-    #                     ],
-    #                     alignment=ft.MainAxisAlignment.CENTER,
-    #                     vertical_alignment=ft.CrossAxisAlignment.CENTER,
-    #                 )
+
     main_column = ft.Column(
 
             controls=[
                 ft.Container(
                     height=10
                 ),
-                # ft.Container(
-                #     content=wlcome_text,
-                #     padding=25,
-                #     width=300,
-                #     # border = ft.border.all(2, ft.Colors.RED),
-                #     # border_radius=ft.border_radius.all(10),
-                # ),
-                # ft.Card(ft.Container(content=ft.Column(
-                #     controls=[
+              
                         dd_instance.ddServer,
                         dd_instance.ddGenre,
                         dd_instance.ddCountry,
                         dd_instance.ddRadio,
                         
-                #     ]
-                # ),
-                #                      padding=20,),
-                # color=ft.Colors.ON_PRIMARY,
-                # # height=280,
-                # variant=ft.CardVariant.OUTLINED,
-                # # bgcolor="#B00020",
-
-                # # border = ft.border.all(2, ft.Colors.BLACK),
-                # # border_radius=ft.border_radius.all(10),
-                # ),
+          
+                ft.Text("Audio Controls", size=16, weight=ft.FontWeight.BOLD),
                 ap.audio_player,
                 ft.Text("Last Visited Radios", size=16, weight=ft.FontWeight.BOLD),
                 last_visited_list_container,

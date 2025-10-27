@@ -34,10 +34,7 @@ class DDComponents:
             hint_text="Select Server",
             border_color=self.border_color,
             filled=True,
-            options=[],
-            text_size=8,
-            dense=True
-            
+            options=[]  
         )
         
         

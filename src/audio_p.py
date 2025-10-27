@@ -73,19 +73,20 @@ class AudioPlayer:
         self.main_content = ft.Container(
             content=ft.Column(
                 controls=[
-                    self.favicon,
+                    ft.Row(controls=[self.favicon, ], alignment=ft.MainAxisAlignment.CENTER, spacing=10),
+                    ft.Divider(),
                     ft.Row(
-                        controls=[
-                            
+                        controls=[     
                             ft.ListTile(
                                 leading=ft.Icon(ft.Icons.MUSIC_NOTE_ROUNDED, color=ft.Colors.BLACK),
                                 title=self.track_name,
                                 subtitle=self.track_artist,
                             ),
                         ],
-                        alignment=ft.MainAxisAlignment.CENTER,
+                        alignment=ft.MainAxisAlignment.START,
                         spacing=10
                     ),
+                    ft.Divider(),
                     ft.Row(
                         controls=[
                             self.btn_play,
@@ -93,87 +94,28 @@ class AudioPlayer:
                             self.slider,
                             self.btn_favorite
                         ],
-                        alignment=ft.MainAxisAlignment.CENTER,
+                        alignment=ft.MainAxisAlignment.START,
                         spacing=10
                     ),
                 ],
-                # alignment=ft.MainAxisAlignment.CENTER,
                 spacing=10
             ),
             border=ft.border.all(3, ft.Colors.BLACK),
             border_radius=ft.border_radius.all(10),
+            width=400,
+            padding=13,
             
-            # alignment=ft.MainAxisAlignment.CENTER,
-        
         )
-        # self.audio_control_title = ft.Text("Audio Control", size=16, weight=ft.FontWeight.BOLD)
-        # self.main_content = ft.Card(
-        #     # content=ft.Container(
-        #         # content=ft.Row(
-        #             [ 
-                     
-        #                 # ft.Container(width=100, height=100), 
-        #                 ft.Column(
-                            
-        #                     [
-                                
-        #                         self.favicon,
-        #                         ft.ListTile(
-        #                             leading=ft.Icon(ft.Icons.MUSIC_NOTE_ROUNDED, color=ft.Colors.BLACK),
-        #                             title=self.track_name,
-        #                             subtitle=self.track_artist,
-                            
-        #                         ),
-        #                         ft.Row(
-        #                             [
-        #                                 self.btn_play,
-        #                                 self.volume_icon,
-        #                                 self.slider,
-        #                                 self.btn_favorite
-        #                             ],
-        #                             alignment=ft.MainAxisAlignment.END, spacing=10
-        #                         ),
-        #                     ]
-        #                 ),
-        #             ],
-        #         # ),
-        #     #     padding=15,
-        #     #     border=ft.border.all(5, ft.Colors.WHITE),
-        #     #     border_radius=ft.border_radius.all(10),
-        #     # ),
-
-        
-        #     # width=600,
-        #     color=ft.Colors.WHITE,
-        #     height=180,
-        #     variant=ft.CardVariant.OUTLINED,
-        # )
-
-        # self.stack = ft.Container(
-        #     content=self.main_content,
-        #     width=500,
-        #     height=180
-            
-        # )
 
         self.audio_player = ft.Container(
-             ft.Column([
-                 ft.Row([
-                    ft.Text("Audio Controls", size=16, weight=ft.FontWeight.BOLD),
-                 ], alignment=ft.MainAxisAlignment.CENTER, spacing=5),
-                 self.main_content,
-                 
-                #  ft.Row([
-                #     self.stack,
-                #     # self.main_content 
-                #  ], alignment=ft.MainAxisAlignment.CENTER, spacing=5)
-             ]),
-            
-            
-             
+             ft.Column(
+                 controls=[
+                     self.main_content,  
+                 ], 
+             )
         )
+             
 
-        
     def play_track(self, e):
         global index
         if self.audio1.src == "empty" or not self.audio1.src:
