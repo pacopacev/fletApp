@@ -70,63 +70,107 @@ class AudioPlayer:
         )
         self.volume_icon = ft.Icon(name=ft.Icons.VOLUME_DOWN, color=ft.Colors.BLACK)
         
-      
-        self.audio_control_title = ft.Text("Audio Control", size=16, weight=ft.FontWeight.BOLD)
-        self.main_content = ft.Card(
-            content=ft.Container(
-                content=ft.Row(
-                    [ self.favicon,
-                        # ft.Container(width=100, height=100), 
-                        ft.Column(
-                            [
-                                ft.ListTile(
-                                    leading=ft.Icon(ft.Icons.MUSIC_NOTE_ROUNDED, color=ft.Colors.BLACK),
-                                    title=self.track_name,
-                                    subtitle=self.track_artist,
+        self.main_content = ft.Container(
+            content=ft.Column(
+                controls=[
+                    self.favicon,
+                    ft.Row(
+                        controls=[
                             
-                                ),
-                                ft.Row(
-                                    [
-                                        self.btn_play,
-                                        self.volume_icon,
-                                        self.slider,
-                                        self.btn_favorite
-                                    ],
-                                    alignment=ft.MainAxisAlignment.END,
-                                ),
-                            ]
-                        ),
-                    ]
-                ),
-                padding=15,
-                border=ft.border.all(5, ft.Colors.WHITE),
-                border_radius=ft.border_radius.all(10),
+                            ft.ListTile(
+                                leading=ft.Icon(ft.Icons.MUSIC_NOTE_ROUNDED, color=ft.Colors.BLACK),
+                                title=self.track_name,
+                                subtitle=self.track_artist,
+                            ),
+                        ],
+                        alignment=ft.MainAxisAlignment.CENTER,
+                        spacing=10
+                    ),
+                    ft.Row(
+                        controls=[
+                            self.btn_play,
+                            self.volume_icon,
+                            self.slider,
+                            self.btn_favorite
+                        ],
+                        alignment=ft.MainAxisAlignment.CENTER,
+                        spacing=10
+                    ),
+                ],
+                # alignment=ft.MainAxisAlignment.CENTER,
+                spacing=10
             ),
+            border=ft.border.all(3, ft.Colors.BLACK),
+            border_radius=ft.border_radius.all(10),
+            
+            # alignment=ft.MainAxisAlignment.CENTER,
+        
+        )
+        # self.audio_control_title = ft.Text("Audio Control", size=16, weight=ft.FontWeight.BOLD)
+        # self.main_content = ft.Card(
+        #     # content=ft.Container(
+        #         # content=ft.Row(
+        #             [ 
+                     
+        #                 # ft.Container(width=100, height=100), 
+        #                 ft.Column(
+                            
+        #                     [
+                                
+        #                         self.favicon,
+        #                         ft.ListTile(
+        #                             leading=ft.Icon(ft.Icons.MUSIC_NOTE_ROUNDED, color=ft.Colors.BLACK),
+        #                             title=self.track_name,
+        #                             subtitle=self.track_artist,
+                            
+        #                         ),
+        #                         ft.Row(
+        #                             [
+        #                                 self.btn_play,
+        #                                 self.volume_icon,
+        #                                 self.slider,
+        #                                 self.btn_favorite
+        #                             ],
+        #                             alignment=ft.MainAxisAlignment.END, spacing=10
+        #                         ),
+        #                     ]
+        #                 ),
+        #             ],
+        #         # ),
+        #     #     padding=15,
+        #     #     border=ft.border.all(5, ft.Colors.WHITE),
+        #     #     border_radius=ft.border_radius.all(10),
+        #     # ),
 
         
-            # width=600,
-            color=ft.Colors.WHITE,
-            height=180,
-            variant=ft.CardVariant.OUTLINED,
-        )
+        #     # width=600,
+        #     color=ft.Colors.WHITE,
+        #     height=180,
+        #     variant=ft.CardVariant.OUTLINED,
+        # )
 
-        self.stack = ft.Container(
-            content=self.main_content,
-            width=500,
-            height=180
+        # self.stack = ft.Container(
+        #     content=self.main_content,
+        #     width=500,
+        #     height=180
             
-        )
+        # )
 
         self.audio_player = ft.Container(
              ft.Column([
                  ft.Row([
                     ft.Text("Audio Controls", size=16, weight=ft.FontWeight.BOLD),
                  ], alignment=ft.MainAxisAlignment.CENTER, spacing=5),
-                 ft.Row([
-                    self.stack,
-                    #  self.main_content 
-                 ], alignment=ft.MainAxisAlignment.CENTER, spacing=5)
-             ])
+                 self.main_content,
+                 
+                #  ft.Row([
+                #     self.stack,
+                #     # self.main_content 
+                #  ], alignment=ft.MainAxisAlignment.CENTER, spacing=5)
+             ]),
+            
+            
+             
         )
 
         

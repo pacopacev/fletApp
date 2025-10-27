@@ -15,6 +15,7 @@ async def main(page: ft.Page):
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     page.theme_mode = ft.ThemeMode.LIGHT  
     page.scroll = ft.ScrollMode.AUTO
+    page.padding = 8
     page.foreground_decoration = ft.BoxDecoration(
         gradient=ft.LinearGradient(
             colors=[

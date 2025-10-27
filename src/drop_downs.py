@@ -35,8 +35,12 @@ class DDComponents:
             border_color=self.border_color,
             filled=True,
             options=[],
+            text_size=8,
+            dense=True
             
         )
+        
+        
         
 
         self.ddGenre = ft.Dropdown(
