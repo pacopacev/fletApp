@@ -2,6 +2,8 @@ import flet as ft
 import asyncio
 from global_model import GlobalModel
 from snackbar import Snackbar
+import requests
+import base64
 
 
 class AudioPlayer:
@@ -102,7 +104,7 @@ class AudioPlayer:
             ),
             border=ft.border.all(3, ft.Colors.BLACK),
             border_radius=ft.border_radius.all(10),
-            width=400,
+            width=350,
             padding=13,
             
         )
@@ -190,11 +192,6 @@ class AudioPlayer:
     async def update_title_on_player(self, radio_name, favicon, favorite_status):
         self.btn_favorite.icon = ft.Icons.FAVORITE_BORDER
         self.btn_favorite.update()
-        # print(favorite_status)
-        
-        # self.btn_favorite.icon = ft.Icons.FAVORITE if favorite_status == True else ft.Icons.FAVORITE_BORDER
-        # self.btn_favorite.icon = ft.Icons.FAVORITE_BORDER
-        # self.btn_favorite.update()
         try:
             # print(f"Updating title to: {radio_name}")
             
@@ -204,27 +201,10 @@ class AudioPlayer:
             
             if self.track_artist:
                 self.track_artist.value = radio_name
-
-            if favicon:
-                print(f"Updating favicon to: {favicon}")
-                self.favicon.src = favicon
-                self.favicon.update()
-                self.page.update()
-            else:
-                self.favicon.src = f"/Weathered Chevron with Spikes and Chains.png"
-                self.favicon.update()
-                self.page.update()
+                if len(self.track_artist.value) > 37:
+                    self.track_artist.value = self.track_artist.value[:35] + "..."  
                 
-            # if favorite_status == True:
-            #     self.btn_favorite.icon = ft.Icons.FAVORITE
-            #     self.btn_favorite.update()
-            #     self.page.update()
-            # else:
-            #     self.btn_favorite.icon = ft.Icons.FAVORITE_BORDER
-            #     self.btn_favorite.update()
-            #     self.page.update()
-            
-            # Ако има страница, ъпдейтваме
+            await self.get_favicon(favicon)   
             if hasattr(self, 'page') and self.page:
                 self.page.update()
                 
@@ -287,15 +267,30 @@ class AudioPlayer:
             print(f"Error in remove_favorite: {e}")
         return status_update
     
-    async def set_to_default(self):
-        self.track_name.value = "Select a station"
-        self.track_name.update()
-        self.track_artist.value = "No station selected"
-        self.track_artist.update()
-        self.favicon.src = f"/Distressed Metal Chevron with Chains.png"
-        self.favicon.update()
-        self.page.update()        
-        
+
+
+    async def get_favicon(self, favicon=None):
+        # print(f"Current favicon src: {self.favicon.src}")
+        if not favicon or favicon in [None, "None", ""]:
+            print("No favicon provided, setting to default.")
+            self.favicon.src = f"/Weathered Chevron with Spikes and Chains.png"
+            self.favicon.update()
+            self.page.update()
+            return
+        if favicon:
+            print(f"Updating favicon to: {favicon}")
+            print(f"favicon value: {favicon}")
+            response = requests.get(f"{favicon}")
+            print(response.status_code)
+            if response.status_code in [200, 201, 304]:
+                favicon_data = response.content
+                self.favicon.src = "data:image/jpeg;base64," + base64.b64encode(favicon_data).decode()
+                self.favicon.update()
+                self.page.update()
+                # print(f"Updated favicon to: {self.favicon.src}")
+            else:
+                print(f"Failed to fetch favicon from {favicon}")
+
         
  
       

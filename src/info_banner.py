@@ -7,7 +7,7 @@ class InfoDialog(ft.AlertDialog):
         self.info_txt = markdown.markdown(info_txt)
         
         super().__init__(
-            bgcolor=ft.Colors.WHITE,
+            bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST,
             title=ft.Row(
                 controls=[
                     ft.Icon(ft.Icons.INFO, color=ft.Colors.BLACK, size=40),

@@ -8,6 +8,7 @@ from audio_p import AudioPlayer
 from audio_p import AudioPlayer
 from datetime import datetime
 from querys import query_radios
+import os
 
 async def main(page: ft.Page):
 
@@ -220,17 +221,16 @@ async def main(page: ft.Page):
         print("Database query failed:", e)
 
 # GUI components
-    licence_text = ft.Container(
-    content=ft.Text(
-        f"© {datetime.now().year} Plambe. All rights reserved.",
-        size=12,
-        weight=ft.FontWeight.BOLD,
-        color=ft.Colors.BLACK,
-    ),
-    # Add alignment and padding for better positioning
-    alignment=ft.alignment.center,
-    padding=10,
-)  
+    version = os.getenv("GITHUB_RUN_NUMBER", "0")
+    new_version = int(version) + 1
+    licence_text = ft.Text(
+  
+    f"© {datetime.now().year} Plambe. All rights reserved.\nVersion {new_version}.{datetime.now().strftime('%Y.%m.%d.%H%M')}",
+    size=12,
+    color=ft.Colors.BLACK,
+    text_align=ft.TextAlign.CENTER,
+    weight=ft.FontWeight.BOLD,
+) 
     
     
     last_visited_list = ft.ListView(
@@ -291,9 +291,10 @@ async def main(page: ft.Page):
                 ap.audio_player,
                 ft.Text("Last Visited Radios", size=16, weight=ft.FontWeight.BOLD),
                 last_visited_list_container,
-                licence_text, 
+                # licence_text, 
+                BottomAppBar(licence_text=licence_text),
                 
-                ft.Container(height=8)  # Spacer at the bottom
+                # ft.Container(height=8)  # Spacer at the bottom
             ],
             alignment=ft.MainAxisAlignment.CENTER,
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
@@ -325,7 +326,7 @@ async def main(page: ft.Page):
 
 
     
-    
+
         
     page.add(main_column)
     
