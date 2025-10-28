@@ -76,7 +76,7 @@ class AudioPlayer:
             content=ft.Column(
                 controls=[
                     ft.Row(controls=[self.favicon, ], alignment=ft.MainAxisAlignment.CENTER, spacing=10),
-                    ft.Divider(),
+                    # ft.Divider(),
                     ft.Row(
                         controls=[     
                             ft.ListTile(
@@ -106,6 +106,11 @@ class AudioPlayer:
             border_radius=ft.border_radius.all(10),
             width=350,
             padding=13,
+            image=ft.DecorationImage(
+                src=f"/Weathered Chevron with Spikes and Chains.png", 
+                fit=ft.ImageFit.COVER,
+                opacity=0.3 
+        )
             
         )
 

@@ -98,4 +98,4 @@ app.mount(
 # --- Entrypoint ---
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8554, log_level="info")
+    uvicorn.run(app, host="0.0.0.0", port=8553, log_level="info")
