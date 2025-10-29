@@ -13,4 +13,4 @@ tinytag==1.9.0
 jinja2
 uuid
 markdown
-pygame
+
