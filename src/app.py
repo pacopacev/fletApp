@@ -222,12 +222,25 @@ async def main(page: ft.Page):
 
 
     version = os.getenv("GITHUB_RUN_NUMBER", "0")
-    new_version = version.strip()
-    new_version= new_version[:4] + "2"
-    print(f"Version: {new_version}")
+    version = int(version)
 
-    print(f"App Version: {new_version}")
-    build_version = f"{new_version}-build.{datetime.now():%Y%m%d%H%M}"
+
+    new_version = version + 1
+
+
+    new_version = str(new_version)
+
+
+    #print(new_version)
+
+
+    result_version = f"{new_version[:1]}.{new_version[1:2]}.{new_version[2:3]}"
+
+
+    #print(result_version)
+
+
+    build_version = f"{result_version}-build.{datetime.now():%Y%m%d%H%M}"
     info = f"© {datetime.now().year} Plambe. All rights reserved.\nVersion {build_version}"
 
     licence_text = ft.Text(
