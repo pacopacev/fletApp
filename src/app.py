@@ -9,6 +9,22 @@ from audio_p import AudioPlayer
 from datetime import datetime
 from querys import query_radios
 import os
+import sys
+
+
+# Add parent directory to path for imports
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+sys.path.insert(0, parent_dir)
+
+from version import version
+# last_key = list(version)[-1]
+# print(f"App Version: {version[last_key]}")
+
+
+
+
+
 
 async def main(page: ft.Page):
 
@@ -220,19 +236,29 @@ async def main(page: ft.Page):
     except Exception as e:
         print("Database query failed:", e)
 
-
-    version = os.getenv("GITHUB_RUN_NUMBER", "0")
-    version = int(version)
-    new_version = version + 1
-    new_version = str(new_version)
-    #print(new_version)
-    result_version = f"{new_version[:1]}.{new_version[1:2]}.{new_version[2:3]}"
-    #print(result_version)
-    build_version = f"{result_version}-build.{datetime.now():%Y%m%d%H%M}"
-    info = f"© {datetime.now().year} Plambe. All rights reserved.\nVersion {build_version}"
+    # try:
+    #     with open("../version.txt", "r+") as version_file:
+    #         version = version_file.read().strip()
+    #         print(f"App version from file: {version}")
+    #         version_file.seek(0)
+    #         version_file.write(str(int(version)+1) + "\n")
+    #         version_file.truncate()
+    # except Exception as e:
+    #     print(f"Failed to read version file: {e}")
+    #     version = "0.0.0"
+    # version = os.getenv("GITHUB_RUN_NUMBER", "0")
+    # version = int(version)
+    # new_version = version + 1
+    # new_version = str(new_version)
+    # #print(new_version)
+    # result_version = f"{new_version[:1]}.{new_version[1:2]}.{new_version[2:3]}"
+    # #print(result_version)
+    # build_version = f"{result_version}-build.{datetime.now():%Y%m%d%H%M}"
+    # info = f"© {datetime.now().year} Plambe. All rights reserved.\nVersion {build_version}"
 
     licence_text = ft.Text(
-    value=info,
+    # value=info,
+    value=f"© {datetime.now().year} Plambe. All rights reserved.\nVersion {version["version"]}",
     size=12,
     color=ft.Colors.BLACK,
     text_align=ft.TextAlign.CENTER,
