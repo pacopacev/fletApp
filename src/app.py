@@ -341,12 +341,7 @@ async def main(page: ft.Page):
                 page.update()
         last_scroll_position = scroll_position
 
-    
-
-
-    
-
-        
+     
     page.add(main_column)
     
     
