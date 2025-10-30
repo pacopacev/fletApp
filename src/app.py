@@ -10,6 +10,7 @@ from datetime import datetime
 from querys import query_radios
 import os
 import sys
+
 import importlib.util
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
@@ -238,7 +239,7 @@ async def main(page: ft.Page):
 
     licence_text = ft.Text(
     # value=info,
-    value=version['version'],
+    value=f"v{version['version']} ({version['build_date']})",
     size=12,
     color=ft.Colors.BLACK,
     text_align=ft.TextAlign.CENTER,
