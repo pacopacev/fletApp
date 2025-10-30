@@ -11,33 +11,36 @@ from querys import query_radios
 import os
 import sys
 import importlib.util
+import os
+
+# project root (one level above src)
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
-sys.path.insert(0, parent_dir)
-# Load version.py from the project root explicitly to avoid import/path issues
-version = {}
 version_path = os.path.join(parent_dir, "version.py")
+
+# attempt to load version.py explicitly from repo root
+version = {}
 try:
     spec = importlib.util.spec_from_file_location("version", version_path)
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
     version = getattr(mod, "version", {})
-    # Normalize string -> dict
-    if isinstance(version, str):
-        version = {"version": version}
 except Exception as ex:
     print(f"Could not load version from {version_path}: {ex}")
+    version = {}
 
-# Normalize version into usable parts
+# normalize into usable values
 if isinstance(version, dict):
     _ver_num = version.get('version', '1.0.0')
     _ver_build = version.get('build_date', '')
+    _ver_commit = version.get('commit_hash', '')
 else:
-    # if version is a plain string or other type
+    # if version is a plain string or something else
     _ver_num = str(version)
     _ver_build = ''
+    _ver_commit = ''
 
-print(f"App Version: {_ver_num} (Build: {_ver_build})")
+print(f"App Version: v{_ver_num} (Build: {_ver_build})")
 
 async def main(page: ft.Page):
 
@@ -258,13 +261,12 @@ async def main(page: ft.Page):
     # info = f"© {datetime.now().year} Plambe. All rights reserved.\nVersion {build_version}"
 
     licence_text = ft.Text(
-    # value=info,
     value=f"v{_ver_num} (Build: {_ver_build})",
     size=12,
     color=ft.Colors.BLACK,
     text_align=ft.TextAlign.CENTER,
     weight=ft.FontWeight.BOLD,
-) 
+)
     
     
     last_visited_list = ft.ListView(
