@@ -1,0 +1,79 @@
+name: Auto Bump Version
+
+on:
+  push:
+    branches: [ main, master, develop ]
+    paths-ignore:
+      - 'version.py'  # Avoid infinite loop
+
+jobs:
+  bump-version:
+    # Only run if not from the bot itself to avoid infinite loops
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') && !contains(github.event.head_commit.message, 'Bump version') }}
+    
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 0
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+    
+    - name: Bump version
+      id: bump
+      run: |
+        # Extract current version
+        CURRENT_VERSION=$(python -c "
+        import re
+        with open('version.py', 'r') as f:
+            content = f.read()
+        match = re.search(r\"'version': '([0-9]+\.[0-9]+\.[0-9]+)'\", content)
+        print(match.group(1) if match else '0.1.0')
+        ")
+        
+        echo "Current version: $CURRENT_VERSION"
+        
+        # Parse and increment version
+        IFS='.' read -r major minor patch <<< "$CURRENT_VERSION"
+        patch=$((patch + 1))
+        NEW_VERSION="$major.$minor.$patch"
+        
+        echo "New version: $NEW_VERSION"
+        
+        # Update version.py file
+        python -c "
+        from datetime import datetime
+        
+        with open('version.py', 'w') as f:
+                          f.write('''# version.py
+              version = {
+                  'version': '$NEW_VERSION',
+                  'major': $major,
+                  'minor': $minor, 
+                  'patch': $patch,
+                  'build_date': '$(date -u +"%Y-%m-%d %H:%M:%S")',
+                  'commit_hash': '${{ github.sha }}'
+              }
+              ''')
+        "
+        
+        # Set outputs for other steps
+        echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+        echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+    
+    - name: Commit version bump
+      run: |
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git add version.py
+        git commit -m "🚀 Bump version to ${{ steps.bump.outputs.new_version }} [skip ci]"
+        git push
