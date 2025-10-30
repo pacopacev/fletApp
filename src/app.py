@@ -16,7 +16,7 @@ import sys
 # sys.path.insert(0, parent_dir)
 
 from version import version
-print(f"App Version_TEST: {version['build']}")
+print(f"App Version_TEST: {version['version']}")
 
 async def main(page: ft.Page):
 
