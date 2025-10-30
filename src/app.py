@@ -10,7 +10,6 @@ from datetime import datetime
 from querys import query_radios
 import os
 import sys
-
 import importlib.util
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
@@ -338,7 +337,6 @@ async def main(page: ft.Page):
                 page.update()
         last_scroll_position = scroll_position
 
-     
     page.add(main_column)
     
     
