@@ -28,7 +28,7 @@ jobs:
         import os
 
         try:
-            with open('version.py', 'r') as f:
+            with open('./version.py', 'r') as f:
                 content = f.read()
             match = re.search(r"'version': '([0-9]+\.[0-9]+\.[0-9]+)'", content)
             if match:
@@ -72,6 +72,6 @@ jobs:
       run: |
         git config --local user.email "github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
-        git add version.py
+        git add ./version.py
         git commit -m "Bump version to ${{ steps.bump.outputs.new_version }} [skip ci]"
         git push
