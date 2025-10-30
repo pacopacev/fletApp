@@ -20,70 +20,58 @@ jobs:
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
     
-    - name: Setup Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.x'
-    
-    - name: Create or update version.py
-      id: bump
+    - name: Create bump script
       run: |
-        # Check if version.py exists and get current version
-        if [ -f "version.py" ]; then
-          echo "version.py exists, reading current version..."
-          CURRENT_VERSION=$(python -c "
-          import re
-          try:
-              with open('version.py', 'r') as f:
-                  content = f.read()
-              match = re.search(r\"'version': '([0-9]+\.[0-9]+\.[0-9]+)'\", content)
-              if match:
-                  print(match.group(1))
-              else:
-                  print('1.0.0')
-          except:
-              print('1.0.0')
-          ")
-          echo "Current version: $CURRENT_VERSION"
-        else
-          echo "version.py does not exist, creating with default version..."
-          CURRENT_VERSION="1.0.0"
-        fi
-        
-        # Parse and increment version
-        IFS='.' read -r major minor patch <<< "$CURRENT_VERSION"
-        patch=$((patch + 1))
-        NEW_VERSION="$major.$minor.$patch"
-        echo "New version: $NEW_VERSION"
-        
-        # Create/update version.py with proper Python syntax
-        python -c "
+        cat > bump_version.py << 'EOF'
+        import re
         from datetime import datetime
         import os
-        import re
 
-        version_content = '''# version.py
-        version = {
-            'version': '$NEW_VERSION',
-            'major': $major,
-            'minor': $minor,
-            'patch': $patch,
-            'build_date': '$(date -u +"%Y-%m-%d %H:%M:%S")',
-            'commit_hash': '${{ github.sha }}'
-        }
-        '''
+        try:
+            with open('version.py', 'r') as f:
+                content = f.read()
+            match = re.search(r"'version': '([0-9]+\.[0-9]+\.[0-9]+)'", content)
+            if match:
+                current_version = match.group(1)
+            else:
+                current_version = "1.0.0"
+        except FileNotFoundError:
+            current_version = "1.0.0"
+
+        print(f"Current version: {current_version}")
+
+        major, minor, patch = map(int, current_version.split('.'))
+        patch += 1
+        new_version = f"{major}.{minor}.{patch}"
+
+        print(f"New version: {new_version}")
+
+        new_content = f"""# version.py
+        version = {{
+            'version': '{new_version}',
+            'major': {major},
+            'minor': {minor},
+            'patch': {patch},
+            'build_date': '{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}',
+            'commit_hash': '{os.getenv("GITHUB_SHA", "")}'
+        }}
+        """
 
         with open('version.py', 'w') as f:
-            f.write(version_content)
-        "
-        
-        echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
-        echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+            f.write(new_content)
+
+        print("::set-output name=current_version::" + current_version)
+        print("::set-output name=new_version::" + new_version)
+        EOF
+
+    - name: Run bump script
+      id: bump
+      run: python bump_version.py
     
-    - name: Commit and push changes
+    - name: Commit and push
       run: |
         git config --local user.email "github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
         git add version.py
-        git commit -m "🚀 Bump version to ${{ steps.bump.outputs.new_version }} [skip ci]"
+        git commit -m "Bump version to ${{ steps.bump.outputs.new_version }} [skip ci]"
         git push
