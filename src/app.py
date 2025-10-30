@@ -9,6 +9,14 @@ from audio_p import AudioPlayer
 from datetime import datetime
 from querys import query_radios
 import os
+import sys
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+sys.path.insert(0, parent_dir)
+
+from version import version
+print(f"App Version_TEST: {version['version']}")
 
 async def main(page: ft.Page):
 
@@ -219,32 +227,20 @@ async def main(page: ft.Page):
         # print("Database query result:", last_visited_radios)
     except Exception as e:
         print("Database query failed:", e)
+        
+    
 
-
-    version = os.getenv("GITHUB_RUN_NUMBER", "0")
-    version = int(version)
-
-
-    new_version = version + 1
-
-
-    new_version = str(new_version)
-
-
-    #print(new_version)
-
-
-    result_version = f"{new_version[:1]}.{new_version[1:2]}.{new_version[2:3]}"
-
-
-    #print(result_version)
-
-
-    build_version = f"{result_version}-build.{datetime.now():%Y%m%d%H%M}"
-    info = f"© {datetime.now().year} Plambe. All rights reserved.\nVersion {build_version}"
+    # version = os.getenv("GITHUB_RUN_NUMBER", "0")
+    # version = int(version)
+    # new_version = version + 1
+    # new_version = str(new_version)
+    # result_version = f"{new_version[:1]}.{new_version[1:2]}.{new_version[2:3]}"
+    # build_version = f"{result_version}-build.{datetime.now():%Y%m%d%H%M}"
+    # info = f"© {datetime.now().year} Plambe. All rights reserved.\nVersion {build_version}"
 
     licence_text = ft.Text(
-    value=info,
+    # value=info,
+    value=version['version'],
     size=12,
     color=ft.Colors.BLACK,
     text_align=ft.TextAlign.CENTER,

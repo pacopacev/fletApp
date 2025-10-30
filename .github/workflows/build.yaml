@@ -27,6 +27,7 @@ jobs:
         
     - name: Build application
       run: |
-        python src/main.py
-      env:
-        GITHUB_RUN_NUMBER: ${{ github.run_number }}
+       
+        python src/increment_version.py
+      # env:
+      #   GITHUB_RUN_NUMBER: ${{ github.run_number }}
