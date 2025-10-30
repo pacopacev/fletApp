@@ -36,7 +36,7 @@ jobs:
             else:
                 current_version = "1"
         except FileNotFoundError:
-            current_version = "1.0."
+            current_version = "1.0.0"
 
         print(f"Current version: {current_version}")
 

@@ -14,11 +14,21 @@ import importlib.util
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 sys.path.insert(0, parent_dir)
+# Load version.py from the project root explicitly to avoid import/path issues
+version = {}
+version_path = os.path.join(parent_dir, "version.py")
 try:
-    from version import version
-    # print(f"App Version: {version['version']}")
-except (ImportError, KeyError):
-    version = {'version': '1.0.0', 'build_date': ''}
+    spec = importlib.util.spec_from_file_location("version", version_path)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    version = getattr(mod, "version", {})
+    # Normalize string -> dict
+    if isinstance(version, str):
+        version = {"version": version}
+except Exception as ex:
+    print(f"Could not load version from {version_path}: {ex}")
+
+print(f"App Version: {version.get('version', '1.0.0')}")
 
 async def main(page: ft.Page):
 
