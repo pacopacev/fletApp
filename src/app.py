@@ -16,8 +16,11 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 sys.path.insert(0, parent_dir)
 
-from version import version
-print(f"App Version: {version.get('version', '1.0.0')}")
+try:
+    from version import version
+    print(f"App Version: {version['version']}")
+except (ImportError, KeyError):
+    version = {'version': '1.0.0', 'build_date': ''}
 
 async def main(page: ft.Page):
 
@@ -239,7 +242,7 @@ async def main(page: ft.Page):
 
     licence_text = ft.Text(
     # value=info,
-    value=f"v{version.get('version', '1.0.0')} (Build: {version.get('build_date', '')})",
+    value=f"v{version['version']} (Build: {version.get('build_date', '')})",
     size=12,
     color=ft.Colors.BLACK,
     text_align=ft.TextAlign.CENTER,
