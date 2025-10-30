@@ -12,7 +12,7 @@ from jinja2 import Environment, FileSystemLoader
 env = Environment(loader=FileSystemLoader('templates'))
 
 
-version = "0.1.2"
+version = "1.0.1"
 
 # Suppress noisy deprecation warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning, module="uvicorn")
