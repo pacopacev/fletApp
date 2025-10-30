@@ -9,7 +9,7 @@ def increment_version():
     parent_dir = os.path.dirname(current_dir)
     sys.path.insert(0, parent_dir)
 
-    from version import version
+    from src.version import version
     last_key = list(version)[-1]
     print(f"App Version: {version[last_key]}")
 

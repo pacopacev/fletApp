@@ -10,13 +10,14 @@ from datetime import datetime
 from querys import query_radios
 import os
 import sys
+# import importlib.util
 
-current_dir = os.path.dirname(os.path.abspath(__file__))
-parent_dir = os.path.dirname(current_dir)
-sys.path.insert(0, parent_dir)
+# current_dir = os.path.dirname(os.path.abspath(__file__))
+# parent_dir = os.path.dirname(current_dir)
+# sys.path.insert(0, parent_dir)
 
 from version import version
-print(f"App Version_TEST: {version['version']}")
+print(f"App Version_TEST: {version['build']}")
 
 async def main(page: ft.Page):
 
