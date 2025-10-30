@@ -1,9 +1,9 @@
 # version.py
 version = {
-    'version': '1.0.6',
+    'version': '1.0.7',
     'major': 1,
     'minor': 0,
-    'patch': 6,
-    'build_date': '2025-10-30 17:59:37',
-    'commit_hash': '012a68e3127cb97572754a8f71e4ca7400ce9b15'
+    'patch': 7,
+    'build_date': '2025-10-30 18:03:56',
+    'commit_hash': '39fbce38cf525be8f2827e5dbe3b2732ec8624ca'
 }
