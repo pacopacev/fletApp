@@ -11,7 +11,6 @@ from querys import query_radios
 import os
 import sys
 # import importlib.util
-
 # current_dir = os.path.dirname(os.path.abspath(__file__))
 # parent_dir = os.path.dirname(current_dir)
 # sys.path.insert(0, parent_dir)
@@ -43,8 +42,7 @@ async def main(page: ft.Page):
             
         ),
     )
-    
-        
+            
     async def on_radio_change(value, key, text, favicon):
         ap.audio1.src = value
         ap.audio1.autoplay = True  
@@ -60,7 +58,6 @@ async def main(page: ft.Page):
         except Exception as ex:
             print(f"Error changing radio: {ex}")
         
-
     async def set_play_from_list(e):
         try:
             radio_url = e.control.data["url"]
