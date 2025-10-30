@@ -28,7 +28,16 @@ try:
 except Exception as ex:
     print(f"Could not load version from {version_path}: {ex}")
 
-print(f"App Version: {version.get('version', '1.0.0')}")
+# Normalize version into usable parts
+if isinstance(version, dict):
+    _ver_num = version.get('version', '1.0.0')
+    _ver_build = version.get('build_date', '')
+else:
+    # if version is a plain string or other type
+    _ver_num = str(version)
+    _ver_build = ''
+
+print(f"App Version: {_ver_num} (Build: {_ver_build})")
 
 async def main(page: ft.Page):
 
@@ -250,7 +259,7 @@ async def main(page: ft.Page):
 
     licence_text = ft.Text(
     # value=info,
-    value=f"v{version['version']} (Build: {version.get('build_date', '')})",
+    value=f"v{_ver_num} (Build: {_ver_build})",
     size=12,
     color=ft.Colors.BLACK,
     text_align=ft.TextAlign.CENTER,
