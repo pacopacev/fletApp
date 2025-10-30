@@ -60,6 +60,7 @@ jobs:
         python -c "
         from datetime import datetime
         import os
+        import re
 
         version_content = '''# version.py
         version = {
