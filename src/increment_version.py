@@ -13,7 +13,6 @@ def increment_version():
     # last_key = list(version)[-1]
     print(f"Current Version: {version['version']}")
 
-    # print(type(version["version"]))
 
     last_version = int(version["version"])
     new_version = last_version + 100
