@@ -17,7 +17,7 @@ parent_dir = os.path.dirname(current_dir)
 sys.path.insert(0, parent_dir)
 
 from version import version
-# print(f"App Version_TEST: {version['version']}")
+print(f"App Version: {version.get('version', '1.0.0')}")
 
 async def main(page: ft.Page):
 
@@ -239,7 +239,7 @@ async def main(page: ft.Page):
 
     licence_text = ft.Text(
     # value=info,
-    value=f"v{version['version']} ({version['build_date']})",
+    value=f"v{version.get('version', '1.0.0')} (Build: {version.get('build_date', '')})",
     size=12,
     color=ft.Colors.BLACK,
     text_align=ft.TextAlign.CENTER,
