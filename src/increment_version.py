@@ -4,18 +4,18 @@ import sys
 def main():
     increment_version()
 def increment_version():
-        # Add parent directory to path for imports
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    parent_dir = os.path.dirname(current_dir)
-    sys.path.insert(0, parent_dir)
+    #     # Add parent directory to path for imports
+    # current_dir = os.path.dirname(os.path.abspath(__file__))
+    # parent_dir = os.path.dirname(current_dir)
+    # sys.path.insert(0, parent_dir)
 
-    from src.version import version
-    last_key = list(version)[-1]
-    print(f"App Version: {version[last_key]}")
+    from version import version
+    # last_key = list(version)[-1]
+    print(f"Current Version: {version['version']}")
 
-    print(type(version[last_key]))
+    # print(type(version["version"]))
 
-    last_version = int(version[last_key])
+    last_version = int(version["version"])
     new_version = last_version + 100
     print(f"New Version: {new_version}")
 
@@ -27,13 +27,13 @@ def increment_version():
 
     # Write the updated version dictionary back to the version.py file
     import importlib.util
-    spec = importlib.util.spec_from_file_location("version", "../version.py")
+    spec = importlib.util.spec_from_file_location("version", "./version.py")
     version_module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(version_module)
     version_module.version = version
 
     # Save the updated version module
-    with open("../version.py", "w") as file:
+    with open("./version.py", "w") as file:
         file.write("version = " + str(version_module.version))
 
     print(version)
