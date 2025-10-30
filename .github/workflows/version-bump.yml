@@ -34,9 +34,9 @@ jobs:
             if match:
                 current_version = match.group(1)
             else:
-                current_version = "1.0.0"
+                current_version = "1"
         except FileNotFoundError:
-            current_version = "1.0.0"
+            current_version = "1.0."
 
         print(f"Current version: {current_version}")
 
