@@ -31,8 +31,8 @@ except Exception as ex:
 
 # normalize into usable values
 if isinstance(version, dict):
-    _ver_num = version.get('version', '1.0.0')
-    _ver_build = version.get('build_date', '')
+    _ver_num = version.get('version', '1.0.66')
+    _ver_build = version.get('build_date', datetime.now().strftime("%Y-%m-%d"))
     _ver_commit = version.get('commit_hash', '')
 else:
     # if version is a plain string or something else
@@ -261,7 +261,7 @@ async def main(page: ft.Page):
     # info = f"© {datetime.now().year} Plambe. All rights reserved.\nVersion {build_version}"
 
     licence_text = ft.Text(
-    value=f"v{_ver_num} (Build: {_ver_build})",
+    value=f"V{_ver_num} (Build: {_ver_build})",
     size=12,
     color=ft.Colors.BLACK,
     text_align=ft.TextAlign.CENTER,
