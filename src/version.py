@@ -1,4 +1,2 @@
 
-# not active code file
-
 version = {'version': '1.0.0', 'build_date': '2024-06-01'}
