@@ -9,9 +9,7 @@ from audio_p import AudioPlayer
 from datetime import datetime
 from querys import query_radios
 import os
-import sys
 import importlib.util
-import os
 
 # project root (one level above src)
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -40,7 +38,7 @@ else:
     _ver_build = ''
     _ver_commit = ''
 
-print(f"App Version: v{_ver_num} (Build: {_ver_build})")
+# print(f"App Version: v{_ver_num} (Build: {_ver_build})")
 
 async def main(page: ft.Page):
 

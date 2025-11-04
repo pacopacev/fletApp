@@ -19,11 +19,9 @@ class DDComponents:
         self.coutrntry_code = None
         self.now_playing_text = None
         self.now_playing = None
-        self.now_playing_container = ft.Container()
-        
+        self.now_playing_container = ft.Container()  
         self.border_color = ft.Colors.BLACK
      
-
         self.ddServer = ft.Dropdown(
             trailing_icon=ft.Icon(ft.Icons.ARROW_DROP_DOWN, color=ft.Colors.BLACK),
             leading_icon=ft.Icon(ft.Icons.PUBLIC, color=ft.Colors.BLACK),
@@ -34,12 +32,8 @@ class DDComponents:
             hint_text="Select Server",
             border_color=self.border_color,
             filled=True,
-            options=[]  
+            options=[],  
         )
-        
-        
-        
-
         self.ddGenre = ft.Dropdown(
             trailing_icon=ft.Icon(ft.Icons.ARROW_DROP_DOWN, color=ft.Colors.BLACK),
             leading_icon=ft.Icon(ft.Icons.MUSIC_NOTE, color=ft.Colors.BLACK),
