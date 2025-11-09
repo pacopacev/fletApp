@@ -40,6 +40,12 @@ else:
 
 # print(f"App Version: v{_ver_num} (Build: {_ver_build})")
 
+
+def on_scroll_top(e):
+        # Scroll the page to the top
+        e.page.scroll_to(offset=0, duration=500)
+        
+
 async def main(page: ft.Page):
 
     page.title = "DropDown Radio"
@@ -326,35 +332,19 @@ async def main(page: ft.Page):
                 ft.Text("Last Visited Radios", size=16, weight=ft.FontWeight.BOLD),
                 last_visited_list_container,
                 # licence_text, 
-                BottomAppBar(licence_text=licence_text),
+                BottomAppBar(licence_text=licence_text, on_scoll_to_top=on_scroll_top),
                 
                 # ft.Container(height=8)  # Spacer at the bottom
             ],
             alignment=ft.MainAxisAlignment.CENTER,
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
             scroll=ft.ScrollMode.ALWAYS,
-            on_scroll_interval=0,
-            on_scroll=lambda e: on_scroll(e)
+   
         )
     
-    scroll_position = 0
-    last_scroll_position = 0
     
-    def on_scroll(e):
-        print("Scroll event triggered")
-        nonlocal scroll_position, last_scroll_position
-        scroll_position = e.pixels
-        # Hide AppBar when scrolling down
-        if scroll_position > last_scroll_position + 20:
-            if appbar.visible:
-                appbar.visible = False
-                page.update()
-        # Show AppBar when scrolling up
-        elif scroll_position < last_scroll_position - 20:
-            if not appbar.visible:
-                appbar.visible = True
-                page.update()
-        last_scroll_position = scroll_position
+    
+ 
 
     page.add(main_column)
     
