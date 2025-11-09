@@ -41,9 +41,7 @@ else:
 # print(f"App Version: v{_ver_num} (Build: {_ver_build})")
 
 
-def on_scroll_top(e):
-        # Scroll the page to the top
-        e.page.scroll_to(offset=0, duration=500)
+
         
 
 async def main(page: ft.Page):
@@ -70,7 +68,9 @@ async def main(page: ft.Page):
             
         ),
     )
-            
+    def on_scroll_top(e):
+        # Scroll the page to the top
+        e.page.scroll_to(offset=0, duration=500)      
     async def on_radio_change(value, key, text, favicon):
         ap.audio1.src = value
         ap.audio1.autoplay = True  
