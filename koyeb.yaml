@@ -1,0 +1,43 @@
+# koyeb.yaml
+app: your-app-name
+services:
+  - name: your-service-name
+    env:
+      # Non-sensitive version info (updated by GitHub Actions)
+      - name: APP_VERSION
+        value: "0.0.1"
+      - name: MAJOR
+        value: "0"
+      - name: MINOR
+        value: "0"
+      - name: PATCH
+        value: "1"
+      - name: BUILD_DATE
+        value: "2024-06-10T12:00:00Z"
+      - name: COMMIT_HASH
+        value: "021fd464528ee60073825aaad72704d7c740eda7"
+      - name: PORT
+        value: "8553"
+      
+      # Sensitive data from Koyeb Secrets
+      - name: DB_NAME
+        secret: db-credentials
+      - name: DB_USER
+        secret: db-credentials
+      - name: DB_PASSWORD
+        secret: db-credentials
+      - name: DB_HOST
+        secret: db-credentials
+      - name: DB_PORT
+        secret: db-credentials
+      - name: GITHUB_TOKEN
+        secret: github-token
+      - name: KOYEB_API_KEY
+        secret: koyeb-api-key
+    
+    ports:
+      - port: 8553
+        http_path: /
+    instances:
+      - type: nano
+        count: 1

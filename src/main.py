@@ -10,43 +10,46 @@ from app import main
 from jinja2 import Environment, FileSystemLoader
 from datetime import datetime
 import os
+from dotenv import load_dotenv
 import importlib.util
 
 
-# project root (one level above src)
-current_dir = os.path.dirname(os.path.abspath(__file__))
-parent_dir = os.path.dirname(current_dir)
-version_path = os.path.join(parent_dir, "version.py")
-# attempt to load version.py explicitly from repo root
-version = {}
-print(version_path)
-try:
-    spec = importlib.util.spec_from_file_location("version", version_path)
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
-    version = getattr(mod, "version", {})
-except Exception as ex:
-    print(parent_dir)
-    print(f"Could not load version from {version_path}: {ex}")
-    version = {}
+# # project root (one level above src)
+# current_dir = os.path.dirname(os.path.abspath(__file__))
+# parent_dir = os.path.dirname(current_dir)
+# version_path = os.path.join(parent_dir, "version.py")
+# # attempt to load version.py explicitly from repo root
+# version = {}
+# print(version_path)
+# try:
+#     spec = importlib.util.spec_from_file_location("version", version_path)
+#     mod = importlib.util.module_from_spec(spec)
+#     spec.loader.exec_module(mod)
+#     version = getattr(mod, "version", {})
+# except Exception as ex:
+#     print(parent_dir)
+#     print(f"Could not load version from {version_path}: {ex}")
+#     version = {}
 
-# normalize into usable values
-if isinstance(version, dict):
-    _ver_num = version.get('version', '1.0.66')
-    _ver_build = version.get('build_date', datetime.now().strftime("%Y-%m-%d"))
-    _ver_commit = version.get('commit_hash', '')
-else:
-    # if version is a plain string or something else
-    _ver_num = str(version)
-    print(f"Version: {_ver_num}")
-    _ver_build = ''
-    _ver_commit = ''
+# # normalize into usable values
+# if isinstance(version, dict):
+#     _ver_num = version.get('version', '1.0.66')
+#     _ver_build = version.get('build_date', datetime.now().strftime("%Y-%m-%d"))
+#     _ver_commit = version.get('commit_hash', '')
+# else:
+#     # if version is a plain string or something else
+#     _ver_num = str(version)
+#     print(f"Version: {_ver_num}")
+#     _ver_build = ''
+#     _ver_commit = ''
 
 # print(f"App Version: v{_ver_num} (Build: {_ver_build})")
+
+load_dotenv()
 env = Environment(loader=FileSystemLoader('templates'))
 
 
-version = f"V{_ver_num} (Build: {_ver_build})"
+version = f"V{os.getenv('APP_VERSION')} Build: {os.getenv('BUILD_DATE')}"
 # version = "1.0.1"
 
 # Suppress noisy deprecation warnings
