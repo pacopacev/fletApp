@@ -16,14 +16,17 @@ class BottomAppBar(ft.BottomAppBar):
                     # ft.IconButton(icon=ft.Icons.NEW_RELEASES, icon_color=ft.Colors.WHITE),
                     licence_text,
                     ft.Container(expand=True),
-                    ft.IconButton(
-                        icon=ft.Icons.ARROW_CIRCLE_UP_SHARP,
-                        mouse_cursor=ft.MouseCursor.CLICK,
-                        icon_color=ft.Colors.RED,
-                        padding=ft.padding.all(0),
-                        on_click=lambda e: self.on_scoll_to_top(e)
-                                   )
-        
+                    ft.Container(
+                        content = ft.Image(
+                        src=f"/icons/arrow_circle_up_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.png", 
+                        # width=30, 
+                        # height=30,
+                        tooltip=ft.Tooltip("Go to top of page"),
+                        
+                    ),
+                      width=50,
+                      on_click=lambda e: self.on_scoll_to_top(e)
+                    ), 
                  
                 ]
             ),
