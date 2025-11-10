@@ -55,13 +55,13 @@ jobs:
         commit_hash = os.getenv("GITHUB_SHA", "")[:8]
 
         version_content = f'''# Auto-generated version info
-APP_VERSION = '{new_version}'
-MAJOR = {major}
-MINOR = {minor}
-PATCH = {patch}
-BUILD_DATE = '{build_date}'
-COMMIT_HASH = '{commit_hash}'
-'''
+        APP_VERSION = '{new_version}'
+        MAJOR = {major}
+        MINOR = {minor}
+        PATCH = {patch}
+        BUILD_DATE = '{build_date}'
+        COMMIT_HASH = '{commit_hash}'
+        '''
 
         os.makedirs('src', exist_ok=True)
         with open(version_path, 'w') as f:
