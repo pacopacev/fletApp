@@ -19,12 +19,14 @@ parent_dir = os.path.dirname(current_dir)
 version_path = os.path.join(parent_dir, "version.py")
 # attempt to load version.py explicitly from repo root
 version = {}
+print(version_path)
 try:
     spec = importlib.util.spec_from_file_location("version", version_path)
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
     version = getattr(mod, "version", {})
 except Exception as ex:
+    print(parent_dir)
     print(f"Could not load version from {version_path}: {ex}")
     version = {}
 

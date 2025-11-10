@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main, master ]
     paths-ignore:
-      - 'version.py'
+      - 'src/.env'
 
 jobs:
   bump-version:
@@ -27,39 +27,87 @@ jobs:
         from datetime import datetime
         import os
 
+        env_path = 'src/.env'
+        
+        # Read from src/.env file
         try:
-            with open('version.py', 'r') as f:
+            with open(env_path, 'r') as f:
                 content = f.read()
-            match = re.search(r"'version': '([0-9]+\.[0-9]+\.[0-9]+)'", content)
+            
+            # Look for APP_VERSION in .env file
+            match = re.search(r'APP_VERSION=([0-9]+\.[0-9]+\.[0-9]+)', content)
             if match:
                 current_version = match.group(1)
             else:
-                current_version = "1"
+                current_version = "1.0.0"
+                print("APP_VERSION not found in src/.env, using default")
         except FileNotFoundError:
             current_version = "1.0.0"
+            print("src/.env file not found, creating new one")
 
         print(f"Current version: {current_version}")
 
+        # Bump patch version
         major, minor, patch = map(int, current_version.split('.'))
         patch += 1
         new_version = f"{major}.{minor}.{patch}"
 
         print(f"New version: {new_version}")
 
-        new_content = f"""# version.py
-        version = {{
-            'version': '{new_version}',
-            'major': {major},
-            'minor': {minor},
-            'patch': {patch},
-            'build_date': '{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}',
-            'commit_hash': '{os.getenv("GITHUB_SHA", "")}'
-        }}
-        """
+        # Read existing .env content or create new
+        env_lines = []
+        version_updated = False
+        
+        try:
+            with open(env_path, 'r') as f:
+                env_lines = f.readlines()
+        except FileNotFoundError:
+            env_lines = []
+        
+        # Update or add APP_VERSION
+        new_env_lines = []
+        for line in env_lines:
+            if line.startswith('APP_VERSION='):
+                new_env_lines.append(f'APP_VERSION={new_version}\n')
+                version_updated = True
+            else:
+                new_env_lines.append(line)
+        
+        if not version_updated:
+            new_env_lines.append(f'APP_VERSION={new_version}\n')
+        
+        # Add build info
+        build_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        commit_hash = os.getenv("GITHUB_SHA", "")[:8]  # Short commit hash
+        
+        # Update or add BUILD_DATE and COMMIT_HASH
+        build_date_updated = False
+        commit_hash_updated = False
+        
+        final_lines = []
+        for line in new_env_lines:
+            if line.startswith('BUILD_DATE='):
+                final_lines.append(f'BUILD_DATE={build_date}\n')
+                build_date_updated = True
+            elif line.startswith('COMMIT_HASH='):
+                final_lines.append(f'COMMIT_HASH={commit_hash}\n')
+                commit_hash_updated = True
+            else:
+                final_lines.append(line)
+        
+        if not build_date_updated:
+            final_lines.append(f'BUILD_DATE={build_date}\n')
+        if not commit_hash_updated:
+            final_lines.append(f'COMMIT_HASH={commit_hash}\n')
 
-        with open('version.py', 'w') as f:
-            f.write(new_content)
+        # Create src directory if it doesn't exist
+        os.makedirs('src', exist_ok=True)
+        
+        # Write back to src/.env
+        with open(env_path, 'w') as f:
+            f.writelines(final_lines)
 
+        print(f"Updated {env_path} with version {new_version}")
         print("::set-output name=current_version::" + current_version)
         print("::set-output name=new_version::" + new_version)
         EOF
@@ -72,6 +120,6 @@ jobs:
       run: |
         git config --local user.email "github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
-        git add version.py
+        git add src/.env
         git commit -m "Bump version to ${{ steps.bump.outputs.new_version }} [skip ci]"
         git push

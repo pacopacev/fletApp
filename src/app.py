@@ -15,6 +15,7 @@ import importlib.util
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 version_path = os.path.join(parent_dir, "version.py")
+print(parent_dir)
 
 # attempt to load version.py explicitly from repo root
 version = {}
