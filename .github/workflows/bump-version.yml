@@ -25,8 +25,9 @@ jobs:
         import re
         from datetime import datetime
         import os
+        import subprocess
 
-        version_path = 'src/version.py'
+        version_path = 'version.py'
         
         # Read from version.py if it exists
         try:
@@ -52,7 +53,10 @@ jobs:
 
         # Create version.py with the format you want
         build_date = datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
-        commit_hash = os.getenv("GITHUB_SHA", "")[:8]
+        
+        # Get the actual commit hash
+        result = subprocess.run(['git', 'rev-parse', '--short', 'HEAD'], capture_output=True, text=True)
+        commit_hash = result.stdout.strip()
 
         version_content = f'''# Auto-generated version info
         import os
@@ -64,11 +68,10 @@ jobs:
         BUILD_DATE = '{build_date}'
         COMMIT_HASH = '{commit_hash}'
 
-        # Version string in your desired format
-        version = f"V{{os.getenv('APP_VERSION', APP_VERSION)}} Build: {{os.getenv('BUILD_DATE', BUILD_DATE)}}"
-        '''
+# Version string in your desired format
+version = f"Ver{{os.getenv('APP_VERSION', APP_VERSION)}} Build: {{os.getenv('BUILD_DATE', BUILD_DATE)}}"
+'''
 
-        os.makedirs('src', exist_ok=True)
         with open(version_path, 'w') as f:
             f.write(version_content)
 
@@ -79,18 +82,30 @@ jobs:
       id: bump
       run: |
         python bump_version.py
-        echo "new_version=$(grep 'new_version=' bump_version.py | tail -1 | cut -d'=' -f2)" >> $GITHUB_OUTPUT
+        new_version=$(python -c "import re; content = open('version.py').read(); match = re.search(r\"APP_VERSION\s*=\s*'([0-9]+\.[0-9]+\.[0-9]+)'\", content); print(match.group(1))")
+        echo "new_version=$new_version" >> $GITHUB_OUTPUT
+        echo "Updated version: $new_version"
+
+    - name: Show version.py content
+      run: cat version.py
 
     - name: Update koyeb.yaml with new version
       run: |
-        sed -i "s/APP_VERSION: \".*\"/APP_VERSION: \"${{ steps.bump.outputs.new_version }}\"/" koyeb.yaml
-        sed -i "s/PATCH: \".*\"/PATCH: \"${{ steps.bump.outputs.new_version }}\"/" koyeb.yaml
+        if [ -f koyeb.yaml ]; then
+          sed -i "s/APP_VERSION: \".*\"/APP_VERSION: \"${{ steps.bump.outputs.new_version }}\"/" koyeb.yaml
+          sed -i "s/PATCH: \".*\"/PATCH: \"${{ steps.bump.outputs.new_version }}\"/" koyeb.yaml
+        else
+          echo "koyeb.yaml not found, skipping update"
+        fi
 
     - name: Commit and push version changes
       run: |
         git config --local user.email "github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
-        git add src/version.py koyeb.yaml
+        git add version.py
+        if [ -f koyeb.yaml ]; then
+          git add koyeb.yaml
+        fi
         git commit -m "Bump version to ${{ steps.bump.outputs.new_version }} [skip ci]"
         git push
 
