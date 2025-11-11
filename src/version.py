@@ -1,10 +1,10 @@
 # Auto-generated version info
-APP_VERSION = '0.0.4'
+APP_VERSION = '0.0.5'
 MAJOR = 0
 MINOR = 0
-PATCH = 4
-BUILD_DATE = '2025-11-11T16:31:50Z'
-COMMIT_HASH = 'ac2a062'
+PATCH = 5
+BUILD_DATE = '2025-11-11T16:38:13Z'
+COMMIT_HASH = '67d9601'
 
 # Version string in your desired format
-version = f"V{APP_VERSION} Build: {BUILD_DATE} ©Plambe. All rights reserved."
+version = f"Ver{APP_VERSION} Build: {BUILD_DATE}"
