@@ -269,7 +269,7 @@ async def main(page: ft.Page):
     # info = f"© {datetime.now().year} Plambe. All rights reserved.\nVersion {build_version}"
 
     licence_text = ft.Text(
-    value=f"Vt (Build: time: {datetime.now():%Y-%m-%d %H:%M}) © {datetime.now().year} Plambe. All rights reserved.",
+    value=f"{version}",
     size=12,
     color=ft.Colors.BLACK,
     text_align=ft.TextAlign.CENTER,
