@@ -48,7 +48,7 @@ BUILD_DATE = '{build_date}'
 COMMIT_HASH = '{commit_hash}'
 
 # Version string in your desired format
-version = f"Ver{{APP_VERSION}} Build: {{BUILD_DATE}}"
+version = f"V{{APP_VERSION}} Build: {{BUILD_DATE}} ©Plambe. All rights reserved."
 """
 
     os.makedirs('src', exist_ok=True)
