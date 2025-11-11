@@ -17,6 +17,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 0
     
     - name: Create bump script
       run: |
@@ -25,7 +26,6 @@ jobs:
         from datetime import datetime
         import os
 
-        # We'll create/update a safe version file instead of .env
         version_path = 'src/version.py'
         
         # Read from version.py if it exists
@@ -50,35 +50,42 @@ jobs:
 
         print(f"New version: {new_version}")
 
-        # Create version.py with safe content
+        # Create version.py with the format you want
         build_date = datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
         commit_hash = os.getenv("GITHUB_SHA", "")[:8]
 
         version_content = f'''# Auto-generated version info
+        import os
+
         APP_VERSION = '{new_version}'
         MAJOR = {major}
         MINOR = {minor}
         PATCH = {patch}
         BUILD_DATE = '{build_date}'
         COMMIT_HASH = '{commit_hash}'
+
+        # Version string in your desired format
+        version = f"V{{os.getenv('APP_VERSION', APP_VERSION)}} Build: {{os.getenv('BUILD_DATE', BUILD_DATE)}}"
         '''
 
         os.makedirs('src', exist_ok=True)
         with open(version_path, 'w') as f:
             f.write(version_content)
 
-        print(f"::set-output name=new_version::{new_version}")
+        print(f"new_version={new_version}")
         EOF
 
     - name: Run bump script
       id: bump
-      run: python bump_version.py
-    
+      run: |
+        python bump_version.py
+        echo "new_version=$(grep 'new_version=' bump_version.py | tail -1 | cut -d'=' -f2)" >> $GITHUB_OUTPUT
+
     - name: Update koyeb.yaml with new version
       run: |
         sed -i "s/APP_VERSION: \".*\"/APP_VERSION: \"${{ steps.bump.outputs.new_version }}\"/" koyeb.yaml
-        sed -i "s/PATCH: \".*\"/PATCH: \"${{ steps.bump.outputs.new_version.split('.')[2] }}\"/" koyeb.yaml
-    
+        sed -i "s/PATCH: \".*\"/PATCH: \"${{ steps.bump.outputs.new_version }}\"/" koyeb.yaml
+
     - name: Commit and push version changes
       run: |
         git config --local user.email "github-actions[bot]@users.noreply.github.com"
@@ -86,9 +93,10 @@ jobs:
         git add src/version.py koyeb.yaml
         git commit -m "Bump version to ${{ steps.bump.outputs.new_version }} [skip ci]"
         git push
-    
+
     - name: Deploy to Koyeb
       uses: koyeb-community/koyeb-actions@v2
       with:
         koyeb-token: ${{ secrets.KOYEB_TOKEN }}
-        config: koyeb.yaml
+        app: your-app-name
+        service: your-service-name
