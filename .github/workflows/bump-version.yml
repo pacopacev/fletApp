@@ -18,76 +18,20 @@ jobs:
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         fetch-depth: 0
-    
-    - name: Create bump script
-      run: |
-        cat > bump_version.py << 'EOF'
-        import re
-        from datetime import datetime
-        import os
-        import subprocess
 
-        version_path = 'version.py'
-        
-        # Read from version.py if it exists
-        try:
-            with open(version_path, 'r') as f:
-                content = f.read()
-            
-            match = re.search(r"APP_VERSION\s*=\s*'([0-9]+\.[0-9]+\.[0-9]+)'", content)
-            if match:
-                current_version = match.group(1)
-            else:
-                current_version = "0.0.1"
-        except FileNotFoundError:
-            current_version = "0.0.1"
-
-        print(f"Current version: {current_version}")
-
-        # Bump patch version
-        major, minor, patch = map(int, current_version.split('.'))
-        patch += 1
-        new_version = f"{major}.{minor}.{patch}"
-
-        print(f"New version: {new_version}")
-
-        # Create version.py with the format you want
-        build_date = datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
-        
-        # Get the actual commit hash
-        result = subprocess.run(['git', 'rev-parse', '--short', 'HEAD'], capture_output=True, text=True)
-        commit_hash = result.stdout.strip()
-
-        version_content = f'''# Auto-generated version info
-        import os
-
-        APP_VERSION = '{new_version}'
-        MAJOR = {major}
-        MINOR = {minor}
-        PATCH = {patch}
-        BUILD_DATE = '{build_date}'
-        COMMIT_HASH = '{commit_hash}'
-
-# Version string in your desired format
-version = f"Ver{{os.getenv('APP_VERSION', APP_VERSION)}} Build: {{os.getenv('BUILD_DATE', BUILD_DATE)}}"
-'''
-
-        with open(version_path, 'w') as f:
-            f.write(version_content)
-
-        print(f"new_version={new_version}")
-        EOF
+    - name: Use bump script
+      run: echo "Using .github/scripts/bump_version.py"
 
     - name: Run bump script
       id: bump
       run: |
-        python bump_version.py
-        new_version=$(python -c "import re; content = open('version.py').read(); match = re.search(r\"APP_VERSION\s*=\s*'([0-9]+\.[0-9]+\.[0-9]+)'\", content); print(match.group(1))")
+        python .github/scripts/bump_version.py > new_version.txt
+        new_version=$(cat new_version.txt | tail -n1)
         echo "new_version=$new_version" >> $GITHUB_OUTPUT
         echo "Updated version: $new_version"
 
     - name: Show version.py content
-      run: cat version.py
+      run: cat src/version.py
 
     - name: Update koyeb.yaml with new version
       run: |
@@ -102,16 +46,26 @@ version = f"Ver{{os.getenv('APP_VERSION', APP_VERSION)}} Build: {{os.getenv('BUI
       run: |
         git config --local user.email "github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
-        git add version.py
+        git add src/version.py
         if [ -f koyeb.yaml ]; then
           git add koyeb.yaml
         fi
         git commit -m "Bump version to ${{ steps.bump.outputs.new_version }} [skip ci]"
         git push
 
-    - name: Deploy to Koyeb
-      uses: koyeb-community/koyeb-actions@v2
-      with:
-        koyeb-token: ${{ secrets.KOYEB_TOKEN }}
-        app: your-app-name
-        service: your-service-name
+    - name: Deploy to Koyeb (placeholder)
+      run: |
+        # Check for KOYEB_TOKEN at runtime in the shell instead of using an 'if' expression
+        if [ -z "${{ secrets.KOYEB_TOKEN }}" ]; then
+          echo "KOYEB_TOKEN not set; skipping deploy."
+          exit 0
+        fi
+
+        echo "KOYEB_TOKEN is set. This workflow does not perform an automatic deploy by default."
+    echo "To enable deployment, replace this step with 'uses: koyeb-community/koyeb-actions@v2' and provide the correct inputs."
+    echo "Example inputs (action may expect different names; check the action's README):"
+    echo "  with:"
+    echo "    api_token: <your_koyeb_token_secret>"
+    echo "    app: <your_koyeb_app_name>"
+    echo "    service: <your_koyeb_service_name>"
+    echo "Or set the environment variables KOYEB_APP_NAME and KOYEB_SERVICE_NAME and call the koyeb CLI in this step."
