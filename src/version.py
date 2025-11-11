@@ -1,13 +1,10 @@
-
 # Auto-generated version info
-import os
-
-APP_VERSION = '0.0.2'
+APP_VERSION = '0.0.3'
 MAJOR = 0
 MINOR = 0
-PATCH = 2
-BUILD_DATE = '2024-06-10T12:30:45Z'
-COMMIT_HASH = 'a1b2c3d4'
+PATCH = 3
+BUILD_DATE = '2025-11-11T16:30:48Z'
+COMMIT_HASH = '4ef666f'
 
 # Version string in your desired format
-version = f"Ver{os.getenv('APP_VERSION', APP_VERSION)} Build: {os.getenv('BUILD_DATE', BUILD_DATE)}"
+version = f"Ver{APP_VERSION} Build: {BUILD_DATE}"

@@ -62,10 +62,10 @@ jobs:
         fi
 
         echo "KOYEB_TOKEN is set. This workflow does not perform an automatic deploy by default."
-    echo "To enable deployment, replace this step with 'uses: koyeb-community/koyeb-actions@v2' and provide the correct inputs."
-    echo "Example inputs (action may expect different names; check the action's README):"
-    echo "  with:"
-    echo "    api_token: <your_koyeb_token_secret>"
-    echo "    app: <your_koyeb_app_name>"
-    echo "    service: <your_koyeb_service_name>"
-    echo "Or set the environment variables KOYEB_APP_NAME and KOYEB_SERVICE_NAME and call the koyeb CLI in this step."
+        echo "To enable deployment, replace this step with 'uses: koyeb-community/koyeb-actions@v2' and provide the correct inputs."
+        echo "Example inputs (action may expect different names; check the action's README):"
+        echo "  with:"
+        echo "    api_token: <your_koyeb_token_secret>"
+        echo "    app: <your_koyeb_app_name>"
+        echo "    service: <your_koyeb_service_name>"
+        echo "Or set the environment variables KOYEB_APP_NAME and KOYEB_SERVICE_NAME and call the koyeb CLI in this step."
