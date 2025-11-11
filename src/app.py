@@ -11,6 +11,9 @@ from querys import query_radios
 import os
 import importlib.util
 
+from version import version
+print(version)
+
 # project root (one level above src)
 # current_dir = os.path.dirname(os.path.abspath(__file__))
 # parent_dir = os.path.dirname(current_dir)

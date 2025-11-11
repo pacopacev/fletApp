@@ -10,5 +10,4 @@ BUILD_DATE = '2024-06-10T12:30:45Z'
 COMMIT_HASH = 'a1b2c3d4'
 
 # Version string in your desired format
-version = f"V{os.getenv('APP_VERSION', APP_VERSION)} Build: {os.getenv('BUILD_DATE', BUILD_DATE)}"
-print(f"Version loaded: {version}")
+version = f"Ver{os.getenv('APP_VERSION', APP_VERSION)} Build: {os.getenv('BUILD_DATE', BUILD_DATE)}"
