@@ -39,7 +39,7 @@ class BottomAppBar(ft.BottomAppBar):
                     height=50,
                     tooltip=ft.Tooltip("Go to top of page"),
                 ),
-                width=60,
+                width=54,
                 on_click=lambda e: self.on_scoll_to_top(e),
             ),
         ]
@@ -47,7 +47,8 @@ class BottomAppBar(ft.BottomAppBar):
         controls = [c for c in controls if c is not None]
         
         super().__init__(
-            height=66,
+            height=54,
             bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST,
             content=ft.Row(controls=controls),
+            shape=ft.NotchShape.CIRCULAR
         )

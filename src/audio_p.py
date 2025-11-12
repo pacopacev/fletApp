@@ -75,7 +75,22 @@ class AudioPlayer:
         self.main_content = ft.Container(
             content=ft.Column(
                 controls=[
-                    ft.Row(controls=[self.favicon, ], alignment=ft.MainAxisAlignment.CENTER, spacing=10),
+                    ft.Row(
+                        controls=[
+                            ft.Image(
+                                src=f"/images/Weathered Chevron with Spikes and Chains.png", #"/icons/arrow_circle_up_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.png",
+                                width=50,
+                                height=50,
+                            ),
+                            self.favicon,
+                              ft.Image(
+                                src=f"/images/Weathered Chevron with Spikes and Chains.png", #"/icons/arrow_circle_up_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.png",
+                                height=50,
+                              )
+                                ], 
+                                alignment=ft.MainAxisAlignment.CENTER, 
+                                spacing=21
+                                ),
                     # ft.Divider(),
                     ft.Row(
                         controls=[     
