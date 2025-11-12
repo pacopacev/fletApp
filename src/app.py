@@ -236,7 +236,7 @@ async def main(page: ft.Page):
     licence_text = ft.Text(
     value=f"{version}",
     size=12,
-    color=ft.Colors.BLACK if page.platform == "windows" else ft.Colors.RED,
+    color=ft.Colors.BLACK if page.platform == ft.PagePlatform.WINDOWS else ft.Colors.RED,
     text_align=ft.TextAlign.CENTER,
     weight=ft.FontWeight.BOLD,
 )
