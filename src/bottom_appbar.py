@@ -8,7 +8,7 @@ class BottomAppBar(ft.BottomAppBar):
 
         self.on_scoll_to_top = on_scoll_to_top
         super().__init__(
-            height=44,
+            height=66,
             bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST,
             content=ft.Row(
                 
@@ -19,12 +19,12 @@ class BottomAppBar(ft.BottomAppBar):
                     ft.Container(
                         content = ft.Image(
                         src=f"/icons/arrow_circle_up_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.png", 
-                        # width=30, 
-                        # height=30,
+                        width=50, 
+                        height=50,
                         tooltip=ft.Tooltip("Go to top of page"),
                         
                     ),
-                      width=50,
+                      width=60,
                       on_click=lambda e: self.on_scoll_to_top(e)
                     ), 
                  
