@@ -13,7 +13,8 @@ from version import version
 print(version)
 
 async def main(page: ft.Page):
-
+    platform = page.platform
+    print(f"Running on platform: {platform}")
     page.title = "DropDown Radio"
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     page.theme_mode = ft.ThemeMode.LIGHT  
@@ -235,7 +236,7 @@ async def main(page: ft.Page):
     licence_text = ft.Text(
     value=f"{version}",
     size=12,
-    color=ft.Colors.BLACK,
+    color=ft.Colors.BLACK if page.platform == "windows" else ft.Colors.RED,
     text_align=ft.TextAlign.CENTER,
     weight=ft.FontWeight.BOLD,
 )
