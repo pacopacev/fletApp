@@ -32,7 +32,7 @@ def main():
     print(f"New version: {new_version}")
 
     # Build metadata
-    build_date = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+    build_date = datetime.utcnow().strftime("%Y-%m-%dT%H:%M")
     try:
         result = subprocess.run(['git', 'rev-parse', '--short', 'HEAD'], capture_output=True, text=True)
         commit_hash = result.stdout.strip() or 'unknown'
