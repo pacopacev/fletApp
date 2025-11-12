@@ -248,7 +248,8 @@ async def main(page: ft.Page):
     text_align=ft.TextAlign.CENTER,
     weight=ft.FontWeight.BOLD,
 ),
-    ], alignment=ft.MainAxisAlignment.START
+    ], alignment=ft.MainAxisAlignment.START,
+    spacing=1,
     )
     
     last_visited_list = ft.ListView(
