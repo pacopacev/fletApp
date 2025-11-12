@@ -17,6 +17,9 @@ class BottomAppBar(ft.BottomAppBar):
                 print("Page platform detected:", page.platform)
                 if page.platform == ft.PagePlatform.WINDOWS or page.platform == ft.PagePlatform.LINUX:
                     expand_container.expand = True
+                else:
+                    expand_container.content = ft.Text("Go to top")
+                    expand_container.expand = False
         except Exception as e:
             # Silently ignore, spacer will just not expand
             pass
