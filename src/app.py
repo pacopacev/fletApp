@@ -310,7 +310,7 @@ async def main(page: ft.Page):
                 ft.Text("Last Visited Radios", size=16, weight=ft.FontWeight.BOLD),
                 last_visited_list_container,
                 # licence_text, 
-                BottomAppBar(licence_text=licence_text, on_scoll_to_top=on_scroll_top),
+                BottomAppBar(licence_text=licence_text, on_scoll_to_top=on_scroll_top, page=page),
                 
                 # ft.Container(height=8)  # Spacer at the bottom
             ],
