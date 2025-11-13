@@ -233,24 +233,26 @@ async def main(page: ft.Page):
     # build_version = f"{result_version}-build.{datetime.now():%Y%m%d%H%M}"
     # info = f"© {datetime.now().year} Plambe. All rights reserved.\nVersion {build_version}"
 
-    licence_text = ft.Column(
+    licence_text = ft.Container(content=ft.Column(
         controls=[
             ft.Text(
     value=f"{version}",
     size=12,
-    color=ft.Colors.BLACK if page.platform == ft.PagePlatform.WINDOWS else ft.Colors.BLACK,
+    color=ft.Colors.WHITE if page.platform == ft.PagePlatform.WINDOWS else ft.Colors.WHITE,
     text_align=ft.TextAlign.CENTER,
     weight=ft.FontWeight.BOLD,
 ), ft.Text(
     value="©Plambe. All rights reserved.",
     size=12,
-    color=ft.Colors.BLACK if page.platform == ft.PagePlatform.WINDOWS else ft.Colors.BLACK,
+    color=ft.Colors.WHITE if page.platform == ft.PagePlatform.WINDOWS else ft.Colors.WHITE,
     text_align=ft.TextAlign.CENTER,
     weight=ft.FontWeight.BOLD,
 ),
     ], alignment=ft.MainAxisAlignment.START,
     spacing=1,
+    ), margin=ft.margin.only(top=0, left=5, right=0, bottom=0)
     )
+    
     
     last_visited_list = ft.ListView(
     clip_behavior=ft.ClipBehavior.ANTI_ALIAS,
