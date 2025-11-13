@@ -5,50 +5,31 @@ import flet as ft
 
 class BottomAppBar(ft.BottomAppBar):
     def __init__(self, licence_text = None, on_scoll_to_top = None, page = None):
-        # state = False
-        # try:
-        #     state = bool(page.platform == ft.PagePlatform.WINDOWS or page.platform == ft.PagePlatform.LINUX)
-        # except Exception as e:
-        #     print("Database query failed:", e)
-        # Always create a spacer container; on Android it won't expand, on desktop it will
-        expand_container = ft.Container(expand=False)
-        try:
-            if page and hasattr(page, 'platform'):
-                print("Page platform detected:", page.platform)
-                if page.platform == ft.PagePlatform.WINDOWS or page.platform == ft.PagePlatform.LINUX:
-                    expand_container.expand = True
-                else:
-                    expand_container.content = ft.Text("Go to top")
-                    expand_container.expand = False
-        except Exception as e:
-            # Silently ignore, spacer will just not expand
-            pass
-         
-    
 
-        self.on_scoll_to_top = on_scoll_to_top
+        icon_data = ft.Icon(name=ft.Icons.ARROW_CIRCLE_UP, color=ft.Colors.WHITE, size=30)
+
+        def handle_scroll_to_top(e):
+            if self.on_scoll_to_top:
+                self.on_scoll_to_top(e) 
+
         
-        # Build controls list, filtering out None values (important for Android compatibility)
-        controls = [
-            licence_text,
-            expand_container,
-            ft.Container(
-                content=ft.Image(
-                    src=f"/icons/arrow_circle_up_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.png",
-                    width=50,
-                    height=50,
-                    tooltip=ft.Tooltip("Go to top of page"),
-                ),
-                width=54,
-                on_click=lambda e: self.on_scoll_to_top(e),
-            ),
-        ]
-        # Remove None values to avoid Flet errors on Android
-        controls = [c for c in controls if c is not None]
+        # Set floating action button if page is provided
+        if page:
+            page.floating_action_button = ft.FloatingActionButton(
+                icon=ft.Icons.ARROW_CIRCLE_UP,
+                bgcolor=ft.Colors.LIME_300,
+                on_click=handle_scroll_to_top,
+                tooltip="Scroll to Top",
+                elevation=3
+            )
+        
+        self.on_scoll_to_top = on_scoll_to_top
         
         super().__init__(
             height=54,
-            bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST,
-            content=ft.Row(controls=controls),
-            shape=ft.NotchShape.CIRCULAR
+            bgcolor="#B00020",
+            content=licence_text,
+            padding=ft.padding.only(top=0, right=5, bottom=0, left=0),
+            shape=ft.RoundedRectangleBorder(radius=15),
+            notch_margin=5
         )
