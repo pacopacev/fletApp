@@ -234,7 +234,7 @@ async def main(page: ft.Page):
     ], alignment=ft.MainAxisAlignment.START,
     spacing=1,
     ),
-    alignment=ft.alignment.center,
+    alignment=ft.alignment.top_left,
     margin=ft.margin.only(left=10, bottom=0, top=10),
     )
     
@@ -299,7 +299,7 @@ async def main(page: ft.Page):
                 last_visited_list_container,
                 # licence_text, 
                 # BottomAppBar(licence_text=licence_text, on_scoll_to_top=on_scroll_top, page=page),
-                ft.Divider(height=1, color=ft.Colors.BLACK, leading_indent=54, trailing_indent=78),
+                ft.Divider(height=1, color=ft.Colors.BLACK, leading_indent=0, trailing_indent=0),
                 
                 ft.Container(content=licence_text, height=54)  # Spacer at the bottom
             ],
