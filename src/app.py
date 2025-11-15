@@ -10,11 +10,11 @@ from datetime import datetime
 from querys import query_radios
 from version import version
 
-print(version)
+# print(version)
 
 async def main(page: ft.Page):
     platform = page.platform
-    print(f"Running on platform: {platform}")
+    # print(f"Running on platform: {platform}")
     page.title = "DropDown Radio"
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     page.theme_mode = ft.ThemeMode.LIGHT  
@@ -23,27 +23,26 @@ async def main(page: ft.Page):
     def on_scroll_top(e):
         e.page.scroll_to(offset=0, duration=500)
     def on_scroll(e: ft.OnScrollEvent):
-        print(e.direction)
-        if e.direction == "reverse":
-            print("Scrolling down")
-            page.floating_action_button = ft.FloatingActionButton(
-                icon=ft.Icons.ARROW_CIRCLE_UP,
-                bgcolor=ft.Colors.LIME_300,
-                on_click=on_scroll_top,
-                tooltip="Scroll to Top",
-                mini=True
-            )
-            page.update()
+        print(e.pixels)
+        try:
+            pixels = float(e.pixels)
+        except Exception:
+            return
+
+        if pixels > 100:
+            if page.floating_action_button is None:
+                page.floating_action_button = ft.FloatingActionButton(
+                    icon=ft.Icons.ARROW_CIRCLE_UP,
+                    bgcolor=ft.Colors.LIME_300,
+                    on_click=on_scroll_top,
+                    tooltip="Scroll to Top",
+                    mini=True,
+                )
+                page.update()
         else:
-            print("Scrolling up")
-            page.floating_action_button = ft.FloatingActionButton(
-                icon=ft.Icons.ARROW_CIRCLE_UP,
-                bgcolor=ft.Colors.LIME_300,
-                on_click=on_scroll_top,
-                tooltip="Scroll to Top",
-                mini=True
-            )
-            page.update()
+            if page.floating_action_button is not None:
+                page.floating_action_button = None
+                page.update()
        
         
     page.on_scroll = on_scroll
@@ -246,13 +245,13 @@ async def main(page: ft.Page):
         controls=[
             ft.Text(
     value=f"{version}",
-    size=12,
+    size=13,
     color=ft.Colors.BLACK if page.platform == ft.PagePlatform.WINDOWS else ft.Colors.BLACK,
     text_align=ft.TextAlign.CENTER,
     weight=ft.FontWeight.BOLD,
 ), ft.Text(
     value="©Plambe. All rights reserved.",
-    size=12,
+    size=13,
     color=ft.Colors.BLACK if page.platform == ft.PagePlatform.WINDOWS else ft.Colors.BLACK,
     text_align=ft.TextAlign.CENTER,
     weight=ft.FontWeight.BOLD,
@@ -260,7 +259,7 @@ async def main(page: ft.Page):
     ], alignment=ft.MainAxisAlignment.START,
     spacing=1,
     ),
-    alignment=ft.alignment.bottom_left,
+    alignment=ft.alignment.top_left,
     margin=ft.margin.only(left=10, bottom=0, top=0),
     )
     
@@ -325,7 +324,7 @@ async def main(page: ft.Page):
                 last_visited_list_container,
                 # licence_text, 
                 # BottomAppBar(licence_text=licence_text, on_scoll_to_top=on_scroll_top, page=page),
-                ft.Divider(height=1, color=ft.Colors.BLACK, leading_indent=0, trailing_indent=54),
+                ft.Divider(height=1, color=ft.Colors.BLACK, leading_indent=0, trailing_indent=0),
                 
                 ft.Container(content=licence_text, height=54)  # Spacer at the bottom
             ],
