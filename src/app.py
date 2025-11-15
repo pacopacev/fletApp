@@ -19,6 +19,34 @@ async def main(page: ft.Page):
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     page.theme_mode = ft.ThemeMode.LIGHT  
     page.scroll = ft.ScrollMode.AUTO
+
+    def on_scroll_top(e):
+        e.page.scroll_to(offset=0, duration=500)
+    def on_scroll(e: ft.OnScrollEvent):
+        print(e.direction)
+        if e.direction == "reverse":
+            print("Scrolling down")
+            page.floating_action_button = ft.FloatingActionButton(
+                icon=ft.Icons.ARROW_CIRCLE_UP,
+                bgcolor=ft.Colors.LIME_300,
+                on_click=on_scroll_top,
+                tooltip="Scroll to Top",
+                mini=True
+            )
+            page.update()
+        else:
+            print("Scrolling up")
+            page.floating_action_button = ft.FloatingActionButton(
+                icon=ft.Icons.ARROW_CIRCLE_UP,
+                bgcolor=ft.Colors.LIME_300,
+                on_click=on_scroll_top,
+                tooltip="Scroll to Top",
+                mini=True
+            )
+            page.update()
+       
+        
+    page.on_scroll = on_scroll
     page.padding = 8
     page.foreground_decoration = ft.BoxDecoration(
         gradient=ft.LinearGradient(
@@ -37,20 +65,18 @@ async def main(page: ft.Page):
             
         ),
     )
-
-    def on_scroll_top(e):
-        # Scroll the page to the top
-        e.page.scroll_to(offset=0, duration=500)
-    # def handle_scroll_to_top(e):
-    #         if on_scoll_to_top:
-    #             on_scoll_to_top(e) 
-    if page:
-            page.floating_action_button = ft.FloatingActionButton(
-                icon=ft.Icons.ARROW_CIRCLE_UP,
-                bgcolor=ft.Colors.LIME_300,
-                on_click=on_scroll_top,
-                tooltip="Scroll to Top",
-            )
+    
+    # def on_scroll_top(e):
+    #     e.page.scroll_to(offset=0, duration=500)
+ 
+    # if page:
+    #         page.floating_action_button = ft.FloatingActionButton(
+    #             icon=ft.Icons.ARROW_CIRCLE_UP,
+    #             bgcolor=ft.Colors.LIME_300,
+    #             on_click=on_scroll_top,
+    #             tooltip="Scroll to Top",
+    #             mini=True
+    #         )
           
     async def on_radio_change(value, key, text, favicon):
         ap.audio1.src = value
@@ -234,8 +260,8 @@ async def main(page: ft.Page):
     ], alignment=ft.MainAxisAlignment.START,
     spacing=1,
     ),
-    alignment=ft.alignment.top_left,
-    margin=ft.margin.only(left=10, bottom=0, top=10),
+    alignment=ft.alignment.bottom_left,
+    margin=ft.margin.only(left=10, bottom=0, top=0),
     )
     
     last_visited_list = ft.ListView(
@@ -282,7 +308,7 @@ async def main(page: ft.Page):
     main_column = ft.Column(
 
             controls=[
-                ft.Divider(height=3, color=ft.Colors.BLACK, leading_indent=0, trailing_indent=0),
+                # ft.Divider(height=3, color=ft.Colors.BLACK, leading_indent=0, trailing_indent=0),
                 # ft.Container(
                 #     height=10
                 # ),
@@ -299,7 +325,7 @@ async def main(page: ft.Page):
                 last_visited_list_container,
                 # licence_text, 
                 # BottomAppBar(licence_text=licence_text, on_scoll_to_top=on_scroll_top, page=page),
-                ft.Divider(height=1, color=ft.Colors.BLACK, leading_indent=0, trailing_indent=0),
+                ft.Divider(height=1, color=ft.Colors.BLACK, leading_indent=0, trailing_indent=54),
                 
                 ft.Container(content=licence_text, height=54)  # Spacer at the bottom
             ],
