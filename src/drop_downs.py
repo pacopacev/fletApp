@@ -32,7 +32,7 @@ class DDComponents:
             hint_text="Select Server",
             border_color=self.border_color,
             filled=True,
-            options=[],  
+            options=[],
         )
         self.ddGenre = ft.Dropdown(
             trailing_icon=ft.Icon(ft.Icons.ARROW_DROP_DOWN, color=ft.Colors.BLACK),

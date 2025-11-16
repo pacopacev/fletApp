@@ -3,12 +3,17 @@ import os
 from info_banner import InfoDialog
 from submit_bug import SubmitBug
 
-
-
 class AppBar(ft.AppBar):
-    def __init__(self, page, toggle_dark_mode=None):
+    def __init__(self, page, licence_text, bottom_divider, floating_action_button, track_name_control=None, track_artist_control=None,player_border_control=None):
         self.page = page
-        self.toggle_dark_mode = toggle_dark_mode
+        self.licence_text = licence_text
+        self.bottom_divider = bottom_divider
+        self.floating_action_button = floating_action_button
+        # optional reference to the main audio player's track name control
+        self.track_name_control = track_name_control
+        self.track_artist_control = track_artist_control
+        self.player_border_control = player_border_control
+        
         if os.getenv("PUBLIC_URL"):
             self.public_url = os.getenv("PUBLIC_URL", "http://127.0.0.1:8000/")
         super().__init__(
@@ -67,7 +72,6 @@ class AppBar(ft.AppBar):
                         ft.Text("Toggle Light/Dark Mode"),
                     ]
                 ),
-                        # icon = ft.Icons.WB_SUNNY_OUTLINED, 
                         checked=False, 
                         on_click=self.toggle_dark_mode
                     ),
@@ -107,33 +111,104 @@ class AppBar(ft.AppBar):
                     
                 ], padding =ft.Padding(0,0,0,0), elevation=0,
             ),
-                # ft.IconButton(
-                #     tooltip="Try on deprecated website", 
-                #     mouse_cursor=ft.MouseCursor.CLICK,
-                #     icon=ft.Icons.LINK, 
-                #     on_click=lambda _: self.page.launch_url("https://plambe.wuaze.com")
-                # ),
-                # ft.IconButton(ft.Icons.WB_SUNNY_OUTLINED, on_click=self._toggle_dark_mode),
+               
             ],
         )
-
-    # def toggle_dark_mode(self, e):
-    #     if self.page.theme_mode == "light":
-    #         self.page.theme_mode = "dark"
-    #     else:
-    #         self.page.theme_mode = "light"
-    #     self.page.update()
     def get_info(self, e):
         info_banner = InfoDialog(self.page)
         info_banner.open_banner(page=self.page)
         self.page.update()
         
     def submit_bug(self, e):
-        
-        # self.page.launch_url("https://github.com/Plambe/RadioDropDown/issues/new")
+
         bug_report = SubmitBug(self.page)
         self.page.open(bug_report)
-        # bug_report.open_dialog(page=self.page)
+        self.page.update()
+
+    
+    def toggle_dark_mode(self, e):
+        # Toggle between light and dark mode
+        if self.page.theme_mode == "dark":
+            print("Toggling to light mode")
+            self.page.theme_mode = "light"
+            text_color = ft.Colors.BLACK
+            divider_color = ft.Colors.BLACK
+            fab_icon_color = ft.Colors.BLACK
+        else:
+            print("Toggling to dark mode")
+            self.page.theme_mode = "dark"
+            text_color = ft.Colors.WHITE
+            divider_color = ft.Colors.WHITE
+            fab_icon_color = ft.Colors.BLACK
+
+        # Update licence text colors if present
+        try:
+            col = getattr(self.licence_text, 'content', None)
+            if col and hasattr(col, 'controls'):
+                controls = col.controls
+                if len(controls) >= 1:
+                    controls[0].color = text_color
+                if len(controls) >= 2:
+                    controls[1].color = text_color
+        except Exception:
+            pass
+
+        # Update divider color if present
+        try:
+            if self.bottom_divider is not None:
+                self.bottom_divider.color = divider_color
+        except Exception:
+            pass
+
+        # Update floating action button icon color if present
+        try:
+            fab = getattr(self, 'floating_action_button', None)
+            if fab is not None:
+                fab.icon_color = fab_icon_color
+                try:
+                    fab.update()
+                except Exception:
+                    pass
+        except Exception:
+            pass
+
+        # Update track name control color if a reference was provided when AppBar was created
+        try:
+            if getattr(self, 'track_name_control', None) is not None:
+                t = self.track_name_control
+                t.color = ft.Colors.WHITE if self.page.theme_mode == "dark" else ft.Colors.BLACK
+                try:
+                    t.update()
+                except Exception:
+                    pass
+        except Exception:
+            pass
+
+        try:
+            if getattr(self, 'track_artist_control', None) is not None:
+                t = self.track_artist_control
+                t.color = ft.Colors.WHITE if self.page.theme_mode == "dark" else ft.Colors.BLACK
+                try:
+                    t.update()
+                except Exception:
+                    pass
+        except Exception:
+            pass
+        try:
+            if getattr(self, 'player_border_control', None) is not None:
+                print("Updating player border color")
+                b = self.player_border_control
+                b.color = ft.Colors.WHITE if self.page.theme_mode == "dark" else ft.Colors.BLACK
+                try:
+                    print("Updating player border color")
+                    b.update()
+                except Exception:
+                    pass
+        except Exception:
+            pass
+
+
+
         self.page.update()
         
         

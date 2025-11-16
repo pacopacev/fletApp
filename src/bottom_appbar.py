@@ -15,13 +15,15 @@ class BottomAppBar(ft.BottomAppBar):
         
         # Set floating action button if page is provided
         if page:
-            page.floating_action_button = ft.FloatingActionButton(
-                icon=ft.Icons.ARROW_CIRCLE_UP,
-                bgcolor=ft.Colors.LIME_300,
-                on_click=handle_scroll_to_top,
-                tooltip="Scroll to Top",
-                elevation=3
-            )
+                page.floating_action_button = ft.FloatingActionButton(
+                    icon=ft.Icons.ARROW_CIRCLE_UP,
+                    icon_size=40,
+                    icon_color=ft.Colors.WHITE,
+                    bgcolor=ft.Colors.LIME_300,
+                    on_click=handle_scroll_to_top,
+                    tooltip="Scroll to Top",
+                    elevation=3
+                )
         
         self.on_scoll_to_top = on_scoll_to_top
         
