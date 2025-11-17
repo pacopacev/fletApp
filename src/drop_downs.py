@@ -88,6 +88,8 @@ class DDComponents:
             filled=True,
         )
         
+        self.dropdowns_s = [ self.ddServer, self.ddGenre, self.ddCountry, self.ddRadio ]
+        
         self.now_playing_text_container = None
 
         hosts = Servers().get_radiobrowser_base_urls()

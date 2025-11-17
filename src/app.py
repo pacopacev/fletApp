@@ -287,9 +287,9 @@ async def main(page: ft.Page):
 
             controls=[
                 # ft.Divider(height=3, color=ft.Colors.BLACK, leading_indent=0, trailing_indent=0),
-                # ft.Container(
-                #     height=10
-                # ),
+                ft.Container(
+                     height=10
+                 ),
               
                         dd_instance.ddServer,
                         dd_instance.ddGenre,
@@ -320,8 +320,13 @@ async def main(page: ft.Page):
         floating_action_button=floating_action_button, 
         track_name_control=ap.track_name, 
         track_artist_control=ap.track_artist,
-        player_border_control=ap.border
-        )
+        player_border_control=ap.main_content,
+        btn_play_control=ap.btn_play,
+        volume_icon_control=ap.volume_icon,
+        btn_favorite_control=ap.btn_favorite,
+        slider_control=ap.slider,
+        dropdown_control=dd_instance.dropdowns_s,
+)
     page.appbar = appbar
     
     

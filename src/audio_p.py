@@ -28,7 +28,6 @@ class AudioPlayer:
             border_radius=ft.border_radius.all(10)
         )
 
-        self.border = ft.border.all(3, ft.Colors.BLACK)
         
         self.slider = ft.Slider(
                                             width=150,
@@ -113,7 +112,7 @@ class AudioPlayer:
                 ],
                 spacing=10
             ),
-            border=self.border,
+            border=ft.border.all(3, ft.Colors.BLACK),
             border_radius=ft.border_radius.all(10),
             width=350,
             padding=13,

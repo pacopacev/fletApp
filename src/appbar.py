@@ -4,7 +4,19 @@ from info_banner import InfoDialog
 from submit_bug import SubmitBug
 
 class AppBar(ft.AppBar):
-    def __init__(self, page, licence_text, bottom_divider, floating_action_button, track_name_control=None, track_artist_control=None,player_border_control=None):
+    def __init__(self, 
+                 page, 
+                 licence_text, 
+                 bottom_divider, 
+                 floating_action_button, 
+                 track_name_control=None, 
+                 track_artist_control=None,
+                 player_border_control=None, 
+                 btn_play_control=None, 
+                 volume_icon_control=None,
+                 btn_favorite_control=None,
+                 slider_control=None,
+                 dropdown_control=None,):
         self.page = page
         self.licence_text = licence_text
         self.bottom_divider = bottom_divider
@@ -13,6 +25,11 @@ class AppBar(ft.AppBar):
         self.track_name_control = track_name_control
         self.track_artist_control = track_artist_control
         self.player_border_control = player_border_control
+        self.btn_play_control = btn_play_control
+        self.volume_icon = volume_icon_control
+        self.btn_favorite_control = btn_favorite_control
+        self.slider_control = slider_control    
+        self.dropdown_control = dropdown_control
         
         if os.getenv("PUBLIC_URL"):
             self.public_url = os.getenv("PUBLIC_URL", "http://127.0.0.1:8000/")
@@ -196,14 +213,88 @@ class AppBar(ft.AppBar):
             pass
         try:
             if getattr(self, 'player_border_control', None) is not None:
-                print("Updating player border color")
                 b = self.player_border_control
-                b.color = ft.Colors.WHITE if self.page.theme_mode == "dark" else ft.Colors.BLACK
+                if hasattr(b, 'border') and b.border is not None:
+                    # Reconstruct border with new color (Border objects are immutable)
+                    new_color = ft.Colors.WHITE if self.page.theme_mode == "dark" else ft.Colors.BLACK
+                    old_border = b.border
+                    # Preserve width and create new border with updated color
+                    width = getattr(old_border, 'left', None)
+                    if width and hasattr(width, 'width'):
+                        width = width.width
+                    else:
+                        width = 3  # default fallback
+                    b.border = ft.border.all(width, new_color)
                 try:
-                    print("Updating player border color")
                     b.update()
                 except Exception:
                     pass
+        except Exception:
+            pass
+        
+        try:
+            if getattr(self, 'btn_play_control', None) is not None:
+                # print("Updating btn play color")
+                b = self.btn_play_control
+                b.icon_color = ft.Colors.WHITE if self.page.theme_mode == "dark" else ft.Colors.BLACK
+                try:
+                    # print("Updating btn play color")
+                    b.update()
+                except Exception:
+                    pass
+        except Exception:
+            pass
+        
+        try:
+            if getattr(self, 'volume_icon', None) is not None:
+                # print("Updating btn next color")
+                b = self.volume_icon
+                b.color = ft.Colors.WHITE if self.page.theme_mode == "dark" else ft.Colors.BLACK
+                try:
+                    # print("Updating btn next color")
+                    b.update()
+                except Exception:
+                    pass
+        except Exception:
+            pass
+        
+        try:
+            if getattr(self, 'btn_favorite_control', None) is not None:
+                # print("Updating btn next color")
+                b = self.btn_favorite_control
+                b.icon_color = ft.Colors.WHITE if self.page.theme_mode == "dark" else ft.Colors.BLACK
+                try:
+                    # print("Updating btn next color")
+                    b.update()
+                except Exception:
+                    pass
+        except Exception:
+            pass
+        
+        try:
+            if getattr(self, 'slider_control', None) is not None:
+                b = self.slider_control
+                b.thumb_color = ft.Colors.WHITE if self.page.theme_mode == "dark" else ft.Colors.BLACK
+                try:
+                    # print("Updating btn next color")
+                    b.update()
+                except Exception:
+                    pass
+        except Exception:
+            pass
+        
+        try:
+            if getattr(self, 'dropdown_control', None) is not None:
+                for i in range(len(self.dropdown_control)):
+                    b = self.dropdown_control[i]
+                    b.border_color = ft.Colors.WHITE if self.page.theme_mode == "dark" else ft.Colors.BLACK
+                    b.label_style.color = ft.Colors.WHITE if self.page.theme_mode == "dark" else ft.Colors.BLACK
+                    b.trailing_icon.color = ft.Colors.WHITE if self.page.theme_mode == "dark" else ft.Colors.BLACK
+                    b.leading_icon.color = ft.Colors.WHITE if self.page.theme_mode == "dark" else ft.Colors.BLACK
+                    try:
+                        b.update()
+                    except Exception:
+                        pass
         except Exception:
             pass
 
