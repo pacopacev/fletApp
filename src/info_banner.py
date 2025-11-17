@@ -10,8 +10,8 @@ class InfoDialog(ft.AlertDialog):
             bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST,
             title=ft.Row(
                 controls=[
-                    ft.Icon(ft.Icons.INFO, color=ft.Colors.BLACK, size=40),
-                    ft.Text("Information", color=ft.Colors.BLACK, weight=ft.FontWeight.BOLD),
+                    ft.Icon(ft.Icons.INFO, size=40),
+                    ft.Text("Information", weight=ft.FontWeight.BOLD),
                 ]
             ),
             content=ft.Container(

@@ -67,9 +67,7 @@ class DDComponents:
             width=300,
             hint_text="Select Country",
             border_color=self.border_color,
-            options=[
-
-            ],
+            options=[],
             filled=True,
             disabled=True
         )
@@ -79,13 +77,13 @@ class DDComponents:
             leading_icon=ft.Icon(ft.Icons.RADIO, color=ft.Colors.BLACK),
             label="Radio Stations",
             label_style=ft.TextStyle(color=ft.Colors.BLACK),
-            # on_click=self.on_radio_click,
             on_change=self.radio_change,
             width=300,
             border_color=self.border_color,
             hint_text="Select Radio",
             options=[],
             filled=True,
+            disabled=True
         )
         
         self.dropdowns_s = [ self.ddServer, self.ddGenre, self.ddCountry, self.ddRadio ]
@@ -199,19 +197,18 @@ class DDComponents:
                 snackbar_instance = Snackbar("Loaded radio stations", bgcolor="green", length = length)
                 snackbar_instance.open = True  
                 self.page.controls.append(snackbar_instance)
+                self.ddRadio.disabled = False
+                self.ddRadio.update()
                 self.page.update()
                 
         except Exception as ex:
             print(f"Error loading stations: {ex}")
     
     async def radio_change(self, e):
-        
         if e.control.value:
-            # print(self.ddRadio.options)
             radio_details = next((opt for opt in self.ddRadio.options if opt.key == self.ddRadio.value), None)
             favicon = str(next((opt.data.get("favicon") for opt in self.ddRadio.options if opt.key == self.ddRadio.value), None))
-            stationuuid = str(next((opt.data.get("stationuuid") for opt in self.ddRadio.options if opt.key == self.ddRadio.value), None))
-            
+            stationuuid = str(next((opt.data.get("stationuuid") for opt in self.ddRadio.options if opt.key == self.ddRadio.value), None))   
             if radio_details:
                 radio_status = await ValidateRadio().validate_stream(radio_details.key)
                 # print(f"Radio URL: {radio_details.key}, Valid: {radio_status}")
@@ -318,8 +315,6 @@ class DDComponents:
         global_model = GlobalModel()
         result = await global_model.execute_query_all("SELECT * FROM flet_radios WHERE uuid = %s", (stationuuid,))
         return result
-       
-            
         
       
 
