@@ -1,24 +1,56 @@
 import flet as ft
 from appbar import AppBar
-from bottom_appbar import BottomAppBar
+# from bottom_appbar import BottomAppBar
 from drop_downs import DDComponents
 from global_model import GlobalModel
 import asyncio
-from audio_p import AudioPlayer
 from audio_p import AudioPlayer
 from datetime import datetime
 from querys import query_radios
 from version import version
 
-print(version)
+# print(version)
 
 async def main(page: ft.Page):
     platform = page.platform
-    print(f"Running on platform: {platform}")
+    # print(f"Running on platform: {platform}")
     page.title = "DropDown Radio"
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     page.theme_mode = ft.ThemeMode.LIGHT  
     page.scroll = ft.ScrollMode.AUTO
+
+    
+
+    def on_scroll_top(e):
+        e.page.scroll_to(offset=0, duration=500)
+
+    fab_icon = ft.Icon(name=ft.Icons.ARROW_CIRCLE_UP, color=ft.Colors.BLACK)
+
+    floating_action_button = ft.FloatingActionButton(
+                    content=fab_icon,   
+                    bgcolor=ft.Colors.LIME_300,
+                    on_click=on_scroll_top,
+                    tooltip="Scroll to Top",
+                    mini=True,
+                )
+    def on_scroll(e: ft.OnScrollEvent):
+        # print(e.pixels)
+        try:
+            pixels = float(e.pixels)
+        except Exception:
+            return
+
+        if pixels > 100:
+            if page.floating_action_button is None:
+                page.floating_action_button = floating_action_button
+                page.update()
+        else:
+            if page.floating_action_button is not None:
+                page.floating_action_button = None
+                page.update()
+       
+        
+    page.on_scroll = on_scroll
     page.padding = 8
     page.foreground_decoration = ft.BoxDecoration(
         gradient=ft.LinearGradient(
@@ -37,9 +69,7 @@ async def main(page: ft.Page):
             
         ),
     )
-    def on_scroll_top(e):
-        # Scroll the page to the top
-        e.page.scroll_to(offset=0, duration=500)      
+          
     async def on_radio_change(value, key, text, favicon):
         ap.audio1.src = value
         ap.audio1.autoplay = True  
@@ -96,10 +126,7 @@ async def main(page: ft.Page):
                 if ap.state==True:
                     print(f"Playing1:{ap.state}")          
                     ap.state = False
-                    ap.btn_play.icon = ft.Icons.PAUSE_CIRCLE
-                    # e.control.icon = ft.Icons.PAUSE_CIRCLE
-                    # e.control.update()   
-                    # await ap.update_title_on_player("Select a station", favicon, favorite_status)    
+                    ap.btn_play.icon = ft.Icons.PAUSE_CIRCLE    
                     ap.audio1.play()
                     ap.audio1.update()
                     page.update()   
@@ -107,13 +134,7 @@ async def main(page: ft.Page):
                     print(f"Paused1:{ap.state}")
                     ap.state = True
                     ap.btn_play.icon = ft.Icons.PAUSE_CIRCLE
-                    # e.control.icon = ft.Icons.PLAY_CIRCLE_FILL             
-                    # favicon = ft.Image(
-                    #     src=f"/Distressed Metal Chevron with Chains.png",
-                    #     width=90,
-                    #     height=90,
-                    #     fit=ft.ImageFit.CONTAIN,
-                    # )
+           
                     await ap.update_title_on_player("Select a station", favicon, favorite_status)
                     ap.audio1.src = radio_url
                     ap.audio1.autoplay = True                   
@@ -121,17 +142,7 @@ async def main(page: ft.Page):
                     # e.control.update()
                     ap.audio1.play()
                     ap.audio1.update()
-                    page.update()
-                    # return
-                # else:
-                #     ap.state = False
-                #     print(f"Resumed1:{ap.state}")
-                #     ap.btn_play.icon = ft.Icons.PAUSE_CIRCLE
-                #     # e.control.icon = ft.Icons.PAUSE_CIRCLE
-                #     # e.control.update()
-                #     ap.audio1.resume()
-                #     ap.audio1.update()
-                #     page.update()           
+                    page.update()       
                    
                 await ap.update_title_on_player(radio_name, favicon, favorite_status)          
                 page.update()
@@ -191,29 +202,13 @@ async def main(page: ft.Page):
                 control.leading.update()
     favorite_status = False
     ap = AudioPlayer(page=page, reset_listeners=reset_listeners, favorite_status=favorite_status)
-    # def toggle_mode():
-    #     print ("Toggling mode")
     dd_instance = DDComponents(page=page, on_radio_change=on_radio_change)
     global_model = GlobalModel()
     
     
-    def toggle_dark_mode(e):
-        dds = [dd_instance.ddServer, dd_instance.ddGenre, dd_instance.ddCountry, dd_instance.ddRadio]
-        if page.theme_mode == "dark":
-            dd_instance.toggle_border_color(page, self=None, e=None, dds=dds)
-
-            licence_text.content.color = ft.Colors.WHITE
-            licence_text.content.color = ft.Colors.BLACK
-            page.theme_mode = "light"     
-        else: 
-            dd_instance.toggle_border_color(page, self=None, e=None, dds=dds)
-            page.theme_mode = "dark"
-            licence_text.content.color = ft.Colors.WHITE
-        page.update()
         
     
-    appbar = AppBar(page=page, toggle_dark_mode=toggle_dark_mode)
-    page.appbar = appbar
+    
     
     last_visited_radios = [] 
     query = query_radios["all_radios"]
@@ -222,36 +217,29 @@ async def main(page: ft.Page):
         # print("Database query result:", last_visited_radios)
     except Exception as e:
         print("Database query failed:", e)
-        
-    
-
-    # version = os.getenv("GITHUB_RUN_NUMBER", "0")
-    # version = int(version)
-    # new_version = version + 1
-    # new_version = str(new_version)
-    # result_version = f"{new_version[:1]}.{new_version[1:2]}.{new_version[2:3]}"
-    # build_version = f"{result_version}-build.{datetime.now():%Y%m%d%H%M}"
-    # info = f"© {datetime.now().year} Plambe. All rights reserved.\nVersion {build_version}"
 
     licence_text = ft.Container(content=ft.Column(
         controls=[
             ft.Text(
     value=f"{version}",
-    size=12,
-    color=ft.Colors.WHITE if page.platform == ft.PagePlatform.WINDOWS else ft.Colors.WHITE,
+    size=13,
+    color=ft.Colors.BLACK,
     text_align=ft.TextAlign.CENTER,
     weight=ft.FontWeight.BOLD,
 ), ft.Text(
     value="©Plambe. All rights reserved.",
-    size=12,
-    color=ft.Colors.WHITE if page.platform == ft.PagePlatform.WINDOWS else ft.Colors.WHITE,
+    size=13,
+    color=ft.Colors.BLACK,
     text_align=ft.TextAlign.CENTER,
     weight=ft.FontWeight.BOLD,
 ),
     ], alignment=ft.MainAxisAlignment.START,
     spacing=1,
-    ), margin=ft.margin.only(top=0, left=5, right=0, bottom=0)
+    ),
+    alignment=ft.alignment.bottom_left,
+    margin=ft.margin.only(left=10, bottom=0, top=0),
     )
+
     
     
     last_visited_list = ft.ListView(
@@ -294,13 +282,14 @@ async def main(page: ft.Page):
         height=666,
         bgcolor="#B00020",
     )
-
+    bottom_divider = ft.Divider(height=1, color=ft.Colors.BLACK, leading_indent=0, trailing_indent=0)
     main_column = ft.Column(
 
             controls=[
-                ft.Container(
-                    height=10
-                ),
+                # ft.Divider(height=3, color=ft.Colors.BLACK, leading_indent=0, trailing_indent=0),
+                # ft.Container(
+                #     height=10
+                # ),
               
                         dd_instance.ddServer,
                         dd_instance.ddGenre,
@@ -312,16 +301,28 @@ async def main(page: ft.Page):
                 ap.audio_player,
                 ft.Text("Last Visited Radios", size=16, weight=ft.FontWeight.BOLD),
                 last_visited_list_container,
-                # licence_text, 
-                BottomAppBar(licence_text=licence_text, on_scoll_to_top=on_scroll_top, page=page),
+
+                bottom_divider,
                 
-                # ft.Container(height=8)  # Spacer at the bottom
+                ft.Container(content=licence_text, height=54)  # Spacer at the bottom
             ],
             alignment=ft.MainAxisAlignment.CENTER,
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
             scroll=ft.ScrollMode.ALWAYS,
    
         )
+    
+    # pass the audio player's track_name control to the AppBar so it can update colors on theme change
+    appbar = AppBar(
+        page=page, 
+        licence_text=licence_text, 
+        bottom_divider=bottom_divider, 
+        floating_action_button=floating_action_button, 
+        track_name_control=ap.track_name, 
+        track_artist_control=ap.track_artist,
+        player_border_control=ap.border
+        )
+    page.appbar = appbar
     
     
     

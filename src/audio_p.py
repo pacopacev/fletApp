@@ -27,6 +27,8 @@ class AudioPlayer:
             fit=ft.ImageFit.CONTAIN,
             border_radius=ft.border_radius.all(10)
         )
+
+        self.border = ft.border.all(3, ft.Colors.BLACK)
         
         self.slider = ft.Slider(
                                             width=150,
@@ -52,12 +54,6 @@ class AudioPlayer:
         autoplay=False,
         volume=0.3,
         balance=0,
-        #on_loaded=lambda _: print("Loaded"),
-        #on_loaded= lambda e: asyncio.run(ValidateRadio().validate_stream(e)),
-        # on_duration_changed=lambda e: print("Duration changed:", e.data),
-        # on_position_changed=lambda e: print("Position changed:", e.data),
-        # on_state_changed=lambda e: print("State changed:", e.data),
-        # on_seek_complete=lambda _: print("Seek complete"),
     )
         self.page.overlay.append(self.audio1)
         
@@ -117,7 +113,7 @@ class AudioPlayer:
                 ],
                 spacing=10
             ),
-            border=ft.border.all(3, ft.Colors.BLACK),
+            border=self.border,
             border_radius=ft.border_radius.all(10),
             width=350,
             padding=13,
@@ -313,7 +309,46 @@ class AudioPlayer:
 
         
  
-      
+    #       # 1) If control has a .color (e.g. Divider, Text)
+    # if hasattr(b, "color"):
+    #     b.color = color
+
+    # # 2) If it's a container-like control with bgcolor
+    # elif hasattr(b, "bgcolor"):
+    #     b.bgcolor = color
+
+    # # 3) If it has a border object, try to change its color
+    # elif hasattr(b, "border"):
+    #     try:
+    #         # some controls store a Border object on `.border`
+    #         if b.border is None:
+    #             # create a simple border if needed (1px solid)
+    #             b.border = ft.border.all(1, color)
+    #         else:
+    #             # try to set nested 
+    #             if hasattr(b.border, "color"):
+    #                 b.border.color = color
+    #             else:
+    #                 # fallback: replace border
+    #                 b.border = ft.border.all(1, color)
+    #     except Exception:
+    #         # ignore border update failures
+    #         pass
+
+    # # 4) Try the control's content (e.g. Container(content=Text(...)))
+    # else:
+    #     try:
+    #         content = getattr(b, "content", None)
+    #         if content is not None and hasattr(content, "color"):
+    #             content.color = color
+    #     except Exception:
+    #         pass
+
+    # # Apply the update if control supports it
+    # try:
+    #     b.update()
+    # except Exception:
+    #     pass
 
 
         
