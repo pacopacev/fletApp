@@ -8,6 +8,7 @@ from audio_p import AudioPlayer
 from datetime import datetime
 from querys import query_radios
 from version import version
+from eq import EQ
 
 # print(version)
 
@@ -18,6 +19,8 @@ async def main(page: ft.Page):
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     page.theme_mode = ft.ThemeMode.LIGHT  
     page.scroll = ft.ScrollMode.AUTO
+    
+    
 
     
 
@@ -299,6 +302,7 @@ async def main(page: ft.Page):
           
                 ft.Text("Audio Controls", size=16, weight=ft.FontWeight.BOLD),
                 ap.audio_player,
+                
                 ft.Text("Last Visited Radios", size=16, weight=ft.FontWeight.BOLD),
                 last_visited_list_container,
 

@@ -4,13 +4,14 @@ from global_model import GlobalModel
 from snackbar import Snackbar
 import requests
 import base64
+from eq import EQ
 
 
 class AudioPlayer:
     def __init__(self, page: ft.Page, reset_listeners=None, favorite_status=None):
         self.page = page
         self.reset_listeners = reset_listeners
-        # self.add_to_favorites = add_to_favorites
+        self._eq = None  # Lazy-load EQ instance
         self.btn_favorite = ft.IconButton(
             icon=ft.Icons.FAVORITE_BORDER,
             icon_color=ft.Colors.BLACK,
@@ -91,9 +92,11 @@ class AudioPlayer:
                         controls=[     
                             ft.ListTile(
                                 leading=ft.Icon(ft.Icons.MUSIC_NOTE_ROUNDED, color=ft.Colors.BLACK),
+                                # leading=self.get_eq(),
                                 title=self.track_name,
                                 subtitle=self.track_artist,
-                            ),
+                                # trailing=self.get_eq(),
+                            )
                         ],
                         alignment=ft.MainAxisAlignment.START,
                         spacing=10
@@ -127,10 +130,17 @@ class AudioPlayer:
         self.audio_player = ft.Container(
              ft.Column(
                  controls=[
-                     self.main_content,  
+                     self.main_content, 
                  ], 
-             )
+             ),
         )
+    
+    def get_eq(self):
+        """Lazy-load and return a single EQ instance."""
+        if self._eq is None:
+            # Create a compact EQ for use in the player trailing slot
+            self._eq = EQ(self.page, width=120, height=40, num_bars=6, levels=6, block_height=4, spacing=1, update_interval=0.12)
+        return self._eq
              
 
     def play_track(self, e):

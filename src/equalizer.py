@@ -17,7 +17,7 @@ def main(page: ft.Page):
     page.title = "Flet Equalizer"
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-    page.bgcolor = ft.colors.BLACK
+    page.bgcolor = ft.Colors.BLACK
     
     # Control variables
     is_running = False
@@ -30,9 +30,9 @@ def main(page: ft.Page):
     equalizer_container = ft.Container(
         width=400,
         height=300,
-        bgcolor=ft.colors.BLACK,
+        bgcolor=ft.Colors.BLACK,
         padding=20,
-        border=ft.border.all(2, ft.colors.WHITE),
+        border=ft.border.all(2, ft.Colors.WHITE),
         border_radius=10,
     )
     
@@ -41,24 +41,24 @@ def main(page: ft.Page):
         "🎵 COLORFUL EQUALIZER 🎵",
         size=20,
         weight=ft.FontWeight.BOLD,
-        color=ft.colors.WHITE
+        color=ft.Colors.WHITE
     )
     
     # Control buttons
     start_button = ft.ElevatedButton(
         "Start Animation",
-        icon=ft.icons.PLAY_ARROW,
+        icon=ft.Icons.PLAY_ARROW,
         on_click=lambda e: start_animation(),
-        bgcolor=ft.colors.GREEN,
-        color=ft.colors.WHITE
+        bgcolor=ft.Colors.GREEN,
+        color=ft.Colors.WHITE
     )
     
     stop_button = ft.ElevatedButton(
         "Stop Animation",
-        icon=ft.icons.STOP,
+        icon=ft.Icons.STOP,
         on_click=lambda e: stop_animation(),
-        bgcolor=ft.colors.RED,
-        color=ft.colors.WHITE,
+        bgcolor=ft.Colors.RED,
+        color=ft.Colors.WHITE,
         disabled=True
     )
     
@@ -84,7 +84,7 @@ def main(page: ft.Page):
                     block = ft.Container(
                         width=30,
                         height=15,
-                        bgcolor=ft.colors.BLACK,
+                        bgcolor=ft.Colors.BLACK,
                         border_radius=ft.border_radius.all(3)
                     )
                 row.controls.append(block)
