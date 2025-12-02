@@ -6,7 +6,7 @@ import asyncio
 
 
 class EQ(ft.Container):
-    def __init__(self, page: ft.Page, *, width: int = 400, height: int = 300, num_bars: int = 10, levels: int = 13, block_height: int = 15, spacing: int = 2, update_interval: float = 0.15):
+    def __init__(self, page: ft.Page, *, width: int = 400, height: int = 300, num_bars: int = 10, levels: int = 13, block_height: int = 25, spacing: int = 2, update_interval: float = 0.15):
         """Equalizer visual control.
 
         Parameters:
@@ -48,7 +48,7 @@ class EQ(ft.Container):
             content=ft.Text("Initializing Equalizer..."),
             width=width,
             height=height,
-            bgcolor=ft.Colors.BLACK,
+            # bgcolor=ft.Colors.BLACK,
             padding=4,
             border=None,
             border_radius=6,
@@ -65,10 +65,15 @@ class EQ(ft.Container):
         for i, bar_height in enumerate(bar_heights[: self.num_bars]):
             col = ft.Column(spacing=self.spacing, alignment=ft.MainAxisAlignment.END)
             color = self.colors[i % len(self.colors)]
+            # print(f"Bar {i} height: {bar_height}")
+            # print(color)
             # compute block width based on control width
             try:
-                block_w = max(6, int(self.width / (self.num_bars + 2)))
+                # print(self.width)
+                block_w = max(4, int(self.width / (self.num_bars + 4)))
+                # print(block_w)
             except Exception:
+                # Fallback to default
                 block_w = 10
             for level in range(self.levels, 0, -1):
                 if bar_height >= level:
@@ -82,7 +87,7 @@ class EQ(ft.Container):
                     block = ft.Container(
                         width=block_w,
                         height=self.block_height,
-                        bgcolor=ft.Colors.BLACK,
+                        bgcolor=ft.Colors.WHITE,
                         border_radius=ft.border_radius.all(2),
                     )
                 col.controls.append(block)

@@ -9,6 +9,7 @@ from eq import EQ
 
 class AudioPlayer:
     def __init__(self, page: ft.Page, reset_listeners=None, favorite_status=None):
+        
         self.page = page
         self.reset_listeners = reset_listeners
         self._eq = None  # Lazy-load EQ instance
@@ -21,6 +22,7 @@ class AudioPlayer:
         )
         self.track_name = ft.Text("Select a station", weight=ft.FontWeight.BOLD, color=ft.Colors.BLACK)
         self.track_artist = ft.Text("No station selected", color=ft.Colors.BLACK)
+        self.leading_icon = ft.Icon(ft.Icons.MUSIC_NOTE_ROUNDED, color=ft.Colors.BLACK)
         self.favicon = ft.Image(
             src=f"/Distressed Metal Chevron with Chains.png",
             width=90,
@@ -67,7 +69,7 @@ class AudioPlayer:
             tooltip="Select a station first"
         )
         self.volume_icon = ft.Icon(name=ft.Icons.VOLUME_DOWN, color=ft.Colors.BLACK)
-        
+        # print([self.src, self.state])
         self.main_content = ft.Container(
             content=ft.Column(
                 controls=[
@@ -91,7 +93,7 @@ class AudioPlayer:
                     ft.Row(
                         controls=[     
                             ft.ListTile(
-                                leading=ft.Icon(ft.Icons.MUSIC_NOTE_ROUNDED, color=ft.Colors.BLACK),
+                                leading=self.leading_icon,
                                 # leading=self.get_eq(),
                                 title=self.track_name,
                                 subtitle=self.track_artist,
@@ -139,7 +141,7 @@ class AudioPlayer:
         """Lazy-load and return a single EQ instance."""
         if self._eq is None:
             # Create a compact EQ for use in the player trailing slot
-            self._eq = EQ(self.page, width=120, height=40, num_bars=6, levels=6, block_height=4, spacing=1, update_interval=0.12)
+            self._eq = EQ(self.page, width=60, height=40, num_bars=6, levels=21, block_height=1, spacing=0, update_interval=0.12)
         return self._eq
              
 
@@ -227,7 +229,9 @@ class AudioPlayer:
             if self.track_artist:
                 self.track_artist.value = radio_name
                 if len(self.track_artist.value) > 37:
-                    self.track_artist.value = self.track_artist.value[:35] + "..."  
+                    self.track_artist.value = self.track_artist.value[:35] + "..."
+                    self.leading_icon = self.get_eq()
+                    print(self.leading_icon)
                 
             await self.get_favicon(favicon)   
             if hasattr(self, 'page') and self.page:
