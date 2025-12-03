@@ -126,13 +126,10 @@ class EQ(ft.Container):
             try:
                 self.animation_task = asyncio.create_task(self.equalizer_animation())
             except RuntimeError:
-                # If there's no running loop, schedule the task via the page
-                try:
-                    self.page.session.run_sync(lambda: asyncio.create_task(self.equalizer_animation()))
-                except Exception:
-                    # If scheduling fails, leave is_running True and let
-                    # the caller try again once the loop is active.
-                    pass
+                # No running loop available right now. Leave is_running True
+                # and let the caller schedule the animation task when the
+                # event loop is available (AudioPlayer.get_eq attempts this).
+                pass
 
     def stop_animation(self):
         """Stop the equalizer animation"""

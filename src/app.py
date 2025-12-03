@@ -10,9 +10,18 @@ from querys import query_radios
 from version import version
 from eq import EQ
 
+# Global reference to the app's running asyncio loop (set inside main)
+APP_MAIN_LOOP = None
+
 # print(version)
 
 async def main(page: ft.Page):
+    # store the running event loop so thread callbacks can schedule coroutines
+    global APP_MAIN_LOOP
+    try:
+        APP_MAIN_LOOP = asyncio.get_running_loop()
+    except RuntimeError:
+        APP_MAIN_LOOP = None
     platform = page.platform
     # print(f"Running on platform: {platform}")
     page.title = "DropDown Radio"
@@ -127,9 +136,25 @@ async def main(page: ft.Page):
                 ap.audio1.autoplay = True               
 
                 if ap.state==True:
-                    print(f"Playing1:{ap.state}")          
+                    print(f"Playing from list:{ap.state}")          
                     ap.state = False
-                    ap.btn_play.icon = ft.Icons.PAUSE_CIRCLE    
+                    ap.btn_play.icon = ft.Icons.PAUSE_CIRCLE
+                    eq_instance = ap.get_eq()
+                    # Place the EQ instance inside the existing leading Container's content
+                    try:
+                        ap.leading_content.content = eq_instance
+                        # ensure the container and eq redraw
+                        try:
+                            ap.leading_content.update()
+                        except Exception:
+                            pass
+                        try:
+                            eq_instance.update()
+                        except Exception:
+                            pass
+                    except Exception:
+                        # Fallback: replace attribute (less ideal)
+                        ap.leading_content = eq_instance
                     ap.audio1.play()
                     ap.audio1.update()
                     page.update()   
@@ -266,7 +291,7 @@ async def main(page: ft.Page):
                 ),     
                 tooltip="Play this radio",               
                 data=radio,
-                on_click=lambda e: asyncio.run(set_play_from_list(e))
+                on_click=lambda e: __import__('asyncio').run_coroutine_threadsafe(set_play_from_list(e), APP_MAIN_LOOP)
             ),
             ft.Divider(height=1, color=ft.Colors.WHITE),
         ]

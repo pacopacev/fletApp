@@ -11,6 +11,7 @@ class AudioPlayer:
     def __init__(self, page: ft.Page, reset_listeners=None, favorite_status=None):
         
         self.page = page
+        self.state = True
         self.reset_listeners = reset_listeners
         self._eq = None  # Lazy-load EQ instance
         self.btn_favorite = ft.IconButton(
@@ -18,11 +19,12 @@ class AudioPlayer:
             icon_color=ft.Colors.BLACK,
             tooltip="Add to favorites",
             disabled=True,
-            on_click=lambda e: asyncio.run(self.update_favorite(e, data=self.audio1.src)),
+            on_click=lambda e: asyncio.create_task(self.update_favorite(e, data=self.audio1.src)),
         )
         self.track_name = ft.Text("Select a station", weight=ft.FontWeight.BOLD, color=ft.Colors.BLACK)
         self.track_artist = ft.Text("No station selected", color=ft.Colors.BLACK)
-        self.leading_icon = ft.Icon(ft.Icons.MUSIC_NOTE_ROUNDED, color=ft.Colors.BLACK)
+        self.leading_content = ft.Container(content= ft.Icon(ft.Icons.MUSIC_NOTE_ROUNDED, color=ft.Colors.BLACK))
+
         self.favicon = ft.Image(
             src=f"/Distressed Metal Chevron with Chains.png",
             width=90,
@@ -93,7 +95,7 @@ class AudioPlayer:
                     ft.Row(
                         controls=[     
                             ft.ListTile(
-                                leading=self.leading_icon,
+                                leading=self.leading_content,
                                 # leading=self.get_eq(),
                                 title=self.track_name,
                                 subtitle=self.track_artist,
@@ -141,7 +143,41 @@ class AudioPlayer:
         """Lazy-load and return a single EQ instance."""
         if self._eq is None:
             # Create a compact EQ for use in the player trailing slot
-            self._eq = EQ(self.page, width=60, height=40, num_bars=6, levels=21, block_height=1, spacing=0, update_interval=0.12)
+            self._eq = EQ(
+                self.page,
+                width=60,
+                height=40,
+                num_bars=6,
+                levels=21,
+                block_height=1,
+                spacing=0,
+                update_interval=0.12,
+            )
+
+            # Ensure animation is started when we create the EQ.
+            try:
+                # Prefer the EQ's helper which sets is_running and tries to schedule a task
+                self._eq.start_animation()
+            except Exception:
+                pass
+
+            # If we are already on a running loop, make sure the animation coroutine is scheduled
+            try:
+                import asyncio
+                loop = asyncio.get_running_loop()
+                if not hasattr(self._eq, "animation_task") or self._eq.animation_task is None or self._eq.animation_task.done():
+                    self._eq.animation_task = loop.create_task(self._eq.equalizer_animation())
+            except RuntimeError:
+                # No running loop available right now; the EQ.start_animation() call
+                # will attempt to schedule once the page's loop is active.
+                pass
+
+            # Update the EQ control so initial rendering happens.
+            try:
+                self._eq.update()
+            except Exception:
+                pass
+    
         return self._eq
              
 
@@ -161,12 +197,36 @@ class AudioPlayer:
                 
             self.state = False
             self.btn_play.icon = ft.Icons.PAUSE_CIRCLE
+            # self.get_eq("playing")
+            eq_instance = EQ(
+                self.page,
+                  width=60,
+                    height=40,
+                      num_bars=6,
+                        levels=21,
+                          block_height=1,
+                            spacing=0,
+                              update_interval=0.12, 
+                              state="playing")
+            self.leading_icon = eq_instance
             self.audio1.play()
             self.audio1.update()
             self.page.update()
         elif self.state == False:
             if self.track_name:
                 self.track_name.value = "Paused:"
+                # self.get_eq("playing")
+                eq_instance = EQ(
+                    self.page,
+                    width=60,
+                        height=40,
+                        num_bars=6,
+                            levels=21,
+                            block_height=1,
+                                spacing=0,
+                                update_interval=0.12, 
+                                state="playing")
+                self.leading_icon = eq_instance
             # self.reset_listeners()
             print(f"Paused:{self.state}")
             self.state = True
