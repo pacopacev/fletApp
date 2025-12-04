@@ -189,45 +189,52 @@ class AudioPlayer:
             self.page.controls.append(snackbar_instance)
             self.page.update()
             return
-    
         if self.state == True:
             print(f"Playing:{self.state}")
             if self.track_name:
                 self.track_name.value = "Now playing:"
-                
             self.state = False
             self.btn_play.icon = ft.Icons.PAUSE_CIRCLE
-            # self.get_eq("playing")
-            eq_instance = EQ(
-                self.page,
-                  width=60,
-                    height=40,
-                      num_bars=6,
-                        levels=21,
-                          block_height=1,
-                            spacing=0,
-                              update_interval=0.12, 
-                              state="playing")
-            self.leading_icon = eq_instance
+
+            eq_instance = self.get_eq()
+                    # Place the EQ instance inside the existing leading Container's content
+            try:
+                self.leading_content.content = eq_instance
+                        # ensure the container and eq redraw
+                try:
+                    self.leading_content.update()
+                except Exception:
+                    pass
+                try:
+                    eq_instance.update()
+                except Exception:
+                    pass
+            except Exception:
+                        # Fallback: replace attribute (less ideal)
+                    self.leading_content = eq_instance
+
             self.audio1.play()
             self.audio1.update()
             self.page.update()
         elif self.state == False:
             if self.track_name:
                 self.track_name.value = "Paused:"
-                # self.get_eq("playing")
-                eq_instance = EQ(
-                    self.page,
-                    width=60,
-                        height=40,
-                        num_bars=6,
-                            levels=21,
-                            block_height=1,
-                                spacing=0,
-                                update_interval=0.12, 
-                                state="playing")
-                self.leading_icon = eq_instance
-            # self.reset_listeners()
+
+                try:
+                    self.leading_content.content = ft.Icon(ft.Icons.MUSIC_NOTE_ROUNDED, color=ft.Colors.BLACK)
+                    # ensure the container and eq redraw
+                    try:
+                        self.leading_content.update()
+                    except Exception:
+                        pass
+                    try:
+                        self.leading_content.update()
+                    except Exception:
+                        pass
+                except Exception:
+                    # Fallback: replace attribute (less ideal)
+                    self.leading_content.content = ft.Icon(ft.Icons.MUSIC_NOTE_ROUNDED, color=ft.Colors.RED)
+       
             print(f"Paused:{self.state}")
             self.state = True
             self.btn_play.icon = ft.Icons.PLAY_CIRCLE

@@ -139,6 +139,8 @@ async def main(page: ft.Page):
                     print(f"Playing from list:{ap.state}")          
                     ap.state = False
                     ap.btn_play.icon = ft.Icons.PAUSE_CIRCLE
+
+
                     eq_instance = ap.get_eq()
                     # Place the EQ instance inside the existing leading Container's content
                     try:
@@ -155,6 +157,10 @@ async def main(page: ft.Page):
                     except Exception:
                         # Fallback: replace attribute (less ideal)
                         ap.leading_content = eq_instance
+
+
+
+
                     ap.audio1.play()
                     ap.audio1.update()
                     page.update()   
@@ -191,6 +197,11 @@ async def main(page: ft.Page):
                 ap.btn_play.update()
                 ap.slider.update()
                 ap.btn_favorite.update()
+
+                
+
+
+                
                 # if ap.audio1:
                 #     ap.audio1.pause()
                 if ap.track_name:
