@@ -366,6 +366,7 @@ async def main(page: ft.Page):
         btn_favorite_control=ap.btn_favorite,
         slider_control=ap.slider,
         dropdown_control=dd_instance.dropdowns_s,
+        note_in_player=ap.leading_content
 )
     page.appbar = appbar
     

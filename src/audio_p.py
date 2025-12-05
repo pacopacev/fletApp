@@ -145,9 +145,9 @@ class AudioPlayer:
             # Create a compact EQ for use in the player trailing slot
             self._eq = EQ(
                 self.page,
-                width=60,
+                width=70,
                 height=40,
-                num_bars=6,
+                num_bars=13,
                 levels=21,
                 block_height=1,
                 spacing=0,

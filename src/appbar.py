@@ -16,7 +16,8 @@ class AppBar(ft.AppBar):
                  volume_icon_control=None,
                  btn_favorite_control=None,
                  slider_control=None,
-                 dropdown_control=None,):
+                 dropdown_control=None,
+                 note_in_player=None):
         self.page = page
         self.licence_text = licence_text
         self.bottom_divider = bottom_divider
@@ -30,6 +31,7 @@ class AppBar(ft.AppBar):
         self.btn_favorite_control = btn_favorite_control
         self.slider_control = slider_control    
         self.dropdown_control = dropdown_control
+        self.note_in_player = note_in_player
         
         if os.getenv("PUBLIC_URL"):
             self.public_url = os.getenv("PUBLIC_URL", "http://127.0.0.1:8000/")
@@ -204,6 +206,16 @@ class AppBar(ft.AppBar):
         try:
             if getattr(self, 'track_artist_control', None) is not None:
                 t = self.track_artist_control
+                t.color = ft.Colors.WHITE if self.page.theme_mode == "dark" else ft.Colors.BLACK
+                try:
+                    t.update()
+                except Exception:
+                    pass
+        except Exception:
+            pass
+        try:
+            if getattr(self, 'note_in_player', None) is not None:
+                t = self.note_in_player
                 t.color = ft.Colors.WHITE if self.page.theme_mode == "dark" else ft.Colors.BLACK
                 try:
                     t.update()

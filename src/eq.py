@@ -6,7 +6,7 @@ import asyncio
 
 
 class EQ(ft.Container):
-    def __init__(self, page: ft.Page, *, width: int = 400, height: int = 300, num_bars: int = 10, levels: int = 13, block_height: int = 25, spacing: int = 2, update_interval: float = 0.15):
+    def __init__(self, page: ft.Page, *, width: int = 400, height: int = 300, num_bars: int = 10, levels: int = 13, block_height: int = 25, spacing: int = 0, update_interval: float = 0.15):
         """Equalizer visual control.
 
         Parameters:
@@ -49,9 +49,10 @@ class EQ(ft.Container):
             width=width,
             height=height,
             # bgcolor=ft.Colors.BLACK,
-            padding=4,
-            border=None,
-            border_radius=6,
+            padding=0,
+            # border=ft.border.all(2, ft.Colors.BLACK),
+            # border_radius=3,
+            # expand=False,
         )
 
         # Kick off animation
@@ -59,7 +60,7 @@ class EQ(ft.Container):
 
     def update_equalizer_display(self, bar_heights):
         """Update the visual display of the equalizer"""
-        bars_display = ft.Row(spacing=6, alignment=ft.MainAxisAlignment.CENTER)
+        bars_display = ft.Row(spacing=0, alignment=ft.MainAxisAlignment.CENTER)
 
         # Create vertical bars left-to-right
         for i, bar_height in enumerate(bar_heights[: self.num_bars]):
@@ -70,25 +71,26 @@ class EQ(ft.Container):
             # compute block width based on control width
             try:
                 # print(self.width)
-                block_w = max(4, int(self.width / (self.num_bars + 4)))
+                block_w = max(4, int(self.width / (self.num_bars + 10)))
                 # print(block_w)
             except Exception:
                 # Fallback to default
-                block_w = 10
+                print("Falling back to default block width")
+                block_w = 4
             for level in range(self.levels, 0, -1):
                 if bar_height >= level:
                     block = ft.Container(
                         width=block_w,
                         height=self.block_height,
                         bgcolor=color,
-                        border_radius=ft.border_radius.all(2),
+                        border_radius=ft.border_radius.all(1),
                     )
                 else:
                     block = ft.Container(
-                        width=block_w,
+                        width=0,
                         height=self.block_height,
                         bgcolor=ft.Colors.WHITE,
-                        border_radius=ft.border_radius.all(2),
+                        border_radius=ft.border_radius.all(1),
                     )
                 col.controls.append(block)
             bars_display.controls.append(col)
