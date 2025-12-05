@@ -1,10 +1,10 @@
 # Auto-generated version info
-APP_VERSION = '0.0.31'
+APP_VERSION = '0.0.32'
 MAJOR = 0
 MINOR = 0
-PATCH = 31
-BUILD_DATE = '2025-12-04T19:07'
-COMMIT_HASH = '8fe54bf'
+PATCH = 32
+BUILD_DATE = '2025-12-05T19:36'
+COMMIT_HASH = '4cf4213'
 
 # Version string in your desired format
 version = f"V{APP_VERSION} Build: {BUILD_DATE}"
