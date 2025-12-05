@@ -288,8 +288,8 @@ async def main(page: ft.Page):
         for item in [
             
             ft.ListTile(
-                title=ft.Text(radio["name"], size=20, weight=ft.FontWeight.BOLD, color=ft.Colors.WHITE),
-                subtitle=ft.Text(radio["url"], size=10, color=ft.Colors.WHITE, selectable=True),
+                title=ft.Text(radio["name"], size=20, weight=ft.FontWeight.BOLD,  selectable=True),
+                subtitle=ft.Text(radio["url"], size=10, selectable=True),
                 leading=ft.Image(
                     src=radio["favicon_url"] if radio["favicon_url"] not in [None, "None", ""] else f"/Weathered Chevron with Spikes and Chains.png",  
                     width=70,
@@ -309,6 +309,7 @@ async def main(page: ft.Page):
     ][:-1],  # Remove the last divider
     height=600,
     spacing=0,
+    
 )
         # on_scroll=lambda e: on_scroll(e),
     
@@ -319,7 +320,8 @@ async def main(page: ft.Page):
         width=666,
         expand=True,
         height=666,
-        bgcolor="#B00020",
+        # bgcolor="#B00020",
+        border=ft.border.all(2, ft.Colors.BLACK),
     )
     bottom_divider = ft.Divider(height=1, color=ft.Colors.BLACK, leading_indent=0, trailing_indent=0)
     main_column = ft.Column(
