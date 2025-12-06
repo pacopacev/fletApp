@@ -304,7 +304,7 @@ async def main(page: ft.Page):
                 data=radio,
                 on_click=lambda e: __import__('asyncio').run_coroutine_threadsafe(set_play_from_list(e), APP_MAIN_LOOP)
             ),
-            ft.Divider(height=1, color=ft.Colors.WHITE),
+            ft.Divider(height=1, leading_indent=0, trailing_indent=0),
         ]
     ][:-1],  # Remove the last divider
     height=600,
@@ -368,7 +368,7 @@ async def main(page: ft.Page):
         btn_favorite_control=ap.btn_favorite,
         slider_control=ap.slider,
         dropdown_control=dd_instance.dropdowns_s,
-        note_in_player=ap.leading_content
+        note_in_player=ap.leading_content.content
 )
     page.appbar = appbar
     

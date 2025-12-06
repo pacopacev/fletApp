@@ -217,6 +217,8 @@ class AppBar(ft.AppBar):
             if getattr(self, 'note_in_player', None) is not None:
                 t = self.note_in_player
                 t.color = ft.Colors.WHITE if self.page.theme_mode == "dark" else ft.Colors.BLACK
+                print("Updating note in player color")
+                print(t.color)
                 try:
                     t.update()
                 except Exception:

@@ -23,7 +23,7 @@ class AudioPlayer:
         )
         self.track_name = ft.Text("Select a station", weight=ft.FontWeight.BOLD, color=ft.Colors.BLACK)
         self.track_artist = ft.Text("No station selected", color=ft.Colors.BLACK)
-        self.leading_content = ft.Container(content= ft.Icon(ft.Icons.MUSIC_NOTE_ROUNDED, color=ft.Colors.BLACK))
+        self.leading_content = ft.Container(content= ft.Icon(ft.Icons.MUSIC_NOTE_ROUNDED))
 
         self.favicon = ft.Image(
             src=f"/Distressed Metal Chevron with Chains.png",
@@ -221,7 +221,7 @@ class AudioPlayer:
                 self.track_name.value = "Paused:"
 
                 try:
-                    self.leading_content.content = ft.Icon(ft.Icons.MUSIC_NOTE_ROUNDED, color=ft.Colors.BLACK)
+                    self.leading_content.content = ft.Icon(ft.Icons.MUSIC_NOTE_ROUNDED)
                     # ensure the container and eq redraw
                     try:
                         self.leading_content.update()
