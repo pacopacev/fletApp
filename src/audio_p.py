@@ -77,16 +77,16 @@ class AudioPlayer:
                 controls=[
                     ft.Row(
                         controls=[
-                            ft.Image(
-                                src=f"/images/Weathered Chevron with Spikes and Chains.png", #"/icons/arrow_circle_up_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.png",
-                                width=50,
-                                height=50,
-                            ),
+                            # ft.Image(
+                            #     src=f"/images/Weathered Chevron with Spikes and Chains.png", #"/icons/arrow_circle_up_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.png",
+                            #     width=50,
+                            #     height=50,
+                            # ),
                             self.favicon,
-                              ft.Image(
-                                src=f"/images/Weathered Chevron with Spikes and Chains.png", #"/icons/arrow_circle_up_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.png",
-                                height=50,
-                              )
+                            #   ft.Image(
+                            #     src=f"/images/Weathered Chevron with Spikes and Chains.png", #"/icons/arrow_circle_up_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.png",
+                            #     height=50,
+                            #   )
                                 ], 
                                 alignment=ft.MainAxisAlignment.CENTER, 
                                 spacing=21
@@ -103,7 +103,7 @@ class AudioPlayer:
                             )
                         ],
                         alignment=ft.MainAxisAlignment.START,
-                        spacing=10
+                        spacing=0
                     ),
                     ft.Divider(),
                     ft.Row(
@@ -122,7 +122,7 @@ class AudioPlayer:
             border=ft.border.all(3, ft.Colors.BLACK),
             border_radius=ft.border_radius.all(10),
             width=350,
-            padding=13,
+            padding=ft.padding.only(left=10, top=10, right=1, bottom=13),
             image=ft.DecorationImage(
                 src=f"/Weathered Chevron with Spikes and Chains.png", 
                 fit=ft.ImageFit.COVER,
@@ -145,9 +145,9 @@ class AudioPlayer:
             # Create a compact EQ for use in the player trailing slot
             self._eq = EQ(
                 self.page,
-                width=70,
+                width=54,
                 height=40,
-                num_bars=13,
+                num_bars=6,
                 levels=21,
                 block_height=1,
                 spacing=0,
@@ -388,49 +388,6 @@ class AudioPlayer:
                 print(f"Failed to fetch favicon from {favicon}")
 
         
- 
-    #       # 1) If control has a .color (e.g. Divider, Text)
-    # if hasattr(b, "color"):
-    #     b.color = color
 
-    # # 2) If it's a container-like control with bgcolor
-    # elif hasattr(b, "bgcolor"):
-    #     b.bgcolor = color
-
-    # # 3) If it has a border object, try to change its color
-    # elif hasattr(b, "border"):
-    #     try:
-    #         # some controls store a Border object on `.border`
-    #         if b.border is None:
-    #             # create a simple border if needed (1px solid)
-    #             b.border = ft.border.all(1, color)
-    #         else:
-    #             # try to set nested 
-    #             if hasattr(b.border, "color"):
-    #                 b.border.color = color
-    #             else:
-    #                 # fallback: replace border
-    #                 b.border = ft.border.all(1, color)
-    #     except Exception:
-    #         # ignore border update failures
-    #         pass
-
-    # # 4) Try the control's content (e.g. Container(content=Text(...)))
-    # else:
-    #     try:
-    #         content = getattr(b, "content", None)
-    #         if content is not None and hasattr(content, "color"):
-    #             content.color = color
-    #     except Exception:
-    #         pass
-
-    # # Apply the update if control supports it
-    # try:
-    #     b.update()
-    # except Exception:
-    #     pass
-
-
-        
             
         

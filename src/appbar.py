@@ -17,7 +17,8 @@ class AppBar(ft.AppBar):
                  btn_favorite_control=None,
                  slider_control=None,
                  dropdown_control=None,
-                 note_in_player=None):
+                 note_in_player=None,
+                 last_visited_list_border=None,):
         self.page = page
         self.licence_text = licence_text
         self.bottom_divider = bottom_divider
@@ -32,6 +33,7 @@ class AppBar(ft.AppBar):
         self.slider_control = slider_control    
         self.dropdown_control = dropdown_control
         self.note_in_player = note_in_player
+        self.last_visited_list_border = last_visited_list_border
         
         if os.getenv("PUBLIC_URL"):
             self.public_url = os.getenv("PUBLIC_URL", "http://127.0.0.1:8000/")
@@ -309,6 +311,17 @@ class AppBar(ft.AppBar):
                         b.update()
                     except Exception:
                         pass
+        except Exception:
+            pass
+        
+        try:
+            if getattr(self, 'last_visited_list_border', None) is not None:
+                b = self.last_visited_list_border
+                b.border = ft.border.all(2, ft.Colors.WHITE) if self.page.theme_mode == "dark" else ft.border.all(2, ft.Colors.BLACK)
+                try:
+                    b.update()
+                except Exception:
+                    pass
         except Exception:
             pass
 

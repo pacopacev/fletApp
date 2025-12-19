@@ -320,7 +320,6 @@ async def main(page: ft.Page):
         width=666,
         expand=True,
         height=666,
-        # bgcolor="#B00020",
         border=ft.border.all(2, ft.Colors.BLACK),
     )
     bottom_divider = ft.Divider(height=1, color=ft.Colors.BLACK, leading_indent=0, trailing_indent=0)
@@ -368,7 +367,8 @@ async def main(page: ft.Page):
         btn_favorite_control=ap.btn_favorite,
         slider_control=ap.slider,
         dropdown_control=dd_instance.dropdowns_s,
-        note_in_player=ap.leading_content.content
+        note_in_player=ap.leading_content.content,
+        last_visited_list_border = last_visited_list_container
 )
     page.appbar = appbar
     
