@@ -12,7 +12,7 @@ from datetime import datetime
 
 from version import version
 env = Environment(loader=FileSystemLoader('templates'))
-print(version)
+# print(version)
 
 
 

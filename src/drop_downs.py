@@ -6,6 +6,7 @@ from snackbar import Snackbar
 from global_model import GlobalModel
 from validate_radio import ValidateRadio
 import uuid
+from querys import query_radios
 
 class DDComponents:
     def __init__(self, page, on_radio_change=None):
@@ -225,6 +226,8 @@ class DDComponents:
                     # print(result_uuid_exist)
                     if len(result_uuid_exist) == 0:
                         await self.insert_radio_to_db(radio_details.text, str(radio_status[1]), favicon, uuid)
+                    else:
+                        print("Radio already exists in database")
                    
                 else:
                     print(f"Radio stream is NOT valid: {radio_details.text}")
@@ -289,10 +292,10 @@ class DDComponents:
         
         try:
             global_model = GlobalModel()
-            await global_model.execute_query_all(
-                "INSERT INTO flet_radios (name, url, favicon_url, uuid,created_at) VALUES (%s, %s, %s, %s, %s);",
-                (name, url, favicon, uuid, datetime.now())
-            )
+            print(f"len(url): {len(url)}", len(url))
+            print(f"Inserting radio: {name}\n, {url}\n, {favicon}\n, {uuid}\n, {datetime.now()}\n", name, url, favicon, uuid)
+            insert_radio_query = query_radios["insert_radio"]
+            await global_model.execute_query_all(insert_radio_query,(name, url, favicon, uuid, datetime.now()))
             print("Radio inserted into database")           
         except Exception as ex:
             print(f"Error inserting radio into database: {ex}")
@@ -313,10 +316,12 @@ class DDComponents:
     async def check_exist_station_uuid(self, stationuuid):
         # print(stationuuid)
         global_model = GlobalModel()
-        result = await global_model.execute_query_all("SELECT * FROM flet_radios WHERE uuid = %s", (stationuuid,))
+        uuid_query= query_radios["check_radio_exists"]
+        result = await global_model.execute_query_all(uuid_query, (stationuuid,))
         return result
         
       
+
 
 
 
