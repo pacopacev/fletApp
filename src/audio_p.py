@@ -8,18 +8,26 @@ from eq import EQ
 
 
 class AudioPlayer:
+
+    async def favorite_async_handler(self, e):
+        """Direct async handler"""
+        await self.update_favorite(e)
     def __init__(self, page: ft.Page, reset_listeners=None, favorite_status=None):
+        print("Initializing AudioPlayer")
         
         self.page = page
         self.state = True
         self.reset_listeners = reset_listeners
         self._eq = None  # Lazy-load EQ instance
+        
         self.btn_favorite = ft.IconButton(
             icon=ft.Icons.FAVORITE_BORDER,
             icon_color=ft.Colors.BLACK,
             tooltip="Add to favorites",
             disabled=True,
-            on_click=lambda e: asyncio.create_task(self.update_favorite(e, data=self.audio1.src)),
+            on_click=self.favorite_async_handler
+            # on_click=lambda e: asyncio.create_task(self.update_favorite(e, data=self.audio1.src)),
+
         )
         self.track_name = ft.Text("Select a station", weight=ft.FontWeight.BOLD, color=ft.Colors.BLACK)
         self.track_artist = ft.Text("No station selected", color=ft.Colors.BLACK)
@@ -138,6 +146,7 @@ class AudioPlayer:
                  ], 
              ),
         )
+        # self.reset_player_state()
     
     def get_eq(self):
         """Lazy-load and return a single EQ instance."""
@@ -309,6 +318,7 @@ class AudioPlayer:
 
 
     async def update_favorite(self, e, data=None):
+        print(f"update_favorite called with data: {data}")
         # Use the current audio source or provided data
         station_url = self.audio1.src if self.audio1.src else False
         station_name = self.track_artist.value
@@ -386,6 +396,32 @@ class AudioPlayer:
                 # print(f"Updated favicon to: {self.favicon.src}")
             else:
                 print(f"Failed to fetch favicon from {favicon}")
+    # def reset_player_state(self):
+    #     """Reset all player states to default"""
+    #     self.state = True  # Stopped state
+    #     self.track_name.value = "Select a station"
+    #     self.track_artist.value = "No station selected"
+    #     self.btn_play.icon = ft.Icons.PLAY_CIRCLE
+    #     self.btn_play.tooltip = "Select a station first"
+    #     self.btn_favorite.icon = ft.Icons.FAVORITE_BORDER
+    #     self.btn_favorite.tooltip = "Add to favorites"
+    #     self.btn_favorite.disabled = True
+    #     self.slider.value = 50
+    #     self.audio1.src = "empty"
+    #     self.audio1.autoplay = False
+    #     self.audio1.volume = 0.5
+        
+    #     # Reset favicon to default
+    #     self.favicon.src = f"/Weathered Chevron with Spikes and Chains.png"
+        
+    #     # Reset leading content to music icon
+    #     self.leading_content.content = ft.Icon(ft.Icons.MUSIC_NOTE_ROUNDED)
+        
+    #     # Stop any playing audio
+    #     try:
+    #         self.audio1.pause()
+    #     except:
+    #         pass
 
         
 

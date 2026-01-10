@@ -34,6 +34,7 @@ class DDComponents:
             border_color=self.border_color,
             filled=True,
             options=[],
+            value=None
         )
         self.ddGenre = ft.Dropdown(
             trailing_icon=ft.Icon(ft.Icons.ARROW_DROP_DOWN, color=ft.Colors.BLACK),
@@ -70,7 +71,8 @@ class DDComponents:
             border_color=self.border_color,
             options=[],
             filled=True,
-            disabled=True
+            disabled=True,
+            value=None
         )
         
         self.ddRadio = ft.Dropdown(
@@ -193,7 +195,7 @@ class DDComponents:
                 
                 # Update the dropdown
                 self.ddRadio.update()
-                print(f"Loaded {len(self.radios)} radio stations")
+                # print(f"Loaded {len(self.radios)} radio stations")
                 length = len(self.radios)
                 snackbar_instance = Snackbar("Loaded radio stations", bgcolor="green", length = length)
                 snackbar_instance.open = True  
@@ -237,7 +239,7 @@ class DDComponents:
                     self.page.update()
 
     async def on_radio_click(self, e):
-        print("Radio dropdown focused")
+        # print("Radio dropdown focused")
         self.page.update()
 
     async def set_countruy_codes(self, country_codes):
@@ -251,7 +253,7 @@ class DDComponents:
         # print(e.control.value)
         self.coutrntry_code = e.control.value
         if self.coutrntry_code == None:
-            print("No country selected")
+            # print("No country selected")
             snackbar_instance = Snackbar("No country selected", bgcolor="red", length = None)
             snackbar_instance.open = True
             self.page.controls.append(snackbar_instance)
@@ -275,7 +277,7 @@ class DDComponents:
                 
                 # Update the dropdown
                 self.ddRadio.update()
-                print(f"Loaded {len(self.radios)} radio stations")
+                # print(f"Loaded {len(self.radios)} radio stations")
                 length = len(self.radios)
                 snackbar_instance = Snackbar("Loaded radio stations", bgcolor="green", length = length)
                 snackbar_instance.open = True  
@@ -292,8 +294,8 @@ class DDComponents:
         
         try:
             global_model = GlobalModel()
-            print(f"len(url): {len(url)}", len(url))
-            print(f"Inserting radio: {name}\n, {url}\n, {favicon}\n, {uuid}\n, {datetime.now()}\n", name, url, favicon, uuid)
+            # print(f"len(url): {len(url)}", len(url))
+            # print(f"Inserting radio: {name}\n, {url}\n, {favicon}\n, {uuid}\n, {datetime.now()}\n", name, url, favicon, uuid)
             insert_radio_query = query_radios["insert_radio"]
             await global_model.execute_query_all(insert_radio_query,(name, url, favicon, uuid, datetime.now()))
             print("Radio inserted into database")           
