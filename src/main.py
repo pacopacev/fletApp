@@ -10,10 +10,12 @@ from app import main
 from jinja2 import Environment, FileSystemLoader
 from datetime import datetime
 import os
+import httpx
 
 from version import version
 env = Environment(loader=FileSystemLoader('templates'))
 ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
+PORT = int(os.getenv("PORT", 8551))
 # print(version)
 
 # CORS origins based on environment
@@ -24,8 +26,8 @@ if ENVIRONMENT == "production":
     ]
 else:
     ALLOWED_ORIGINS = [
-        "http://localhost:8551",
-        "http://127.0.0.1:8551",
+        "http://localhost:{PORT}",
+        "http://127.0.0.1:{PORT}",
     ]
 
 
@@ -99,7 +101,9 @@ async def read_root():
         icon_file = next((f.name for f in ASSETS_DIR.glob("*.png")), "favicon.png")
 
     return env.get_template('main_page_html.html').render(version=version, icon_file=icon_file)
-       
+
+
+
 
 # --- Mount Flet app at /app ---
 app.mount(
@@ -113,4 +117,11 @@ app.mount(
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8551, log_level="debug")
+    # log_level = "debug" if ENVIRONMENT == "development" else "info"
+    log_level = "info"
+    uvicorn.run("main:app", 
+                 host="0.0.0.0",
+                 port=PORT,
+                log_level=log_level,
+                reload=ENVIRONMENT == "development",
+                )
