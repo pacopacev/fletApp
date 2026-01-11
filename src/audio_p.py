@@ -13,7 +13,7 @@ class AudioPlayer:
         """Direct async handler"""
         await self.update_favorite(e)
     def __init__(self, page: ft.Page, reset_listeners=None, favorite_status=None):
-        print("Initializing AudioPlayer")
+        #print("Initializing AudioPlayer")
         
         self.page = page
         self.state = True
@@ -305,7 +305,7 @@ class AudioPlayer:
             if self.track_artist:
                 self.track_artist.value = radio_name
                 if len(self.track_artist.value) > 37:
-                    self.track_artist.value = self.track_artist.value[:35] + "..."
+                    self.track_artist.value = self.track_artist.value[:30] + "..."
                     self.leading_icon = self.get_eq()
                     print(self.leading_icon)
                 

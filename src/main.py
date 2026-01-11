@@ -9,11 +9,24 @@ from global_model import GlobalModel
 from app import main
 from jinja2 import Environment, FileSystemLoader
 from datetime import datetime
+import os
 
 from version import version
 env = Environment(loader=FileSystemLoader('templates'))
+ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
 # print(version)
 
+# CORS origins based on environment
+if ENVIRONMENT == "production":
+    ALLOWED_ORIGINS = [
+        "https://plambe.koyeb.app",
+        "https://www.plambe.koyeb.app",
+    ]
+else:
+    ALLOWED_ORIGINS = [
+        "http://localhost:8551",
+        "http://127.0.0.1:8551",
+    ]
 
 
 
@@ -38,9 +51,9 @@ app = flet_fastapi.FastAPI()
 # CORS setup
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # configure properly in prod!
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE"],
     allow_headers=["*"],
 )
 
@@ -100,4 +113,4 @@ app.mount(
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8551, log_level="info")
+    uvicorn.run(app, host="0.0.0.0", port=8551, log_level="debug")

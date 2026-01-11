@@ -298,7 +298,7 @@ async def main(page: ft.Page):
                 trailing=ft.Icon(
                     "favorite" if radio["favorite"] else "favorite_border",
                     tooltip="Added to favorites" if radio["favorite"] else "",
-                    color=ft.Colors.WHITE,
+                    # color=ft.Colors.WHITE,
                 ),     
                 tooltip="Play this radio",               
                 data=radio,
