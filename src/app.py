@@ -302,9 +302,11 @@ async def main(page: ft.Page):
                 ),     
                 tooltip="Play this radio",               
                 data=radio,
+
                 on_click=lambda e: __import__('asyncio').run_coroutine_threadsafe(set_play_from_list(e), APP_MAIN_LOOP)
             ),
             ft.Divider(height=1, leading_indent=0, trailing_indent=0),
+            
         ]
     ][:-1],  # Remove the last divider
     height=600,
@@ -321,8 +323,9 @@ async def main(page: ft.Page):
         expand=True,
         height=666,
         border=ft.border.all(2, ft.Colors.BLACK),
+        # margin=ft.margin.only(left=0, bottom=54, top=0),
     )
-    bottom_divider = ft.Divider(height=1, color=ft.Colors.BLACK, leading_indent=0, trailing_indent=0)
+    # bottom_divider = ft.Divider(height=1, color=ft.Colors.BLACK, leading_indent=0, trailing_indent=0)
     main_column = ft.Column(
 
             controls=[
@@ -337,13 +340,13 @@ async def main(page: ft.Page):
                         dd_instance.ddRadio,
                         
           
-                ft.Text("Audio Controls", size=16, weight=ft.FontWeight.BOLD),
+                ft.Text("Audio Controls", size=18, weight=ft.FontWeight.BOLD),
                 ap.audio_player,
                 
-                ft.Text("Last Visited Radios", size=16, weight=ft.FontWeight.BOLD),
+                ft.Text("Last Visited Radios", size=18, weight=ft.FontWeight.BOLD),
                 last_visited_list_container,
 
-                bottom_divider,
+                # bottom_divider,
                 
                 ft.Container(content=licence_text, height=54)  # Spacer at the bottom
             ],
@@ -357,7 +360,7 @@ async def main(page: ft.Page):
     appbar = AppBar(
         page=page, 
         licence_text=licence_text, 
-        bottom_divider=bottom_divider, 
+        # bottom_divider=bottom_divider, 
         floating_action_button=floating_action_button, 
         track_name_control=ap.track_name, 
         track_artist_control=ap.track_artist,

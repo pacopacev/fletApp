@@ -7,7 +7,7 @@ class AppBar(ft.AppBar):
     def __init__(self, 
                  page, 
                  licence_text, 
-                 bottom_divider, 
+                #  bottom_divider, 
                  floating_action_button, 
                  track_name_control=None, 
                  track_artist_control=None,
@@ -21,7 +21,7 @@ class AppBar(ft.AppBar):
                  last_visited_list_border=None,):
         self.page = page
         self.licence_text = licence_text
-        self.bottom_divider = bottom_divider
+        # self.bottom_divider = bottom_divider
         self.floating_action_button = floating_action_button
         # optional reference to the main audio player's track name control
         self.track_name_control = track_name_control
