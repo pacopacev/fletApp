@@ -18,7 +18,9 @@ class AppBar(ft.AppBar):
                  slider_control=None,
                  dropdown_control=None,
                  note_in_player=None,
-                 last_visited_list_border=None,):
+                 favorite_visited_list_border=None,
+                 visited_list_all_border=None,
+                 ):
         self.page = page
         self.licence_text = licence_text
         # self.bottom_divider = bottom_divider
@@ -33,7 +35,8 @@ class AppBar(ft.AppBar):
         self.slider_control = slider_control    
         self.dropdown_control = dropdown_control
         self.note_in_player = note_in_player
-        self.last_visited_list_border = last_visited_list_border
+        self.favorite_visited_list_border = favorite_visited_list_border
+        self.visited_list_all_border = visited_list_all_border
         
         if os.getenv("PUBLIC_URL"):
             self.public_url = os.getenv("PUBLIC_URL", "http://127.0.0.1:8000/")
@@ -315,8 +318,19 @@ class AppBar(ft.AppBar):
             pass
         
         try:
-            if getattr(self, 'last_visited_list_border', None) is not None:
-                b = self.last_visited_list_border
+            if getattr(self, 'favorite_visited_list_border', None) is not None:
+                b = self.favorite_visited_list_border
+                b.border = ft.border.all(2, ft.Colors.WHITE) if self.page.theme_mode == "dark" else ft.border.all(2, ft.Colors.BLACK)
+                try:
+                    b.update()
+                except Exception:
+                    pass
+        except Exception:
+            pass
+
+        try:
+            if getattr(self, 'visited_list_all_border', None) is not None:
+                b = self.visited_list_all_border
                 b.border = ft.border.all(2, ft.Colors.WHITE) if self.page.theme_mode == "dark" else ft.border.all(2, ft.Colors.BLACK)
                 try:
                     b.update()

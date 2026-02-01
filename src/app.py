@@ -231,16 +231,16 @@ async def main(page: ft.Page):
                 
         except Exception as ex:
             print(f"Error changing radio: {ex}")
-    def reset_listeners():
-        print("Resetting listeners")
-        # Reset all icons
-        for control in last_visited_list_container.content.controls:
-            # control is a ListTile, its leading is the IconButton
-            if hasattr(control, 'leading') and isinstance(control.leading, ft.IconButton):
-                control.leading.icon = ft.Icons.PLAY_CIRCLE_FILL
-                control.leading.update()
+    # def reset_listeners():
+    #     print("Resetting listeners")
+    #     # Reset all icons
+    #     for control in last_visited_list_container.content.controls:
+    #         # control is a ListTile, its leading is the IconButton
+    #         if hasattr(control, 'leading') and isinstance(control.leading, ft.IconButton):
+    #             control.leading.icon = ft.Icons.PLAY_CIRCLE_FILL
+    #             control.leading.update()
     favorite_status = False
-    ap = AudioPlayer(page=page, reset_listeners=reset_listeners, favorite_status=favorite_status)
+    ap = AudioPlayer(page=page, reset_listeners=None, favorite_status=favorite_status)
     dd_instance = DDComponents(page=page, on_radio_change=on_radio_change)
     global_model = GlobalModel()
     
@@ -249,13 +249,26 @@ async def main(page: ft.Page):
     
     
     
-    last_visited_radios = [] 
-    query = query_radios["all_radios"]
+    favorite_radios_list = [] 
+    query = query_radios["all_radios_favorites"]
     try:
-        last_visited_radios = await global_model.execute_query_all(query)
+        favorite_radios_list = await global_model.execute_query_all(query)
         # print("Database query result:", last_visited_radios)
     except Exception as e:
         print("Database query failed:", e)
+
+    
+    last_radios_list = [] 
+    query = query_radios["all_radios_last_visited"]
+    try:
+        last_radios_list = await global_model.execute_query_all(query)
+        # print("Database query result:", last_visited_radios)
+    except Exception as e:
+        print("Database query failed:", e)
+
+
+
+
 
     licence_text = ft.Container(content=ft.Column(
         controls=[
@@ -281,10 +294,45 @@ async def main(page: ft.Page):
 
     
     
-    last_visited_list = ft.ListView(
+    last_visited_list_favorites = ft.ListView(
     clip_behavior=ft.ClipBehavior.ANTI_ALIAS,
     controls=[
-        item for radio in last_visited_radios
+        item for radio in favorite_radios_list
+        for item in [
+            
+            ft.ListTile(
+                title=ft.Text(radio["name"], size=20, weight=ft.FontWeight.BOLD,  selectable=True),
+                subtitle=ft.Text(radio["url"], size=10, selectable=True),
+                leading=ft.Image(
+                    src=radio["favicon_url"] if radio["favicon_url"] not in [None, "None", ""] else f"/Weathered Chevron with Spikes and Chains.png",  
+                    width=70,
+                    height=70,
+                ),
+                trailing=ft.Icon(
+                    "favorite" if radio["favorite"] else "favorite_border",
+                    tooltip="Added to favorites" if radio["favorite"] else "",
+                    # color=ft.Colors.WHITE,
+                ),     
+                tooltip="Play this radio",               
+                data=radio,
+
+                on_click=lambda e: __import__('asyncio').run_coroutine_threadsafe(set_play_from_list(e), APP_MAIN_LOOP)
+            ),
+            ft.Divider(height=1, leading_indent=0, trailing_indent=0),
+            
+        ]
+    ][:-1],  # Remove the last divider
+    height=600,
+    spacing=0,
+    
+)
+    
+
+
+    last_visited_list_all = ft.ListView(
+    clip_behavior=ft.ClipBehavior.ANTI_ALIAS,
+    controls=[
+        item for radio in last_radios_list
         for item in [
             
             ft.ListTile(
@@ -315,8 +363,19 @@ async def main(page: ft.Page):
 )
         # on_scroll=lambda e: on_scroll(e),
     
-    last_visited_list_container = ft.Container(
-        content=last_visited_list,
+    last_visited_list_favorites_container = ft.Container(
+        content=last_visited_list_favorites,
+        alignment=ft.alignment.center,
+        border_radius=ft.border_radius.all(10),
+        width=666,
+        expand=True,
+        height=666,
+        border=ft.border.all(2, ft.Colors.BLACK),
+        # margin=ft.margin.only(left=0, bottom=54, top=0),
+    )
+
+    last_visited_list_all_container = ft.Container(
+        content=last_visited_list_all,
         alignment=ft.alignment.center,
         border_radius=ft.border_radius.all(10),
         width=666,
@@ -343,8 +402,10 @@ async def main(page: ft.Page):
                 ft.Text("Audio Controls", size=18, weight=ft.FontWeight.BOLD),
                 ap.audio_player,
                 
-                ft.Text("Last Visited Radios", size=18, weight=ft.FontWeight.BOLD),
-                last_visited_list_container,
+                ft.Text("Last Visited Favorite Radios", size=18, weight=ft.FontWeight.BOLD),
+                last_visited_list_favorites_container,
+                ft.Text("Last Visited All Radios", size=18, weight=ft.FontWeight.BOLD),
+                last_visited_list_all_container,
 
                 # bottom_divider,
                 
@@ -371,7 +432,9 @@ async def main(page: ft.Page):
         slider_control=ap.slider,
         dropdown_control=dd_instance.dropdowns_s,
         note_in_player=ap.leading_content.content,
-        last_visited_list_border = last_visited_list_container
+        favorite_visited_list_border = last_visited_list_favorites_container,
+        visited_list_all_border = last_visited_list_all_container
+
 )
     page.appbar = appbar
     
