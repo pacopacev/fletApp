@@ -7,8 +7,6 @@ class AppBar(ft.AppBar):
     def __init__(self, 
                  page, 
                  licence_text, 
-                #  bottom_divider, 
-                 floating_action_button, 
                  track_name_control=None, 
                  track_artist_control=None,
                  player_border_control=None, 
@@ -23,8 +21,7 @@ class AppBar(ft.AppBar):
                  ):
         self.page = page
         self.licence_text = licence_text
-        # self.bottom_divider = bottom_divider
-        self.floating_action_button = floating_action_button
+
         # optional reference to the main audio player's track name control
         self.track_name_control = track_name_control
         self.track_artist_control = track_artist_control
@@ -97,7 +94,7 @@ class AppBar(ft.AppBar):
                     ]
                 ),
                         checked=False, 
-                        on_click=self.toggle_dark_mode
+                        on_click=self.toggle_light_mode
                     ),
                     ft.PopupMenuItem(),
                     ft.PopupMenuItem(
@@ -150,26 +147,19 @@ class AppBar(ft.AppBar):
         self.page.update()
 
     
-    def toggle_dark_mode(self, e):
-        # Toggle between light and dark mode
-        if self.page.theme_mode == "dark":
-            print("Toggling to light mode")
-            self.page.theme_mode = "light"
-            text_color = ft.Colors.BLACK
-            divider_color = ft.Colors.BLACK
-            fab_icon_color = ft.Colors.BLACK
-        else:
-            print("Toggling to dark mode")
-            self.page.theme_mode = "dark"
-            text_color = ft.Colors.WHITE
-            divider_color = ft.Colors.WHITE
-            fab_icon_color = ft.Colors.BLACK
-
+    def toggle_light_mode(self, e):
+        print(f"Current theme mode at start of toggle: {self.page.theme_mode}")
+        self.page.theme_mode = ft.ThemeMode.LIGHT if self.page.theme_mode == ft.ThemeMode.DARK else ft.ThemeMode.DARK
+        print(f"Theme mode after toggle: {self.page.theme_mode}")
+      
+            
         # Update licence text colors if present
         try:
             col = getattr(self.licence_text, 'content', None)
             if col and hasattr(col, 'controls'):
                 controls = col.controls
+                text_color = ft.Colors.BLACK if self.page.theme_mode == ft.ThemeMode.LIGHT else ft.Colors.WHITE
+                print(f"Setting licence text color to: {text_color}")
                 if len(controls) >= 1:
                     controls[0].color = text_color
                 if len(controls) >= 2:
@@ -180,27 +170,17 @@ class AppBar(ft.AppBar):
         # Update divider color if present
         try:
             if self.bottom_divider is not None:
+                divider_color = ft.Colors.BLACK if self.page.theme_mode == ft.ThemeMode.LIGHT else ft.Colors.WHITE
                 self.bottom_divider.color = divider_color
         except Exception:
             pass
 
-        # Update floating action button icon color if present
-        try:
-            fab = getattr(self, 'floating_action_button', None)
-            if fab is not None:
-                fab.icon_color = fab_icon_color
-                try:
-                    fab.update()
-                except Exception:
-                    pass
-        except Exception:
-            pass
-
-        # Update track name control color if a reference was provided when AppBar was created
         try:
             if getattr(self, 'track_name_control', None) is not None:
                 t = self.track_name_control
-                t.color = ft.Colors.WHITE if self.page.theme_mode == "dark" else ft.Colors.BLACK
+                t.color = ft.Colors.BLACK if self.page.theme_mode == ft.ThemeMode.LIGHT else ft.Colors.WHITE
+                print("Updating track name color")
+                print(t.color)
                 try:
                     t.update()
                 except Exception:
@@ -211,7 +191,7 @@ class AppBar(ft.AppBar):
         try:
             if getattr(self, 'track_artist_control', None) is not None:
                 t = self.track_artist_control
-                t.color = ft.Colors.WHITE if self.page.theme_mode == "dark" else ft.Colors.BLACK
+                t.color = ft.Colors.BLACK if self.page.theme_mode == ft.ThemeMode.LIGHT else ft.Colors.WHITE
                 try:
                     t.update()
                 except Exception:
@@ -221,9 +201,9 @@ class AppBar(ft.AppBar):
         try:
             if getattr(self, 'note_in_player', None) is not None:
                 t = self.note_in_player
-                t.color = ft.Colors.WHITE if self.page.theme_mode == "dark" else ft.Colors.BLACK
-                print("Updating note in player color")
-                print(t.color)
+                t.color = ft.Colors.BLACK if self.page.theme_mode == ft.ThemeMode.LIGHT else ft.Colors.WHITE
+                # print("Updating note in player color")
+                # print(t.color)
                 try:
                     t.update()
                 except Exception:
@@ -235,7 +215,7 @@ class AppBar(ft.AppBar):
                 b = self.player_border_control
                 if hasattr(b, 'border') and b.border is not None:
                     # Reconstruct border with new color (Border objects are immutable)
-                    new_color = ft.Colors.WHITE if self.page.theme_mode == "dark" else ft.Colors.BLACK
+                    new_color = ft.Colors.BLACK if self.page.theme_mode == ft.ThemeMode.LIGHT else ft.Colors.WHITE
                     old_border = b.border
                     # Preserve width and create new border with updated color
                     width = getattr(old_border, 'left', None)
@@ -255,7 +235,7 @@ class AppBar(ft.AppBar):
             if getattr(self, 'btn_play_control', None) is not None:
                 # print("Updating btn play color")
                 b = self.btn_play_control
-                b.icon_color = ft.Colors.WHITE if self.page.theme_mode == "dark" else ft.Colors.BLACK
+                b.icon_color = ft.Colors.BLACK if self.page.theme_mode == ft.ThemeMode.LIGHT else ft.Colors.WHITE
                 try:
                     # print("Updating btn play color")
                     b.update()
@@ -268,7 +248,7 @@ class AppBar(ft.AppBar):
             if getattr(self, 'volume_icon', None) is not None:
                 # print("Updating btn next color")
                 b = self.volume_icon
-                b.color = ft.Colors.WHITE if self.page.theme_mode == "dark" else ft.Colors.BLACK
+                b.color = ft.Colors.BLACK if self.page.theme_mode == ft.ThemeMode.LIGHT else ft.Colors.WHITE
                 try:
                     # print("Updating btn next color")
                     b.update()
@@ -281,7 +261,7 @@ class AppBar(ft.AppBar):
             if getattr(self, 'btn_favorite_control', None) is not None:
                 # print("Updating btn next color")
                 b = self.btn_favorite_control
-                b.icon_color = ft.Colors.WHITE if self.page.theme_mode == "dark" else ft.Colors.BLACK
+                b.icon_color = ft.Colors.BLACK if self.page.theme_mode == ft.ThemeMode.LIGHT else ft.Colors.WHITE
                 try:
                     # print("Updating btn next color")
                     b.update()
@@ -293,7 +273,7 @@ class AppBar(ft.AppBar):
         try:
             if getattr(self, 'slider_control', None) is not None:
                 b = self.slider_control
-                b.thumb_color = ft.Colors.WHITE if self.page.theme_mode == "dark" else ft.Colors.BLACK
+                b.thumb_color = ft.Colors.BLACK if self.page.theme_mode == ft.ThemeMode.LIGHT else ft.Colors.WHITE
                 try:
                     # print("Updating btn next color")
                     b.update()
@@ -306,10 +286,10 @@ class AppBar(ft.AppBar):
             if getattr(self, 'dropdown_control', None) is not None:
                 for i in range(len(self.dropdown_control)):
                     b = self.dropdown_control[i]
-                    b.border_color = ft.Colors.WHITE if self.page.theme_mode == "dark" else ft.Colors.BLACK
-                    b.label_style.color = ft.Colors.WHITE if self.page.theme_mode == "dark" else ft.Colors.BLACK
-                    b.trailing_icon.color = ft.Colors.WHITE if self.page.theme_mode == "dark" else ft.Colors.BLACK
-                    b.leading_icon.color = ft.Colors.WHITE if self.page.theme_mode == "dark" else ft.Colors.BLACK
+                    b.border_color = ft.Colors.BLACK if self.page.theme_mode == ft.ThemeMode.LIGHT else ft.Colors.WHITE
+                    b.label_style.color = ft.Colors.WHITE if self.page.theme_mode == ft.ThemeMode.DARK else ft.Colors.BLACK
+                    b.trailing_icon.color = ft.Colors.WHITE if self.page.theme_mode == ft.ThemeMode.DARK else ft.Colors.BLACK
+                    b.leading_icon.color = ft.Colors.WHITE if self.page.theme_mode == ft.ThemeMode.DARK else ft.Colors.BLACK
                     try:
                         b.update()
                     except Exception:
@@ -320,7 +300,7 @@ class AppBar(ft.AppBar):
         try:
             if getattr(self, 'favorite_visited_list_border', None) is not None:
                 b = self.favorite_visited_list_border
-                b.border = ft.border.all(2, ft.Colors.WHITE) if self.page.theme_mode == "dark" else ft.border.all(2, ft.Colors.BLACK)
+                b.border = ft.border.all(2, ft.Colors.BLACK) if self.page.theme_mode == ft.ThemeMode.LIGHT else ft.border.all(2, ft.Colors.WHITE)
                 try:
                     b.update()
                 except Exception:
@@ -331,7 +311,7 @@ class AppBar(ft.AppBar):
         try:
             if getattr(self, 'visited_list_all_border', None) is not None:
                 b = self.visited_list_all_border
-                b.border = ft.border.all(2, ft.Colors.WHITE) if self.page.theme_mode == "dark" else ft.border.all(2, ft.Colors.BLACK)
+                b.border = ft.border.all(2, ft.Colors.BLACK) if self.page.theme_mode == ft.ThemeMode.LIGHT else ft.border.all(2, ft.Colors.WHITE)
                 try:
                     b.update()
                 except Exception:

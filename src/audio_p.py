@@ -22,15 +22,15 @@ class AudioPlayer:
         
         self.btn_favorite = ft.IconButton(
             icon=ft.Icons.FAVORITE_BORDER,
-            icon_color=ft.Colors.BLACK,
+            icon_color=ft.Colors.WHITE,
             tooltip="Add to favorites",
             disabled=True,
             on_click=self.favorite_async_handler
             # on_click=lambda e: asyncio.create_task(self.update_favorite(e, data=self.audio1.src)),
 
         )
-        self.track_name = ft.Text("Select a station", weight=ft.FontWeight.BOLD, color=ft.Colors.BLACK)
-        self.track_artist = ft.Text("No station selected", color=ft.Colors.BLACK)
+        self.track_name = ft.Text("Select a station", weight=ft.FontWeight.BOLD, color=ft.Colors.WHITE)
+        self.track_artist = ft.Text("No station selected", color=ft.Colors.WHITE)
         self.leading_content = ft.Container(content= ft.Icon(ft.Icons.MUSIC_NOTE_ROUNDED))
 
         self.favicon = ft.Image(
@@ -44,7 +44,7 @@ class AudioPlayer:
         
         self.slider = ft.Slider(
                                             width=150,
-                                            thumb_color=ft.Colors.BLACK,
+                                            thumb_color=ft.Colors.WHITE,
                                             overlay_color=ft.Colors.RED,
                                             min=0,
                                             max=100,
@@ -72,13 +72,13 @@ class AudioPlayer:
         
         self.btn_play = ft.IconButton(
             icon=ft.Icons.PLAY_CIRCLE,
-            icon_color=ft.Colors.BLACK,
+            icon_color=ft.Colors.WHITE,
             icon_size=50, 
             on_click=self.play_track,
             disabled=False,
             tooltip="Select a station first"
         )
-        self.volume_icon = ft.Icon(name=ft.Icons.VOLUME_DOWN, color=ft.Colors.BLACK)
+        self.volume_icon = ft.Icon(name=ft.Icons.VOLUME_DOWN, color=ft.Colors.WHITE)
         # print([self.src, self.state])
         self.main_content = ft.Container(
             content=ft.Column(
@@ -127,7 +127,7 @@ class AudioPlayer:
                 ],
                 spacing=10
             ),
-            border=ft.border.all(3, ft.Colors.BLACK),
+            border=ft.border.all(3, ft.Colors.WHITE),
             border_radius=ft.border_radius.all(10),
             width=350,
             padding=ft.padding.only(left=10, top=10, right=1, bottom=13),

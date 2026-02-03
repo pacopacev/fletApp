@@ -26,7 +26,7 @@ async def main(page: ft.Page):
     # print(f"Running on platform: {platform}")
     page.title = "DropDown Radio"
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-    page.theme_mode = ft.ThemeMode.LIGHT  
+    page.theme_mode = ft.ThemeMode.DARK 
     page.scroll = ft.ScrollMode.AUTO
     
     
@@ -275,13 +275,13 @@ async def main(page: ft.Page):
             ft.Text(
     value=f"{version}",
     size=13,
-    color=ft.Colors.BLACK,
+    color=ft.Colors.WHITE,
     text_align=ft.TextAlign.CENTER,
     weight=ft.FontWeight.BOLD,
 ), ft.Text(
     value="©Plambe. All rights reserved.",
     size=13,
-    color=ft.Colors.BLACK,
+    color=ft.Colors.WHITE,
     text_align=ft.TextAlign.CENTER,
     weight=ft.FontWeight.BOLD,
 ),
@@ -370,7 +370,7 @@ async def main(page: ft.Page):
         width=666,
         expand=True,
         height=666,
-        border=ft.border.all(2, ft.Colors.BLACK),
+        border=ft.border.all(2, ft.Colors.WHITE),
         # margin=ft.margin.only(left=0, bottom=54, top=0),
     )
 
@@ -381,7 +381,7 @@ async def main(page: ft.Page):
         width=666,
         expand=True,
         height=666,
-        border=ft.border.all(2, ft.Colors.BLACK),
+        border=ft.border.all(2, ft.Colors.WHITE) 
         # margin=ft.margin.only(left=0, bottom=54, top=0),
     )
     # bottom_divider = ft.Divider(height=1, color=ft.Colors.BLACK, leading_indent=0, trailing_indent=0)
@@ -421,8 +421,6 @@ async def main(page: ft.Page):
     appbar = AppBar(
         page=page, 
         licence_text=licence_text, 
-        # bottom_divider=bottom_divider, 
-        floating_action_button=floating_action_button, 
         track_name_control=ap.track_name, 
         track_artist_control=ap.track_artist,
         player_border_control=ap.main_content,

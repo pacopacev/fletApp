@@ -21,13 +21,13 @@ class DDComponents:
         self.now_playing_text = None
         self.now_playing = None
         self.now_playing_container = ft.Container()  
-        self.border_color = ft.Colors.BLACK
+        self.border_color = ft.Colors.WHITE
      
         self.ddServer = ft.Dropdown(
-            trailing_icon=ft.Icon(ft.Icons.ARROW_DROP_DOWN, color=ft.Colors.BLACK),
-            leading_icon=ft.Icon(ft.Icons.PUBLIC, color=ft.Colors.BLACK),
+            trailing_icon=ft.Icon(ft.Icons.ARROW_DROP_DOWN, color=ft.Colors.WHITE),
+            leading_icon=ft.Icon(ft.Icons.PUBLIC, color=ft.Colors.WHITE),
             label="Server",
-            label_style=ft.TextStyle(color=ft.Colors.BLACK),
+            label_style=ft.TextStyle(color=ft.Colors.WHITE),
             on_change=self.server_change,
             width=300,
             hint_text="Select Server",
@@ -37,10 +37,10 @@ class DDComponents:
             value=None
         )
         self.ddGenre = ft.Dropdown(
-            trailing_icon=ft.Icon(ft.Icons.ARROW_DROP_DOWN, color=ft.Colors.BLACK),
-            leading_icon=ft.Icon(ft.Icons.MUSIC_NOTE, color=ft.Colors.BLACK),
+            trailing_icon=ft.Icon(ft.Icons.ARROW_DROP_DOWN, color=ft.Colors.WHITE),
+            leading_icon=ft.Icon(ft.Icons.MUSIC_NOTE, color=ft.Colors.WHITE),
             label="Tag",
-            label_style=ft.TextStyle(color=ft.Colors.BLACK),
+            label_style=ft.TextStyle(color=ft.Colors.WHITE),
             on_change=self.tag_change,
             width=300,
             hint_text="Select Genre",
@@ -61,10 +61,10 @@ class DDComponents:
         )
         
         self.ddCountry = ft.Dropdown(
-            trailing_icon=ft.Icon(ft.Icons.ARROW_DROP_DOWN, color=ft.Colors.BLACK),
-            leading_icon=ft.Icon(ft.Icons.FLAG, color=ft.Colors.BLACK),
+            trailing_icon=ft.Icon(ft.Icons.ARROW_DROP_DOWN, color=ft.Colors.WHITE),
+            leading_icon=ft.Icon(ft.Icons.FLAG, color=ft.Colors.WHITE),
             label="Country",
-            label_style=ft.TextStyle(color=ft.Colors.BLACK),
+            label_style=ft.TextStyle(color=ft.Colors.WHITE),
             on_change=self.get_country_code,    
             width=300,
             hint_text="Select Country",
@@ -76,10 +76,10 @@ class DDComponents:
         )
         
         self.ddRadio = ft.Dropdown(
-            trailing_icon=ft.Icon(ft.Icons.ARROW_DROP_DOWN, color=ft.Colors.BLACK),
-            leading_icon=ft.Icon(ft.Icons.RADIO, color=ft.Colors.BLACK),
+            trailing_icon=ft.Icon(ft.Icons.ARROW_DROP_DOWN, color=ft.Colors.WHITE),
+            leading_icon=ft.Icon(ft.Icons.RADIO, color=ft.Colors.WHITE),
             label="Radio Stations",
-            label_style=ft.TextStyle(color=ft.Colors.BLACK),
+            label_style=ft.TextStyle(color=ft.Colors.WHITE),
             on_change=self.radio_change,
             width=300,
             border_color=self.border_color,
@@ -105,7 +105,7 @@ class DDComponents:
         if page.theme_mode == "dark":
             page.theme_mode = "dark"
             for dd in dds:
-                dd.border_color = ft.Colors.BLACK
+                dd.border_color = ft.Colors.WHITE
                 dd.border_width = 1
             page.theme_mode = "light"
         else: 
@@ -113,7 +113,7 @@ class DDComponents:
             for dd in dds:
                 dd.border_color = ft.Colors.WHITE
                 dd.border_width = 15
-                dd.label_style.color = ft.Colors.BLACK
+                dd.label_style.color = ft.Colors.WHITE
                 dd.fill_color = ft.Colors.WHITE
                 dd.border_radius = ft.border_radius.all(10)
         page.update()
