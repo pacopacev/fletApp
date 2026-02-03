@@ -48,7 +48,7 @@ class DDComponents:
             options=[
                 ft.dropdown.Option("punk", "Punk"),
                 ft.dropdown.Option("metal", "Metal"),
-                ft.dropdown.Option("rock", "Rock"),
+                # ft.dropdown.Option("rock", "Rock"),
                 ft.dropdown.Option("grindcore", "Grindcore"),
                 ft.dropdown.Option("core", "Core"),
                 ft.dropdown.Option("metalcore", "Metalcore"),
